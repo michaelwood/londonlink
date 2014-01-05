@@ -1,0 +1,162 @@
+<!-- start form bottom -->
+  <table>
+    <th>Participant information</th>
+    <tr>
+      <td>
+        <label for="full_name">Full name</label>
+      </td>
+      <td><input type="text" id="full_name" name="full_name" /></td>
+    </tr>
+
+    <tr>
+      <td><label for="address">Home address</label></td>
+      <td><textarea id="address" name="address"></textarea></td>
+    </tr>
+
+    <tr>
+      <td><label for="participant_phone" class="not-required">Phone No.</label></td>
+      <td><input type="text" class="not-required" id="participant_phone" name="participant_phone" /></td>
+    </tr>
+    <tr>
+      <td><label for="participant_email" class="not-required">Email</label></td>
+      <td><input type="text" id="participant_email" class="not-required" name="participant_email" /></td>
+    </tr>
+    <tr>
+      <td><label for="dob">Date of birth (dd/mm/yyyy)</label></td>
+      <td><input type="text" id="dob" name="dob" /></td>
+    </tr>
+
+
+    <tr title="If other, please contact us so we can best suit the needs of the participant">
+      <td><label for="gender_f" >Gender
+        <img alt="additional info icon" src="/files/i.png">
+        </label></td>
+      <td>
+        <label for="gender_f" class="inner-option">Female</label><input type="radio" id="gender_f" name="gender" value="female"><br />
+        <label for="gender_m" class="inner-option">Male</label><input type="radio" id="gender_m" name="gender" value="male" /><br />
+        <label for="gender_o" class="inner-option">Other</label><input type="radio" id="gender_o" name="gender" value="other" /><br />
+      </td>
+    </tr>
+
+    <tr>
+      <td><label for="local_meeting">Local meeting</label></td>
+      <td><input type="text" id="local_meeting" name="local_meeting" /></td>
+    </tr>
+
+    <th>Dietary information (this will be a vegetarian event)</th>
+    <tr>
+      <td><label for="dietary" class="not-required">Any Allergies?, Vegan? etc</label></td>
+      <td><textarea id="dietary" class="not-required" name="dietary"></textarea></td>
+    </tr>
+    <th>Medical information</th>
+    <tr title="Relevant information about participant physical or mental health, any medications taken (and how to administer), etc">
+      <td><label for="medial_info" class="not-required">Medical information
+          <img alt="additional info icon" src="/files/i.png" />
+        </label></td>
+      <td><textarea id="medial_info" class="not-required" name="medial_info"></textarea></td>
+    </tr>
+    <tr>
+      <td><label for="painkillers">Able to take</label></td>
+      <td>
+        <input type="checkbox" id="painkillers" name="painkillers" value="ibuprofen"><label for="painkillers" class="inner-option">Ibuprofen</label><br />
+          <input type="checkbox" id="painkillers1" name="painkillers1" value="paracetamol" /><label for="painkillers1" class="inner-option">Paracetamol</label><br />
+        </td>
+      </tr>
+
+    <th>Parent/Guardian contact information</th>
+    <tr>
+      <td><label for="parent_guardian_email">Preferred email contact</label></td>
+      <td><input type="text" id="parent_guardian_email" name="parent_guardian_email" /></td>
+    </tr>
+
+    <tr><td>Primary contact:</td></tr>
+    <tr>
+      <td><label for="parent_guardian_name1">1. Name</label></td>
+      <td><input type="text" id="parent_guardian_name1" name="parent_guardian_name1" /></td>
+    </tr>
+    <tr>
+      <td><label for="parent_guardian_phone1">1. Phone no.</label></td>
+      <td><input type="text" id="parent_guardian_phone1" name="parent_guardian_phone1" /></td>
+    </tr>
+    <tr><td>Secondary contact:</td></tr>
+    <tr>
+      <td><label for="parent_guardian_name2">2. Name</label></td>
+      <td><input type="text" id="parent_guardian_name2" name="parent_guardian_name2" /></td>
+    </tr>
+    <tr>
+      <td><label for="parent_guardian_phone2">2. Phone no.</label></td>
+      <td><input type="text" id="parent_guardian_phone2" name="parent_guardian_phone2" /></td>
+    </tr>
+        <th>Data consent</th>
+    <tr>
+      <td><label for="use_contact_dets_y">Can we use contact details to tell you about future events</label></td>
+      <td>
+        <input type="checkbox" id="use_contact_dets_y" name="use_contact_dets" value="yes"><label for="use_contact_dets_y" class="inner-option">Yes</label><br />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="consent_photo_yes">Can the participant be included in photographs taken that may be used for future publicity</label>
+          <td>
+            <input type="checkbox" id="consent_photo_yes" name="consent_photo" value="yes"><label for="consent_photo_yes" class="inner-option">Yes</label><br />
+            </td>
+          </tr>
+          <th>Travel &amp; Money</th>
+          <tr title="Please add details of travel arrangements if the participant is making their own way to the event or will be arriving at a different time from others">
+            <td><label for="travel_dets" class="not-required">Alternative travel arrangements?
+        <img alt="additional info icon" src="/files/i.png">
+              </label>
+            </td>
+            <td><textarea id="travel_dets" class="not-required" name="travel_dets"></textarea></td>
+          </tr>
+          <tr>
+            <td><label class="inner-option" for="payment_method">Payment method</td>
+              <td><input type="radio" name="payment_method" id="payment_method1" value="cheque_cash" ><label class="inner-option" for="payment_method1">Cheque or cash at event</label><br />
+                <input type="radio" name="payment_method" id="payment_method" value="BACS" /><label class="inner-option" for="payment_method">BACS Transfer with the young person's name as reference</label><br />
+              </td>
+            </tr>
+          <th>Consent</th>
+          <tr>
+            <td>
+              <label for="consent">I consider my child / ward to be medically &amp; psychologically fit to participate in this London link group event and I give permission for them to take part in this activity. The participant agrees to adhere to the <a href="//londonlinkgroup.org.uk/about/boundaries/">London Link group boundaries</a>.</label>
+            </td>
+            <td><input type="checkbox" id="consent" value="yes" name="consent"/><label for="consent">I confirm</label></td>
+          </tr>
+          <tr><td></td><td><input type="button" onClick="validate_form ();" value="Send!"/></td></tr>
+          <input type="hidden" value="save_booking" name="llg_post_action" />
+  </form>
+</table>
+</span>
+<script type="text/javascript">
+
+function validate_form () {
+
+    var failed = llg_check_form ();
+    var consent_failed = true;
+    var consent_item = jQuery('#consent');
+
+    /* special case */
+    if (consent_failed = !consent_item.is (':checked')) {
+        var parent_item = consent_item.parent ();
+        set_border_red (parent_item, true);
+        parent_item.change (function () {
+                 set_border_red (parent_item, false);
+        });
+    }
+
+    if (failed == true || consent_failed == true) {
+        alert ("Please make sure all required fields are filled in");
+    }
+    else {
+        jQuery.post ("/",
+                     jQuery ("#llg-check-form").serialize (),
+                     function (data) {
+                     jQuery ("#booking-area").css ("display", "none");
+                     jQuery ("#thankyou").css ("display", "inline");
+                     });
+    }
+}
+
+</script>
+<!-- TODO add social ?-->
+<!-- End form bottom -->
