@@ -21,12 +21,11 @@ function set_border_red (item, set)
     item.css ('border', '');
 }
 
-
-function llg_check_form ()
+/* form is the jQuery object for the form */
+function llg_check_form (form)
 {
 var failed = false;
-
-jQuery ('#llg-check-form input').not (".not-required").each (function () {
+form.find('input').not (".not-required").each (function () {
   var item = jQuery (this);
   if (!item.val ()) {
     failed = true;
@@ -58,7 +57,7 @@ jQuery ('#llg-check-form input').not (".not-required").each (function () {
 });
 
 
-jQuery ('#llg-check-form textarea').not (".not-required").each (function () {
+form.find('textarea').not (".not-required").each (function () {
   if (jQuery (this).val () == '') {
     failed = true;
     var item = jQuery (this);
