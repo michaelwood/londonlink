@@ -102,8 +102,8 @@
             </td>
           </tr>
           <th>Travel &amp; Money</th>
-          <tr title="Please add details of travel arrangements if the participant is making their own way to the event or will be arriving at a different time from others">
-            <td><label for="travel_dets" class="not-required">Alternative travel arrangements?
+          <tr title="Please add details of travel arrangements if there are multiple options or the participant is making their own way to the event or will be arriving at a different time from others">
+            <td><label for="travel_dets" class="not-required">Travel arrangements
         <img alt="additional info icon" src="/files/i.png">
               </label>
             </td>
@@ -131,7 +131,8 @@
 
 function validate_form () {
 
-    var failed = llg_check_form ();
+    var form = jQuery("#llg-check-form");
+    var failed = llg_check_form (form);
     var consent_failed = true;
     var consent_item = jQuery('#consent');
 
@@ -149,7 +150,7 @@ function validate_form () {
     }
     else {
         jQuery.post ("/",
-                     jQuery ("#llg-check-form").serialize (),
+                     form.serialize (),
                      function (data) {
                      jQuery ("#booking-area").css ("display", "none");
                      jQuery ("#thankyou").css ("display", "inline");

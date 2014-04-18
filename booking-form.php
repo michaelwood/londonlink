@@ -1,18 +1,19 @@
 <?php
 
-function get_event_data ()
+function get_event_data ($event_name)
 {
   llg_db_connection ();
 
-  $sql = 'SELECT `name`, `booking_person_name`, `event_start_date`, `event_end_date` FROM event ORDER BY id DESC LIMIT 1 ';
+  $sql = 'SELECT `name`, `booking_person_name`, `event_start_date`, `event_end_date` FROM event  WHERE name="'.$event_name.'" ORDER BY id DESC LIMIT 1 ';
 
   $result = mysql_query($sql) or die(mysql_error());
-  $event_data = mysql_fetch_assoc ($result);
+  if (mysql_num_rows ($result) > 0)
+    $event_data = mysql_fetch_assoc ($result);
 
   return $event_data;
 }
 
-function booking_form_get_string ()
+function booking_form_get_string ($event_name)
 {
   $ret = "";
 
@@ -35,7 +36,12 @@ function booking_form_get_string ()
 
   $ret .= $form_top;
 
-  $event_data = get_event_data ();
+  $event_data = get_event_data ($event_name);
+  if (isset ($event_data) == 0) {
+    $ret .= "Err: No event by the name specified";
+    return $ret;
+  }
+
   /* Add event data info */
   $ret .= '
     <ul><li>Booking for: <b>'.$event_data['name'].'</b></li><li>Date '.$event_data['event_start_date'].' to '.$event_data['event_end_date'].'</li><li>Contact person: '.$event_data['booking_person_name'].'</ul>

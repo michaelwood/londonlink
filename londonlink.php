@@ -22,11 +22,17 @@ include_once ('booking-record.php');
 include_once ('booking-form.php');
 include_once ('delete-data.php');
 
+
 $llg_db_connection;
 
 function llg_db_connection ()
 {
-  $llg_db_connection = mysql_connect($host,$user,$pass) or die ('Could not connect: ' . mysql_error ());
+  if ($llg_db_connection)
+    return;
+
+  $llg_config = llg_config ();
+
+  $llg_db_connection = mysql_connect($llg_config['host'],$llg_config['user'],$llg_config['pass']) or die ('Could not connect: ' . mysql_error ());
 
   if (!$llg_db_connection)
   {
@@ -35,12 +41,14 @@ function llg_db_connection ()
     exit ();
   }
 
-  mysql_select_db ($database);
+  mysql_select_db ($llg_config['database']);
 }
 
 function verify_domain ()
 {
-  if ($_SERVER['HTTP_HOST'] == $domain)
+  $llg_config = llg_config ();
+
+  if ($_SERVER['HTTP_HOST'] == $llg_config['domain'])
     return true;
 
   deactivate_plugins ("londonlink/londonlink.php");
@@ -61,17 +69,18 @@ function llg_admin_subpage ()
 function llg_register_admin_page ()
 {
   add_menu_page ('London Link Bookings', 'London Link Events', 'manage_options', 'llg_booking_admin', 'llg_admin_page');
-  add_submenu_page ('llg_booking_admin', 'Bookings Data', 'Bookings Data', 0, 'llg_booking_data', 'llg_admin_subpage');
+//  add_submenu_page ('llg_booking_admin', 'Bookings Data', 'Bookings Data', 0, 'llg_booking_data', 'llg_admin_subpage');
 }
 
 function llg_form_shortcode_handler ($attr, $content, $tag)
 {
-  $form = booking_form_get_string ();
+  $form = booking_form_get_string ($attr['event']);
   return $form;
 }
 
 function llg_process_post ()
 {
+//  print_r ($_POST);
   /* N.b These posts requests come from anywhere */
   switch ($_POST['llg_post_action']) {
 

@@ -25,16 +25,28 @@ function export_data ()
     exit;
   }
 
-  header ('Content-type:text/csv',true);
-  header ('Content-Disposition: attachment; filename="LLG_data_'.date("d-m-y").'.csv"', true);
-
   llg_db_connection ();
 
-  $key = md5 ($_POST['password']);
+  $pass = $_POST['password'];
+  $event_name = $_POST['event_name_selected'];
 
-  /* TODO compare $key with db value before continue */
-  if (!isset ($key))
+  if (!isset ($pass))
     return;
+
+  $res = mysql_query ('SELECT COUNT(password) FROM event WHERE name="'.mysql_real_escape_string ($event_name).'" AND password=PASSWORD("'.mysql_real_escape_string ($pass).'") LIMIT 1') or die (mysql_error ());
+  $db_key = mysql_result ($res, 0);
+
+  if ($db_key != 1) {
+    echo '
+    <script type="text/javascript">
+      alert ("Sorry that\'s not the correct password");
+      location.reload();
+    </script>';
+    exit;
+  }
+
+  header ('Content-type:text/csv',true);
+  header ('Content-Disposition: attachment; filename="LLG-'.$event_name.'-'.date("d-m-y").'.csv"', true);
 
   $col_headers = "";
   $decrypt_fields = "";
@@ -54,12 +66,12 @@ function export_data ()
     if (non_encryped_fields ($field))
       continue;
 
-    $decrypt_fields .= 'AES_DECRYPT ('.$field.',"'.$key.'") as '.$field.$decrypt_identifier.',';
+    $decrypt_fields .= 'AES_DECRYPT ('.$field.', PASSWORD("'.$pass.'")) as '.$field.$decrypt_identifier.',';
   }
 
   $decrypt_fields = substr ($decrypt_fields, 0, -1);
 
-  $sql = 'SELECT *, '.$decrypt_fields.' FROM bookings WHERE event_name="'.mysql_real_escape_string ($_POST['event_name_selected']).'"';
+  $sql = 'SELECT *, '.$decrypt_fields.' FROM bookings WHERE event_name="'.mysql_real_escape_string ($event_name).'"';
 
   $res = mysql_query ($sql) or die (mysql_error ());
 

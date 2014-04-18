@@ -21,7 +21,7 @@ function already_subscribed ($email)
   if (substr_compare ('found in', $ret, 0) == 1)
     return true;
 
-  return false
+  return false;
 }
 
 function add_to_mailing_list ($emails)
@@ -105,6 +105,7 @@ function save_booking ()
     $mail_cc = $booking_person_email;
   }
 
+  $admin_email = 'internet@michaelwood.me.uk';
   $mail_body = 'Hello,'."\n\n";
   $mail_body .= 'We have received your booking for '.$_POST['full_name'].'.';
   $mail_body .= "\n";
