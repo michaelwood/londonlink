@@ -55,9 +55,11 @@ function update_event () {
   $result = mysql_query($sql) or die(mysql_error());
 }
 
+
+/* TODO refactor */
 function bookings_settings_form ($current_values, $i) {
 
-  $res = mysql_query ('SELECT COUNT(id) FROM bookings WHERE event_name="'.$val.'"');
+  $res = mysql_query ('SELECT COUNT(id) FROM bookings WHERE event_name="'.$current_values['name'].'"');
   $event_stat .= mysql_result ($res, 0);
 
   $ret ='
@@ -71,9 +73,17 @@ function bookings_settings_form ($current_values, $i) {
           <tr>
           <td><label for="name">Event name</label></td>
           <td><input type="text" id="name" name="name" value="'.$current_values['name'].'" /></td>
-          </tr>
+          </tr>';
 
-          <tr>
+  if ($i != $ADD_NEW_EVENT) {
+    $ret .='
+      <tr>
+      <td title="Insert into any page to embed online form">Short code</td>
+      <td>[londonlinkbookingform event="'.$current_values['name'].'"]</td>
+      </tr>';
+  }
+
+          $ret .= '<tr>
           <td><label for="event_start_date">Event start date (dd/mm/yyyy)</label></td>
           <td><input type="text" id="event_start_date" name="event_start_date" value="'.$current_values['event_start_date'].'" required/></td>
           </tr>
@@ -111,13 +121,14 @@ function bookings_settings_form ($current_values, $i) {
         </form>
         </span>
     </td>
-
-    <td style="vertical-align: bottom">
-    <span class="bookingdetails" style="display:none" id="actions-'.$i.'">
     <!-- event actions -->
     ';
     if ($i != $ADD_NEW_EVENT) {
       $ret .= '
+    <td style="width: 50px">'.$event_stat.'</td>
+    <td style="vertical-align: bottom">
+    <span class="bookingdetails" style="display:none" id="actions-'.$i.'">
+
       <form method="post" action="?page='.$_GET['page'].'">
       <table class="stats">
         <th>Download current bookings data</th>
@@ -143,7 +154,6 @@ function bookings_settings_form ($current_values, $i) {
       </form>
     </span>
     </td>
-    <td>'.$event_stat.'</td>
     ';
     } else {
       $ret .= '<td />';
@@ -188,10 +198,15 @@ function main_page ()
     </style>
     <h2>London Link Bookings</h2>
     <table class="wp-list-table widefat fixed events">
+    <colgroup>
+      <col style="width: 50%" />
+      <col style="width: 15%" />
+      <col style="width: 35%" />
+    </colgroup>
     <thead>
       <th>Event details</th>
-      <th>Actions</th>
       <th>Number bookings</th>
+      <th>Actions</th>
     </thead>';
 
   $result = mysql_query ('SELECT * FROM event ORDER BY id DESC') or die (mysql_error ());
