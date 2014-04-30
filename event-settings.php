@@ -125,8 +125,7 @@ function bookings_settings_form ($current_values, $i) {
     ';
     if ($i != $ADD_NEW_EVENT) {
       $ret .= '
-    <td style="width: 50px">'.$event_stat.'</td>
-    <td style="vertical-align: bottom">
+    <td style="vertical-align: bottom;">
     <span class="bookingdetails" style="display:none" id="actions-'.$i.'">
 
       <form method="post" action="?page='.$_GET['page'].'">
@@ -154,9 +153,10 @@ function bookings_settings_form ($current_values, $i) {
       </form>
     </span>
     </td>
+    <td style="text-align: center; "><strong>'.$event_stat.'</strong></td>
     ';
     } else {
-      $ret .= '<td />';
+      $ret .= '<td></td><td></td>';
     }
 
     $ret .= '</tr>';
@@ -200,13 +200,13 @@ function main_page ()
     <table class="wp-list-table widefat fixed events">
     <colgroup>
       <col style="width: 50%" />
-      <col style="width: 15%" />
-      <col style="width: 35%" />
+      <col style="width: 45%" />
+      <col style="width: 10%" />
     </colgroup>
     <thead>
       <th>Event details</th>
-      <th>Number bookings</th>
       <th>Actions</th>
+      <th>Bookings</th>
     </thead>';
 
   $result = mysql_query ('SELECT * FROM event ORDER BY id DESC') or die (mysql_error ());
@@ -219,8 +219,8 @@ function main_page ()
     echo $form;
   }
 
-echo '</table>
-<script type="text/javascript">
+  echo '</table>
+    <script type="text/javascript">
 
 function really_delete (i) {
   var deleteForm = jQuery("#"+i+"-form-delete");
@@ -240,108 +240,28 @@ function open_form (id) {
     eventDiv.css ("display", "inline");
     eventActions.css ("display", "inline");
     jQuery (".llg-arrow").eq(id).toggleClass ("open", true);
-  }
-  else {
-    eventDiv.css ("display", "none");
-    eventActions.css ("display", "none");
-    jQuery (".llg-arrow").eq(id).toggleClass ("open", false);
-  }
+}
+else {
+  eventDiv.css ("display", "none");
+  eventActions.css ("display", "none");
+  jQuery (".llg-arrow").eq(id).toggleClass ("open", false);
+}
 
 }
 
 /* I is form instance number */
 function admin_check_form (i) {
   var form = jQuery("#"+i+" #llg-check-form");
-/* TODO this needs to get the right form instance */
+  /* TODO this needs to get the right form instance */
   var failed = llg_check_form (form);
   if (!failed) {
-      form.submit ();
-  } else {
-    alert ("Please fill in all fields");
-  }
+    form.submit ();
+} else {
+  alert ("Please fill in all fields");
+}
 }
 </script>';
 
 }
 
-function sub_page ()
-{
-  llg_db_connection ();
-  $result = mysql_query ('SELECT name FROM event') or die (mysql_error ());
-  if (mysql_num_rows ($result) > 0) {
-    $options = '<select name="event_name_selected" id="select_event_name" >';
-    while ($val = mysql_fetch_assoc ($result)) {
-        $event_stat .='<tr><td>'.$val['name'].'</td><td>';
-        $res = mysql_query ('SELECT COUNT(id) FROM bookings WHERE event_name="'.$val.'"');
-        $event_stat .= mysql_result ($res, 0);
-        $event_stat .= '</td></tr>';
-
-        $options .= '<option value="'.$val['name'].'">'.$val['name'].'</option>';
-      }
-      $options .= '</select>';
-    } else {
-    $options .= '<option value="No current event">No current event</option>';
-  }
-
-  echo '
-    <style>
-    label { margin-left: 3px; }
-    label:after { color: red; content: "*"; }
-    .not-required:after { content: none; }
-    table { border-collapse: collapse; padding: 1px; }
-    table tr:nth-child(even)  {background-color:#ffffff;}
-    th { padding-top: 30px; text-align: left; }
-    input[type=radio] {float: left; }
-    input, textarea, select { width: 260px }
-    </style>
-
-    <h2>Booking Data</h2>
-    <p>Download, Delete and View bookings information</p>
-    <table class="stats">
-    <th>Event</th><th>Num bookings</th>
-    '.$event_stat.'
-
-    <th>Download current bookings data</th>
-
-    <form method="post" action="?page='.$_GET['page'].'">
-
-    <tr>
-      <td><label for="select_event_name">Event: </label></td>
-      <td>'.$options.'</td>
-    </tr>
-
-    <tr>
-      <td><label for="password">Password: </label></td>
-      <td><input type="password" id="password" name="password" /></td>
-    </tr>
-
-    <tr>
-      <td />
-      <td><input type="submit" value="Download" /></td>
-    </tr>
-
-      <input type="hidden" name="llg_post_action" value="download_data" />
-    </form>
-
-    <form id="form_delete" method="post" action="?page='.$_GET['page'].'">
-    <tr>
-     <td><label for="select_event_name">Event: </label></td>
-     <td>'.$options.'</td>
-    </tr>
-
-    <tr>
-    <td />
-    <td><input type="button" value="Delete" onClick=\'really_delete ()\'></td>
-    </tr>
-    <input type="hidden" name="llg_post_action" value="delete_data" />
-    </table>
-    </form>
-    <script type="text/javascript">
-      function really_delete () {
-        var ret = confirm (\'Really delete?!\');
-        if (ret == true) { jQuery (\'#form_delete\').submit (); }
-      }
-    </script>
-    ';
-}
 ?>
