@@ -74,7 +74,11 @@ function llg_register_admin_page ()
 
 function llg_form_shortcode_handler ($attr, $content, $tag)
 {
-  $form = booking_form_get_string ($attr['event']);
+  if ($attr && array_key_exists ('event', $attr))
+    $form = booking_form_get_string ($attr['event']);
+  else
+    $form = booking_form_get_string (null);
+
   return $form;
 }
 

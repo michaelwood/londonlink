@@ -4,7 +4,11 @@ function get_event_data ($event_name)
 {
   llg_db_connection ();
 
-  $sql = 'SELECT `name`, `booking_person_name`, `event_start_date`, `event_end_date` FROM event  WHERE name="'.$event_name.'" ORDER BY id DESC LIMIT 1 ';
+  /* If we don't have an event name set then just get the latest one */
+  if (!isset($event_name))
+    $sql = 'SELECT `name`, `booking_person_name`, `event_start_date`, `event_end_date` FROM event ORDER BY id DESC LIMIT 1 ';
+  else
+    $sql = 'SELECT `name`, `booking_person_name`, `event_start_date`, `event_end_date` FROM event  WHERE name="'.$event_name.'" ORDER BY id DESC LIMIT 1 ';
 
   $result = mysql_query($sql) or die(mysql_error());
   if (mysql_num_rows ($result) > 0)
@@ -38,7 +42,7 @@ function booking_form_get_string ($event_name)
 
   $event_data = get_event_data ($event_name);
   if (isset ($event_data) == 0) {
-    $ret .= "Err: No event by the name specified";
+    $ret .= "No event found E13";
     return $ret;
   }
 
