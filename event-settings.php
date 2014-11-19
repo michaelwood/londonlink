@@ -55,12 +55,39 @@ function update_event () {
   $result = mysql_query($sql) or die(mysql_error());
 }
 
+function toggle_event_status () {
+
+  if (!isset($_POST['event_id']) ||
+      !isset($_POST['event_state']))
+      return;
+
+  if ($_POST['event_state'] == 'Close')
+    $enabled = 0;
+  elseif ($_POST['event_state'] == 'Open')
+    $enabled = 1;
+
+  if (!isset($enabled))
+    return;
+
+  llg_db_connection ();
+
+  $event_id = mysql_real_escape_string ($_POST['event_id']);
+
+  $sql = 'UPDATE `event` SET `enabled`='.$enabled.' WHERE id='.$event_id;
+  $result = mysql_query($sql) or die(mysql_error());
+}
 
 /* TODO refactor */
 function bookings_settings_form ($current_values, $i) {
 
   $res = mysql_query ('SELECT COUNT(id) FROM bookings WHERE event_name="'.$current_values['name'].'"');
   $event_stat .= mysql_result ($res, 0);
+
+  $event_toggle_button = "";
+  if ($current_values['enabled'] == 1)
+    $event_toggle_button = '<input type="submit" name="event_state" value="Close" />';
+  else
+    $event_toggle_button = '<input type="submit" name="event_state" value="Open" />';
 
   $ret ='
     <tr>
@@ -130,6 +157,15 @@ function bookings_settings_form ($current_values, $i) {
 
       <form method="post" action="?page='.$_GET['page'].'">
       <table class="stats">
+      <tr>
+      <td>Set bookings status</td>
+      <td>'.$event_toggle_button.'
+      <input type="hidden" name="llg_post_action" value="toggle_event_status" />
+      <input type="hidden" name="event_id" value="'.$current_values['id'].'" />
+      </form>
+      <form method="post" action="?page='.$_GET['page'].'">
+      </td>
+       </tr>
         <th>Download current bookings data</th>
         <tr>
          <td><label for="password">Password: </label></td>

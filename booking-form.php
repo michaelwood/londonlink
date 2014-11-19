@@ -6,9 +6,9 @@ function get_event_data ($event_name)
 
   /* If we don't have an event name set then just get the latest one */
   if (!isset($event_name))
-    $sql = 'SELECT `name`, `booking_person_name`, `event_start_date`, `event_end_date` FROM event ORDER BY id DESC LIMIT 1 ';
+    $sql = 'SELECT `name`, `booking_person_name`, `event_start_date`, `event_end_date` , `enabled` FROM event ORDER BY id DESC LIMIT 1 ';
   else
-    $sql = 'SELECT `name`, `booking_person_name`, `event_start_date`, `event_end_date` FROM event  WHERE name="'.$event_name.'" ORDER BY id DESC LIMIT 1 ';
+    $sql = 'SELECT `name`, `booking_person_name`, `event_start_date`, `event_end_date`, `enabled` FROM event  WHERE name="'.$event_name.'" ORDER BY id DESC LIMIT 1 ';
 
   $result = mysql_query($sql) or die(mysql_error());
   if (mysql_num_rows ($result) > 0)
@@ -31,6 +31,10 @@ function booking_form_get_string ($event_name)
     $ret = '<p><a href="'.$correct_url.'" title="Switch to SSL version">Please view this page using the secure server</a> Redirecting in 3 seconds..</p><script type="text/javascript">setTimeout("redirect()",3000); function redirect() { location.href = "'.$correct_url.'"; } </script>';
     return $ret;
   }
+
+  $event_data = get_event_data ($event_name);
+  if ($event_data['enabled'] == 0)
+    return '<p>Sorry bookings are now closed. <a href="/contact">Contact for further enquieries</a></p>';
 
   $form_top = file_get_contents ("form-top.html", FILE_USE_INCLUDE_PATH);
   $form_bottom = file_get_contents ("form-bottom.html", FILE_USE_INCLUDE_PATH);

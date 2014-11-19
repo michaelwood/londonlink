@@ -102,10 +102,17 @@ function llg_process_post ()
     if (is_admin ()) {
       update_event ();
     }
+    break;
 
   case 'delete_data':
     if (is_admin ()) {
       delete_data ();
+    }
+    break;
+
+  case 'toggle_event_status':
+    if (is_admin ()) {
+      toggle_event_status();
     }
     break;
   }
