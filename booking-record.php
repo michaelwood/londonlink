@@ -64,7 +64,7 @@ function save_booking ()
 
   foreach ($array as $key => $val)
   {
-    if ($key == 'llg_post_action')
+    if ($key == 'llg_post_action' || $key == 'anti_spam')
       continue;
 
     $keys .= mysql_real_escape_string ($key).',';
@@ -93,7 +93,7 @@ function save_booking ()
   $sql .= " (".$keys.")";
   $sql .= " VALUES (".$values.")";
 
-  $result = mysql_query($sql) or die(mysql_error());
+  $result = mysql_query($sql) or die(http_response_code(500));
 
   $mail_to = $_POST['parent_guardian_email'];
   $subject = 'Booking received for: '.$_POST['event_name'];

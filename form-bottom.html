@@ -57,7 +57,7 @@
       <td><textarea id="medial_info" class="not-required" name="medial_info"></textarea></td>
     </tr>
     <tr>
-      <td><label for="painkillers">Able to take</label></td>
+      <td><label for="painkillers" class="not-required">Able to take</label></td>
       <td>
         <input type="checkbox" id="painkillers" name="painkillers" value="ibuprofen"><label for="painkillers" class="inner-option">Ibuprofen</label><br />
           <input type="checkbox" id="painkillers1" name="painkillers1" value="paracetamol" /><label for="painkillers1" class="inner-option">Paracetamol</label><br />
@@ -90,14 +90,14 @@
     </tr>
         <th>Data consent</th>
     <tr>
-      <td><label for="use_contact_dets_y">Can we use contact details to tell you about future events</label></td>
+      <td><label for="use_contact_dets_y" class="not-required">Can we use contact details to tell you about future events</label></td>
       <td>
         <input type="checkbox" id="use_contact_dets_y" name="use_contact_dets" value="yes"><label for="use_contact_dets_y" class="inner-option">Yes</label><br />
         </td>
       </tr>
       <tr>
         <td>
-          <label for="consent_photo_yes">Can the participant be included in photographs taken that may be used for future publicity</label>
+          <label for="consent_photo_yes" class="not-required">Can the participant be included in photographs taken that may be used for future publicity</label>
           <td>
             <input type="checkbox" id="consent_photo_yes" name="consent_photo" value="yes"><label for="consent_photo_yes" class="inner-option">Yes</label><br />
             </td>
@@ -122,6 +122,10 @@
               <label for="consent">I consider my child / ward to be medically &amp; psychologically fit to participate in this London link group event and I give permission for them to take part in this activity. The participant agrees to adhere to the <a href="//londonlinkgroup.org.uk/about/boundaries/">London Link group boundaries</a>.</label>
             </td>
             <td><input type="checkbox" id="consent" value="yes" name="consent"/><label for="consent">I confirm</label></td>
+          </tr>
+          <tr>
+            <td><label for="anit_spam">Anti-spam complete the following: The founder of Quakerism has the first name: George and surname:</label></td>
+            <td><input type="text" name="anti_spam" id="anti_spam" value="???"></td>
           </tr>
           <tr><td></td><td><input type="button" onClick="validate_form ();" value="Send!"/></td></tr>
           <input type="hidden" value="save_booking" name="llg_post_action" />
@@ -157,8 +161,11 @@ function validate_form () {
                        jQuery ("#spinner").hide ();
                        jQuery ("#booking-area").css ("display", "none");
                        jQuery ("#thankyou").css ("display", "inline");
-                     }
-                    );
+                       }
+        ).fail(function (data) {
+               jQuery ("#spinner").hide ();
+               alert("Sorry error submitting please contact us");
+        });
     }
 }
 
