@@ -118,9 +118,10 @@ function llg_process_post ()
 
 function llg_enqueue_scripts ()
 {
+  $js_url = plugins_url('js', __FILE__);
   wp_enqueue_script(
     'llg-custom-script',
-    '/files/llg-form-checker.js',
+    $js_url . '/llg-form-checker.js',
     array( 'jquery' ),
     false
   );
