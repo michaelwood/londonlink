@@ -51,9 +51,16 @@ function add_to_mailing_list ($emails)
 function save_booking ()
 {
   llg_db_connection ();
+  $config = config ();
 
   $add_to_mailing_list = false;
   $array = $_POST;
+
+  /* Test the anti spam answer */
+  if (strtolower($_POST['anti_spam']) != $config['antispam']){
+    http_response_code(500);
+    exit();
+  }
 
   $sql = 'SELECT booking_person_email, password FROM event WHERE name=\''.mysql_real_escape_string ($_POST['event_name']).'\' LIMIT 1';
 
