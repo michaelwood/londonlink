@@ -41,11 +41,9 @@ function export_data ()
   $db_key = mysql_result ($res, 0);
 
   if ($db_key != 1) {
-    echo '
-    <script type="text/javascript">
-      alert ("Sorry that\'s not the correct password");
-      location.reload();
-    </script>';
+    echo "Sorry that is not the correct password <a href=\"";
+    echo $_SERVER["REQUEST_URI"];
+    echo "\">back</a>";
     exit;
   }
 
