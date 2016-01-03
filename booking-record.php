@@ -1,5 +1,7 @@
 <?php
 
+include_once ('config.php');
+
 function simple_pw_gen ()
 {
   $possibles = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -16,9 +18,13 @@ function simple_pw_gen ()
 
 function already_subscribed ($email)
 {
-  $ret = system ('/usr/sbin/find_member -l llg "'.$email.'"');
+  $mailman_pw = config ()['mailman'];
 
-  if (substr_compare ('found in', $ret, 0) == 1)
+  $url = "http://lists.londonlinkgroup.org.uk/cgi-bin/mailman/admin/llg/members?adminpw=".$mailman_pw."&findmember=".$email;
+
+  $ret = file_get_contents ($url);
+
+  if (strpos ($ret, '1 members total') > 0)
     return true;
 
   return false;
