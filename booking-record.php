@@ -127,7 +127,6 @@ function save_booking ()
     $mail_cc = $booking_person_email;
   }
 
-  $admin_email = 'internet@michaelwood.me.uk';
   $mail_body = 'Hello,'."\n\n";
   $mail_body .= 'We have received your booking for '.$_POST['full_name'].'.';
   $mail_body .= "\n";
@@ -141,7 +140,7 @@ function save_booking ()
 
   $headers = 'From: '.$config['from'].''."\r\n";
   $headers .= 'Cc:'.$mail_cc."\r\n";
-  $headers .= 'bcc: '.$admin_email."\r\n";
+  $headers .= 'bcc: '.$config['admin_email']."\r\n";
   $headers .= 'Reply-To:'.$booking_person_email;
 
   mail ($mail_to, $subject, $mail_body, $headers, '-f '.$config['from']);
