@@ -13,19 +13,25 @@ jQuery (document).ready (function () {
   });
 });
 
+var firstFailed;
 function set_border_red (item, set)
 {
-  if (set)
+  if (set){
     item.css ('border', '1px solid red');
-  else
+    if (!firstFailed) {
+      firstFailed = item;
+    }
+  } else {
     item.css ('border', '');
+  }
 }
 
 /* form is the jQuery object for the form */
 function llg_check_form (form)
 {
-var failed = false;
-form.find('input').not (".not-required").each (function () {
+ var failed = false;
+
+ form.find('input').not (".not-required").each (function () {
   var item = jQuery (this);
   if (!item.val ()) {
     failed = true;
@@ -71,6 +77,10 @@ form.find('textarea').not (".not-required").each (function () {
   }
 });
 
+if (firstFailed) {
+  firstFailed.get(0).scrollIntoView();
+  firstFailed = null;
+}
 
 
 

@@ -1,5 +1,6 @@
 <!-- start form bottom -->
-<p>Please fill in the form below to book onto the event:</p>
+<p>Additional details of the event will have been sent out by email, please <a href="/contact/">contact us</a> if you would like to receive them.<br />
+Please fill in the form below to book onto the event:</p>
   <table>
     <th>Participant information</th>
     <tr>
@@ -105,17 +106,27 @@
           <th>Travel &amp; Money</th>
           <tr title="Please add details of travel arrangements if there are multiple options or the participant is making their own way to the event or will be arriving at a different time from others">
             <td><label for="travel_dets" class="not-required">Travel arrangements
-        <img alt="additional info icon" src="/files/i.png">
+                <img alt="additional info icon" src="/files/i.png">
               </label>
             </td>
             <td><textarea id="travel_dets" class="not-required" name="travel_dets"></textarea></td>
           </tr>
           <tr>
-            <td><label class="inner-option" for="payment_method">Payment method</td>
-              <td><input type="radio" name="payment_method" id="payment_method1" value="cheque_cash" ><label class="inner-option" for="payment_method1">Cheque or cash at event</label><br />
-                <input type="radio" name="payment_method" id="payment_method" value="BACS" /><label class="inner-option" for="payment_method">BACS Transfer with the young person's name as reference</label><br />
-              </td>
-            </tr>
+            <td title="It is London Link Group policy that no one should be prevented from attending an event due to the cost, please let us know if you'd like a busary.">
+              <label for="payment_method">Payment method</label>
+              <img alt="additional info icon" src="/files/i.png">
+            </td>
+            <td>
+              <input type="radio" name="payment_method" id="payment_method1" value="cheque_cash" >
+              <label class="inner-option" for="payment_method1">Cheque or cash at event</label>
+              <br />
+              <input type="radio" name="payment_method" id="payment_method" value="BACS" />
+              <label class="inner-option" for="payment_method">BACS Transfer with the young person's name as reference</label>
+              <br />
+              <input type="radio" name="payment_method" id="payment_method2" value="Bursary" />
+              <label class="inner-option" for="payment_method2">Bursary</label>
+            </td>
+          </tr>
           <th>Consent</th>
           <tr>
             <td>
