@@ -68,6 +68,15 @@ function save_booking ()
   $details = mysql_fetch_assoc ($res);
 
   $pw = $details['password'];
+  $salt = file_get_contents($config['saltfile'], FILE_USE_INCLUDE_PATH);
+
+  if ($salt === false){
+    http_response_code(500);
+    exit();
+  }
+
+  $pw .= $salt;
+
   $booking_person_email = $details['booking_person_email'];
 
   $values ="";

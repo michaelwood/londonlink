@@ -1,5 +1,7 @@
 <?php
 
+include_once('config.php');
+
 function non_encryped_fields ($field)
 {
   /* Skip these fields they aren't encrypted */
@@ -27,6 +29,8 @@ function export_data ()
 
   llg_db_connection ();
 
+  $config = config();
+
   $pass = $_POST['password'];
   $event_name = $_POST['event_name_selected'];
 
@@ -51,6 +55,13 @@ function export_data ()
   $col_headers = "";
   $decrypt_fields = "";
   $csv = "";
+
+  $salt = file_get_contents($config['saltfile'], FILE_USE_INCLUDE_PATH);
+  if ($salt === false){
+    http_response_code(500);
+    exit();
+  }
+
   /* value appended to colname of decrypted field */
   $decrypt_identifier = "_decrypt";
   $decrypt_identifier_len = strlen ($decrypt_identifier);
@@ -66,7 +77,7 @@ function export_data ()
     if (non_encryped_fields ($field))
       continue;
 
-    $decrypt_fields .= 'AES_DECRYPT ('.$field.', PASSWORD("'.$pass.'")) as '.$field.$decrypt_identifier.',';
+    $decrypt_fields .= 'AES_DECRYPT ('.$field.', CONCAT(PASSWORD("'.$pass.'"), "'.$salt.'")) as '.$field.$decrypt_identifier.',';
   }
 
   $decrypt_fields = substr ($decrypt_fields, 0, -1);
