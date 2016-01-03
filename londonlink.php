@@ -13,8 +13,6 @@ Author URI: http://michaelwood.me.uk
  * $sql = "CREATE TABLE `llg_bookings`.`event` (`id` INT NOT NULL AUTO_INCREMENT, `name` TEXT NOT NULL, `booking_person_name` TEXT NOT NULL, `booking_person_email` TEXT NOT NULL, `event_start_date` TEXT NOT NULL, `event_end_date` TEXT NOT NULL, PRIMARY KEY (`id`)) ENGINE = MyISAM;";
  */
 
-
-/* TODO merge some of these into logical groups */
 include_once ('config.php');
 include_once ('export-data.php');
 include_once ('event-settings.php');
@@ -30,9 +28,9 @@ function llg_db_connection ()
   if ($llg_db_connection)
     return;
 
-  $llg_config = llg_config ();
+  $config = config ();
 
-  $llg_db_connection = mysql_connect($llg_config['host'],$llg_config['user'],$llg_config['pass']) or die ('Could not connect: ' . mysql_error ());
+  $llg_db_connection = mysql_connect($config['host'],$config['user'],$config['pass']) or die ('Could not connect: ' . mysql_error ());
 
   if (!$llg_db_connection)
   {
@@ -41,14 +39,14 @@ function llg_db_connection ()
     exit ();
   }
 
-  mysql_select_db ($llg_config['database']);
+  mysql_select_db ($config['database']);
 }
 
 function verify_domain ()
 {
-  $llg_config = llg_config ();
+  $config = config ();
 
-  if ($_SERVER['HTTP_HOST'] == $llg_config['domain'])
+  if ($_SERVER['HTTP_HOST'] == $config['domain'])
     return true;
 
   deactivate_plugins ("londonlink/londonlink.php");

@@ -137,14 +137,14 @@ function save_booking ()
   $mail_body .= "\n\n";
   $mail_body .= '---';
   $mail_body .= "\n";
-  $mail_body .= 'http://londonlinkgroup.org.uk';
+  $mail_body .= 'http://'.$config['domain'].'';
 
-  $headers = 'From: noreply@londonlinkgroup.org.uk'."\r\n";
+  $headers = 'From: '.$config['from'].''."\r\n";
   $headers .= 'Cc:'.$mail_cc."\r\n";
   $headers .= 'bcc: '.$admin_email."\r\n";
   $headers .= 'Reply-To:'.$booking_person_email;
 
-  mail ($mail_to, $subject, $mail_body, $headers);
+  mail ($mail_to, $subject, $mail_body, $headers, '-f '.$config['from']);
   if ($add_to_mailing_list) {
     $emails_to_add = array ($mail_to, $participant_email);
     add_to_mailing_list ($emails_to_add);
