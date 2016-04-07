@@ -47,12 +47,9 @@ function export_data ()
     exit;
   }
 
-  header ('Content-type:text/csv',true);
-  header ('Content-Disposition: attachment; filename="LLG-'.$event_name.'-'.date("d-m-y").'.csv"', true);
 
   $col_headers = "";
   $decrypt_fields = "";
-  $csv = "";
 
   $salt = file_get_contents($config['saltfile'], FILE_USE_INCLUDE_PATH);
   if ($salt === false){
@@ -85,6 +82,29 @@ function export_data ()
   $res = mysql_query ($sql) or die (mysql_error ());
 
 
+  switch ($_POST['output_type']){
+    case 'csv':
+      output_as_csv($res, $event_name, $col_headers);
+      break;
+    case 'pdf':
+      output_as_pdf($res, $event_name);
+      break;
+    default:
+      echo "unknown output type";
+      exit;
+  }
+}
+
+function output_as_csv($res, $event_name, $col_headers){
+
+  header ('Content-type:text/csv',true);
+  header ('Content-Disposition: attachment; filename="LLG-'.$event_name.'-'.date("d-m-y").'.csv"', true);
+
+  $csv = "";
+  /* value appended to colname of decrypted field */
+  $decrypt_identifier = "_decrypt";
+  $decrypt_identifier_len = strlen ($decrypt_identifier);
+ 
   while ($row_arr = mysql_fetch_assoc ($res)) {
     /* skip the encryped restuls i.e. medical_info ,
      * in favour of medical_info_decrypt version
@@ -111,5 +131,71 @@ function export_data ()
   echo "\n";
   echo $csv;
   exit;
+}
+
+/* format the text a bit nicer */
+function write_kv($pdf, $key, $value){
+  $decrypt_identifier = "_decrypt";
+  $key = str_replace($decrypt_identifier, "", $key);
+  $key = str_replace("_", " " ,$key);
+  $pdf->Write(5, $key.": ".$value);
+  $pdf->SetY($pdf->GetY() + 5);
+}
+
+function output_as_pdf($res, $event_name){
+
+  require('fpdf.php');
+
+
+  class PDF extends FPDF {
+    function Footer(){
+      // Position at 1.5 cm from bottom
+      $this->SetY(-15);
+      // Arial italic 8
+      $this->SetFont('Arial','I',8);
+      // Page number
+      $this->Cell(0,10,'LLG Bookings CONFIDENTIAL - Destroy after use - Page '.$this->PageNo().'/{nb}',0,0,'C');
+    }
+  }
+
+  $pdf = new PDF('P', 'mm', 'A4');
+  $pdf->AliasNbPages();
+  $pdf->SetTitle($event_name);
+  $pdf->SetAutoPageBreak(True, 20);
+  $pdf->SetLineWidth(2);
+  $pdf->SetDrawColor(255,255,255);
+  $pdf->AddPage();
+
+  $pdf->SetFont('Arial','',15);
+  $pdf->Write(5, "London Link Bookings: ".$event_name);
+
+  $pdf->SetY($pdf->GetY() + 10);
+
+  $pdf->Line(0, 100, 10, 100);
+  $pdf->SetFont('Arial','',12);
+
+  /* value appended to colname of decrypted field */
+  $decrypt_identifier = "_decrypt";
+  $decrypt_identifier_len = strlen ($decrypt_identifier);
+
+  while ($row_arr = mysql_fetch_assoc ($res)) {
+    /* skip the encryped restuls i.e. medical_info ,
+     * in favour of medical_info_decrypt version
+     */
+    foreach ($row_arr as $key => $value) {
+      if (non_encryped_fields ($key) == true) {
+        write_kv($pdf, $key, $value);
+        continue;
+      }
+
+      if (substr ($key, -$decrypt_identifier_len) == $decrypt_identifier) {
+        write_kv($pdf, $key, $value);
+      }
+    }
+
+    $pdf->SetY($pdf->GetY() + 10);
+  }
+
+  $pdf->Output();
 }
 ?>
