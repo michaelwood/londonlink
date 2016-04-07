@@ -96,6 +96,8 @@ function bookings_settings_form ($current_values, $i) {
         <a href="#" style="padding: 3px" onClick="open_form (\''.$i.'\')" >'.$current_values['name'].'</a>
         <span class="bookingdetails" style="display:none" id="'.$i.'">
         <form id="llg-check-form" method="post" action="?page='.$_GET['page'].'">
+
+        <h3>Edit event</h3>
         <table>
           <tr>
           <td><label for="name">Event name</label></td>
@@ -133,7 +135,7 @@ function bookings_settings_form ($current_values, $i) {
           if (!isset ($current_values['password'])) {
               $ret .= '
           <tr>
-          <td><label for="password">Bookings data password*<br /><b>DO NOT LOSE THIS PASSWORD</b></label></td>
+          <td><label for="password">Bookings data password<br /><b>DO NOT LOSE THIS PASSWORD</b><small> The data will be encrypted with this password there is no recovery once data has been encryped.</small></label></td>
           <td><input type="text" id="password" name="password" /></td>
           </tr>';
           }
@@ -155,6 +157,7 @@ function bookings_settings_form ($current_values, $i) {
     <td style="vertical-align: bottom;">
     <span class="bookingdetails" style="display:none" id="actions-'.$i.'">
 
+      <h3>Bookings data</h3>
       <form method="post" action="?page='.$_GET['page'].'">
       <table class="stats">
       <tr>
@@ -166,21 +169,25 @@ function bookings_settings_form ($current_values, $i) {
       <form method="post" action="?page='.$_GET['page'].'">
       </td>
        </tr>
-        <th>Download current bookings data</th>
+        <th><strong>Download current bookings data</strong></th>
         <tr>
          <td><label for="password">Password: </label></td>
          <td><input type="password" id="password" name="password" /></td>
         </tr>
         <tr>
           <td />
-          <td><input type="submit" value="Download" /></td>
+          <td>
+            <input type="radio" name="output_type" value="csv" checked> Speadsheet<br/>
+            <input type="radio" name="output_type" value="pdf"> PDF <br />
+            <input type="submit" value="Download" />
+          </td>
         </tr>
         <input type="hidden" name="event_name_selected" value="'.$current_values['name'].'" />
         <input type="hidden" name="llg_post_action" value="download_data" />
       </form>
       <form id="'.$i.'-form-delete" method="post" action="?page='.$_GET['page'].'">
       <input type="hidden" id="'.$i.'-event-name" name="event_name_selected" value="'.$current_values['name'].'" />
-      <input type="hidden" name="llg_post_action" value="delete_data" />
+      <input type="hidden" name="llg_post_action"  value="delete_data" />
       <tr>
         <td>Delete event and data</td>
         <td><input type="button" value="Delete" onClick=\'really_delete ('.$i.')\'></td>
