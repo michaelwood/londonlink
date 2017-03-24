@@ -50,9 +50,16 @@ function booking_form_get_string ($event_name)
     return $ret;
   }
 
+  if ($event_data['cost'] == 0){
+    $cost_string = 'FREE';
+    $ret .= '<style>#payment-selection { display: None }</style>';
+  } else {
+    $cost_string = $event_data['cost'];
+  }
+
   /* Add event data info */
   $ret .= '
-    <ul><li>Booking for: <b>'.$event_data['name'].'</b></li><li>Date '.$event_data['event_start_date'].' to '.$event_data['event_end_date'].'</li><li>Contact person: '.$event_data['booking_person_name'].'</ul>
+    <ul><li>Booking for: <b>'.$event_data['name'].'</b></li><li>Date '.$event_data['event_start_date'].' to '.$event_data['event_end_date'].'</li><li>Contact person: '.$event_data['booking_person_name'].'<li>Cost: £'.$cost_string.'</ul>
     <span id="booking-area">
     <form id="llg-check-form"  method="POST">
     <input type="hidden" name="event_name" value="'.$event_data['name'].'" />';

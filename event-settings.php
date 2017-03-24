@@ -123,6 +123,11 @@ function bookings_settings_form ($current_values, $i) {
           </tr>
 
           <tr>
+          <td><label for="cost">Cost (enter 0 for free)</label></td>
+          <td><input type="text" id="cost" name="cost" value="'.$current_values['cost'].'" required/></td>
+          </tr>
+
+          <tr>
           <td><label for="booking_person_name">Bookings person name</label></td>
           <td><input type="text" id="booking_person_name" name="booking_person_name" value="'.$current_values['booking_person_name'].'" required/></td>
           </tr>
