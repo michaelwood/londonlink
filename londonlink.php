@@ -19,6 +19,7 @@ include_once ('event-settings.php');
 include_once ('booking-record.php');
 include_once ('booking-form.php');
 include_once ('delete-data.php');
+include_once ('widget.php');
 
 
 $llg_db_connection;
@@ -80,6 +81,12 @@ function llg_form_shortcode_handler ($attr, $content, $tag)
   return $form;
 }
 
+
+function llg_next_events_shortcode_handler($attr, $content, $tag){
+  $widget = new NextEventWidget();
+  $widget->widget();
+}
+
 function llg_process_post ()
 {
 //  print_r ($_POST);
@@ -127,6 +134,11 @@ function llg_enqueue_scripts ()
   );
 }
 
+function llg_register_widgets ()
+{
+  register_widget ('NextEventWidget');
+}
+
 function llg_admin_init ()
 {
   verify_domain ();
@@ -134,9 +146,14 @@ function llg_admin_init ()
 
 /* Adds [londonlinkbookingform] */
 add_shortcode ('londonlinkbookingform', 'llg_form_shortcode_handler');
+add_shortcode ('londonlinknextevents', 'llg_next_events_shortcode_handler');
+
 add_action ('admin_menu', 'llg_register_admin_page');
 add_action ('wp_enqueue_scripts', 'llg_enqueue_scripts');
 add_action ('init', 'llg_process_post');
 add_action ('admin_enqueue_scripts', 'llg_enqueue_scripts');
 add_action ('admin_init', 'llg_admin_init');
+add_action ('widgets_init', 'llg_register_widgets');
+
+
 ?>
