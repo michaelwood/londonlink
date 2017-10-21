@@ -77,7 +77,7 @@ function export_data ()
 
   $decrypt_fields = substr ($decrypt_fields, 0, -1);
 
-  $sql = 'SELECT *, '.$decrypt_fields.' FROM bookings WHERE event_name="'.mysql_real_escape_string ($event_name).'"';
+  $sql = 'SELECT *, '.$decrypt_fields.' FROM bookings WHERE event_name="'.mysql_real_escape_string ($event_name).'" ORDER BY full_name_decrypt ';
 
   $res = mysql_query ($sql) or die (mysql_error ());
 
