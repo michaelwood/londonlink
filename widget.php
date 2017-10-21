@@ -10,7 +10,7 @@ class NextEventWidget extends WP_Widget {
   function widget( $args, $instance ) {
     llg_db_connection ();
 
-     $sql = 'SELECT `name`, `event_start_date` FROM `event` WHERE `enabled`=1';
+     $sql = "SELECT `name`, `event_start_date`, STR_TO_DATE(event_start_date, '%d/%m/%y') as 'realDate'  FROM `event` WHERE `enabled`=1 ORDER BY `realDate` ASC";
      $result = mysql_query($sql) or die(mysql_error());
 
      if (mysql_num_rows ($result) == 0){
