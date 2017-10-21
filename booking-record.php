@@ -130,7 +130,7 @@ function save_booking ()
   $mail_body = 'Hello,'."\n\n";
   $mail_body .= 'We have received your booking for '.$_POST['full_name'].'.';
   $mail_body .= "\n";
-  $mail_body .= 'If there any any problems please don\'t hesitate to contact the bookings person for this event (CC d)';
+  $mail_body .= 'If there any problems please don\'t hesitate to contact the bookings person for this event (CC d)';
   $mail_body .= "\n\n";
   $mail_body .= 'Thank you';
   $mail_body .= "\n\n";
