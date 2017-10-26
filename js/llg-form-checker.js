@@ -31,10 +31,11 @@ function llg_check_form (form)
 {
  var failed = false;
 
- form.find('input').not (".not-required").each (function () {
+ form.find('input[type=text]').not (".not-required").each (function () {
   var item = jQuery (this);
   if (!item.val ()) {
     failed = true;
+    console.log("Failed on "+item.prop("name"));
 
     set_border_red (item, true);
 
@@ -50,6 +51,7 @@ function llg_check_form (form)
     if (!jQuery ("input[name=\""+group_name+"\"]:checked").val ()) {
       failed = true;
       var parent_item = item.parent ();
+      console.log("Failed on "+item.prop("name"));
 
       set_border_red (parent_item, true);
 
