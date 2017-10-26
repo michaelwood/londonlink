@@ -198,7 +198,8 @@ function bookings_settings_form ($current_values, $i) {
           </td>
           </tr>
           </table>
-        <input type="hidden" name="llg_post_action" value="update_event" />
+          <input type="hidden" name="llg_post_action" value="update_event" />
+
         </form>
         </span>
     </td>
@@ -213,7 +214,7 @@ function bookings_settings_form ($current_values, $i) {
       <form method="post" action="?page='.$_GET['page'].'">
       <table class="stats">
       <tr>
-      <td>Set bookings status</td>
+      <td>Set bookings status (currently '.$event_status.')</td>
       <td>'.$event_toggle_button.'
       <input type="hidden" name="llg_post_action" value="toggle_event_status" />
       <input type="hidden" name="event_id" value="'.$current_values['id'].'" />
