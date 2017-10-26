@@ -7,11 +7,12 @@ class NextEventWidget extends WP_Widget {
     parent::__construct( false, 'London link next event' );
   }
 
-  function widget( $args, $instance ) {
+  //function can take $args, $instance
+  function widget() {
     llg_db_connection ();
 
-     $sql = "SELECT `name`, `event_start_date`, STR_TO_DATE(event_start_date, '%d/%m/%y') as 'realDate'  FROM `event` WHERE `enabled`=1 ORDER BY `realDate` ASC";
-     $result = mysql_query($sql) or die(mysql_error());
+     $sql = "SELECT `name`, `wp_page_id`, `event_start_date`, STR_TO_DATE(event_start_date, '%d/%m/%y') as 'realDate'  FROM `event` WHERE `enabled`=1 ORDER BY `realDate` ASC";
+    $result = mysql_query($sql) or die(mysql_error());
 
      if (mysql_num_rows ($result) == 0){
        echo('<!-- no events currently -->');
@@ -25,7 +26,8 @@ class NextEventWidget extends WP_Widget {
            <ul>');
 
      while($event_data = mysql_fetch_assoc ($result)){
-       echo('<li><a href="/?s='.$event_data["name"].'">');
+       $page_link = get_permalink($event_data['wp_page_id']);
+       echo('<li><a href="'.$page_link.'">');
        echo($event_data['event_start_date'].' - '.$event_data['name']);
        echo('</a></li>');
      }
