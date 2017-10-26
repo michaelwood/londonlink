@@ -44,7 +44,6 @@ function booking_form_get_string ($event_name)
 
   $ret .= $form_top;
 
-  $event_data = get_event_data ($event_name);
   if (isset ($event_data) == 0) {
     $ret .= "No event found E13";
     return $ret;
