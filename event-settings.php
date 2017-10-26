@@ -14,7 +14,7 @@ function update_event () {
 
   $sql  = "INSERT INTO event ";
   foreach ($_POST as $key => $value) {
-    if ($key == "llg_post_action")
+    if ($key == "llg_post_action" || $key == 'wp_page_id')
       continue;
 
     $keys .= $key;
@@ -52,8 +52,37 @@ function update_event () {
   $sql .= ") ON DUPLICATE KEY UPDATE ";
   $sql .= $update_sql;
 
+//  echo $sql;
+
   $result = mysql_query($sql) or die(mysql_error());
+
+  /* Update the form's own page */
+  $event_name = mysql_real_escape_string($_POST['name']);
+
+  $res = mysql_query ('SELECT wp_page_id FROM event WHERE name="'.$event_name.'"');
+  $wp_page_id = mysql_result ($res, 0);
+
+  $my_post = array(
+    'post_title'    => $_POST['name'],
+    'post_content'  => '[londonlinkbookingform event="'.$_POST['name'].'"]',
+    'post_status'   => 'publish',
+    'post_author'   => 1,
+    'post_parent' => 498,
+    'post_type'     => 'page',
+    'post_name' => $_POST['name'],
+    'ID' => $wp_page_id,
+  );
+
+  /* Insert the post into the database */
+  $new_wp_post_id = wp_insert_post( $my_post );
+
+  /* Blindly update this */
+  $sql = 'UPDATE `event` SET `wp_page_id`='.$new_wp_post_id.' WHERE name="'.$event_name.'"';
+
+  mysql_query($sql) or die(mysql_error());
 }
+
+/* Everyting below here needs refactoring */
 
 function toggle_event_status () {
 
@@ -89,6 +118,18 @@ function bookings_settings_form ($current_values, $i) {
   else
     $event_toggle_button = '<input type="submit" name="event_state" value="Open" />';
 
+  if ($current_values['enabled']){
+    $event_status = 'Open';
+  } else {
+    $event_status = 'Closed';
+  }
+
+  if ($current_values['wp_page_id']){
+    $page_link = get_permalink($current_values['wp_page_id']);
+  } else {
+    $page_link = 'page not yet created';
+  }
+
   $ret ='
     <tr>
       <td style="vertical-align: bottom">
@@ -109,7 +150,13 @@ function bookings_settings_form ($current_values, $i) {
       <tr>
       <td title="Insert into any page to embed online form">Short code</td>
       <td>[londonlinkbookingform event="'.$current_values['name'].'"]</td>
+      </tr>
+
+      <tr>
+      <td title="Link to booking form">Link:</td>
+      <td><a href="'.$page_link.'">'.$page_link.'</a></td>
       </tr>';
+
   }
 
           $ret .= '<tr>
