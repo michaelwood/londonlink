@@ -13,6 +13,9 @@ Author URI: http://michaelwood.me.uk
  * $sql = "CREATE TABLE `llg_bookings`.`event` (`id` INT NOT NULL AUTO_INCREMENT, `name` TEXT NOT NULL, `booking_person_name` TEXT NOT NULL, `booking_person_email` TEXT NOT NULL, `event_start_date` TEXT NOT NULL, `event_end_date` TEXT NOT NULL, PRIMARY KEY (`id`)) ENGINE = MyISAM;";
  */
 
+include_once ('mustache/mustache.php');
+
+
 include_once ('config.php');
 include_once ('export-data.php');
 include_once ('event-settings.php');
@@ -62,13 +65,13 @@ function llg_admin_page ()
 
 function llg_admin_subpage ()
 {
-    sub_page ();
+  add_event_page();
 }
 
 function llg_register_admin_page ()
 {
   add_menu_page ('London Link Bookings', 'London Link Events', 'manage_options', 'llg_booking_admin', 'llg_admin_page');
-//  add_submenu_page ('llg_booking_admin', 'Bookings Data', 'Bookings Data', 0, 'llg_booking_data', 'llg_admin_subpage');
+  add_submenu_page ('llg_booking_admin', 'Add an event', 'Add an event', 'manage_options', 'llg_new_event', 'llg_admin_subpage');
 }
 
 function llg_form_shortcode_handler ($attr, $content, $tag)
@@ -126,12 +129,17 @@ function llg_process_post ()
 function llg_enqueue_scripts ()
 {
   $js_url = plugins_url('js', __FILE__);
-  wp_enqueue_script(
-    'llg-custom-script',
-    $js_url . '/llg-form-checker.js',
+  wp_enqueue_script('llg-custom-script', $js_url . '/llg-form-checker.js',
     array( 'jquery' ),
     false
   );
+
+}
+
+function llg_enqueue_admin_scripts(){
+  wp_register_script('llg-admin-scripts', plugins_url('/js/llg-admin-page.js', __FILE__), array('jquery'));
+
+  wp_enqueue_script('llg-admin-scripts');
 }
 
 function llg_register_widgets ()
@@ -152,6 +160,7 @@ add_action ('admin_menu', 'llg_register_admin_page');
 add_action ('wp_enqueue_scripts', 'llg_enqueue_scripts');
 add_action ('init', 'llg_process_post');
 add_action ('admin_enqueue_scripts', 'llg_enqueue_scripts');
+add_action ('admin_enqueue_scripts', 'llg_enqueue_admin_scripts');
 add_action ('admin_init', 'llg_admin_init');
 add_action ('widgets_init', 'llg_register_widgets');
 

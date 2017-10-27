@@ -1,0 +1,157 @@
+<!-- event-settings.mustache -->
+
+<style scoped>
+  .event-details {
+    display: none;
+    background-color: rgb(252, 252, 252);
+  }
+
+  .llg-arrow {
+    float: left;
+    height: 15px;
+    width: 15px;
+    border-color: #ccc;
+    border-radius: 10px;
+    background-image: transparent url(./images/arrows.png) no-repeat 6px 7px;
+    background-position: 0 -108px;
+    background-size: 15px 123px;
+    background-image: url(./images/arrows.png), linear-gradient(to top, #dfdfdf, #fff);
+  }
+
+  .llg-arrow.open {
+    background-position: 0 0px;
+  }
+</style>
+
+<div class="wrap">
+  <h2>Events <a href="?page=llg_new_event" class="add-new-h2">Add new</a></h2>
+
+  <table class="wp-list-table widefat fixed events">
+    <colgroup>
+      <col style="width: 50%" />
+      <col style="width: 45%" />
+      <col style="width: 10%" />
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Event details</th>
+        <th>Actions</th>
+        <th>Bookings</th>
+      </tr>
+    </thead>
+
+    {{#events}}
+    <tr>
+      <td style="vertical-align: bottom">
+        <span class="llg-arrow"></span>
+        <a href="#" class="toggle-event-details" style="padding: 3px" data-for="llg-form-{{id}}" >{{name}}</a>
+        <div class="event-details llg-form-{{id}}" style="display:none" id="llg-form-{{id}}">
+          <h3>Event details</h3>
+          <form id="llg-update-event-form-{{id}}" method="POST" action="?page={{this_page}}">
+            <table>
+              <tr>
+                <td><label for="{{id}}-name">Event name</label></td>
+                <td>{{name}}
+                </td>
+              </tr>
+              <tr>
+                <td title="Insert into any page to embed online form">Short code
+                </td>
+
+                <td>[londonlinkbookingform event="{{name}}"]</td>
+              </tr>
+              <tr>
+                <td title="Link to booking form">Link:</td>
+                <td><a href="{{page_link}}">{{page_link}}</a></td>
+              </tr>
+              <tr>
+                <td>
+                  <label for="{{id}}-event_start_date">Event start date (dd/mm/yyyy)</label></td>
+                <td><input type="text" id="{{id}}-event_start_date" name="event_start_date" value="{{event_start_date}}" required/></td>
+              </tr>
+              <tr>
+                <td><label for="{{id}}-event_end_date">Event end date (dd/mm/yyyy)</label></td>
+                <td><input type="text" id="{{id}}-event_end_date" name="event_end_date" value="{{event_end_date}}" required/></td>
+              </tr>
+              <tr>
+                <td><label for="{{id}}-cost">Cost (enter 0 for free)</label></td>
+                <td><input type="text" id="{{id}}-cost" name="cost" value="{{cost}}" required/></td>
+              </tr>
+              <tr>
+                <td><label for="{{id}}-booking_person_name">Bookings person name</label></td>
+                <td><input type="text" id="{{id}}-booking_person_name" name="booking_person_name" value="{{booking_person_name}}" required/></td>
+              </tr>
+              <tr>
+                <td><label for="{{id}}-booking_person_email">Bookings person email</label></td>
+                <td><input type="text" id="{{id}}-booking_person_email" name="booking_person_email" value="{{booking_person_email}}" required/></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <input type="button" class="button button-primary update-event-btn" value="Update" data-event-id="{{id}}" />
+                </td>
+              </tr>
+              <input value="{{name}}" type="hidden" name="name" />
+              <input type="hidden" name="llg_post_action" value="update_event" />
+            </table>
+          </form>
+        </div>
+      </td>
+      <td style="vertical-align: middle;">
+        <div class="event-details llg-form-{{id}}">
+          <h3>Bookings data</h3>
+          <form method="POST" action="?page={{this_page}}">
+            <table>
+              <tr>
+                <td>Change bookings status (currently {{#enabled}}open{{/enabled}}{{^enabled}}closed{{/enabled}})
+                </td>
+                <td>
+                  <input type="submit" class="button button-primary" name="event_state" value="{{#enabled}}Close{{/enabled}}{{^enabled}}Open{{/enabled}}" />
+                  <input type="hidden" name="llg_post_action" value="toggle_event_status" />
+                  <input type="hidden" name="event_id" value="{{id}}" />
+                </td>
+              </tr>
+            </table>
+          </form>
+          <br />
+          <form method="post" action="?page={{this_page}}">
+            <table>
+              <tr>
+                <th><strong>Download current bookings data</strong></th>
+              </tr>
+              <tr>
+                <td><label for="password">Password: </label></td>
+                <td><input type="password" id="password" name="password" /></td>
+              </tr>
+              <tr>
+                <td />
+                  <td>
+                    <input type="radio" name="output_type" value="csv" checked> Speadsheet<br/>
+                    <input type="radio" name="output_type" value="pdf"> PDF <br />
+                    <br />
+                    <input type="submit" class="button button-primary" value="Download" />
+                  </td>
+                </tr>
+                <input type="hidden" name="event_name_selected" value="{{name}}" />
+                <input type="hidden" name="llg_post_action" value="download_data" />
+              </table>
+            </form>
+
+            <form id="{{id}}-form-delete" method="post" action="?page={{this_page}}">
+              <input type="hidden" id="{{id}}-event-name" name="event_name_selected" value="{{name}}" />
+              <input type="hidden" name="llg_post_action"  value="delete_data" />
+              <table>
+                <tr>
+                  <td>Delete event and data</td>
+                  <td><input type="button" class="button button-primary delete-event" value="Delete" data-event-id="{{id}}"></td>
+                </tr>
+              </table>
+            </form>
+          </td>
+          <td style="text-align: center; "><strong>{{num_bookings}}</strong></td>
+        </tr>
+        {{/events}}
+      </table>
+    </div>
+  </div>
+<!-- / event-settings.mustache -->

@@ -1,8 +1,8 @@
-
-
   London Link Group bookings plugin
 
   Allows online booking for events
 
   Author: Michael Wood
   Licence: GPLv2 
+
+Word of warning: This is not a generic Wordpress plugin, do not expect it to work in other contexts other than for London Link Group.
