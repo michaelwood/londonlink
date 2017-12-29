@@ -1,40 +1,51 @@
 <div class="wrap">
-  <h2>Add new London Link Group event</h2>
+  <h2>Add new {{org_name}} event</h2>
   <div class="form-wrap" style="width: 50%">
-    <form id="llg-new-event-form" method="post" action="?page=llg_booking_admin">
+    <form class="llg-form" id="llg-new-event-form" method="post" action="?page=llg_booking_admin">
       <div class="form-field">
         <label for="new-name">Event name</label>
-        <input type="text" id="new-name" name="name" placeholder="Event name" />
+        <input type="text" id="new-name" name="name" placeholder="Event name" required/>
       </div>
       <div class="form-field">
         <label for="new-event_start_date">Event start date</label>
         <input type="text" id="new-event_start_date" name="event_start_date" value="" placeholder="dd/mm/yyyy" required/>
         <p>Please use the format dd/mm/yyyy</p>
-      </div>         
+      </div>
       <div class="form-field">
         <label for="new-event_end_date">Event end date</label>
         <input type="text" placeholder="dd/mm/yyyy" id="new-event_end_date" name="event_end_date" value="" required/>
         <p>Please use the format dd/mm/yyyy</p>
-      </div>        
+      </div>
       <div class="form-field">
         <label for="new-cost">Cost</label>
         <input type="text" id="new-cost" name="cost" placeholder="0" required/>
         <p>Enter 0 for Free</p>
-      </div>        
+      </div>
       <div class="form-field">
         <label for="new-booking_person_name">Bookings person name</label>
         <input type="text" placeholder="e.g. Bob" id="new-booking_person_name" name="booking_person_name" value="" required/>
-      </div>        
+      </div>
       <div class="form-field">
         <label for="new-booking_person_email">Bookings person email</label>
         <input type="text" id="new-booking_person_email" name="booking_person_email" placeholder="e.g. bob@bob.example.com" required />
         <p>This person will receive the notifications for bookings</p>
-      </div>        
+      </div>
       <div class="form-field">
         <label for="password">Bookings data password<br /><b>DO NOT LOSE THIS PASSWORD</b></label>
-        <input type="text" id="password" name="password" />
+        <input type="text" id="password" name="password" required/>
         <p>The data will be encrypted with this password there is no recovery once data has been encrypted.</p>
-      </div>        
+      </div>
+      <div class="form-field">
+        <label for="page-parent">Parent page<br /></label>
+        <select id="parent-page" name="parent_page" />
+          <option value="">-</option>
+          {{#pages}}
+          <option value="{{ID}}">{{post_title}}</option>
+          {{/pages}}
+        </select>
+        <p>If this new form is to be a subpage of an existing one</p>
+      </div>
+
       <input type="button" class="button button-primary" value="Add event" id="add-new-event" />
       <input type="hidden" name="llg_post_action" value="update_event" />
     </form>

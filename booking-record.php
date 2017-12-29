@@ -2,124 +2,76 @@
 
 include_once ('config.php');
 
-function simple_pw_gen ()
-{
-  $possibles = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-  $string = "";
-
-  for ($i=0; $i < 7; $i++) {
-    if ($i == rand (0,7))
-      $string .= rand (0,9);
-    else
-      $string .= $possibles{rand (0, 51)};
+function exit_with_error($err_msg, $details){
+  if (config()['debug'] == true){
+    $err_msg .= ' '.$details;
   }
-  return $string;
+
+  header("X-llg-booking:" . $err_msg);
+  http_response_code(500);
+  exit();
 }
 
-function already_subscribed ($email)
-{
-  $mailman_pw = config ()['mailman'];
-
-  $url = "http://lists.londonlinkgroup.org.uk/cgi-bin/mailman/admin/llg/members?adminpw=".$mailman_pw."&findmember=".$email;
-
-  $ret = file_get_contents ($url);
-
-  if (strpos ($ret, '1 members total') > 0)
-    return true;
-
-  return false;
-}
-
-function add_to_mailing_list ($emails)
-{
-  $url = 'http://lists.londonlinkgroup.org.uk/cgi-bin/mailman/subscribe/llg?';
-
-  foreach ($emails as $email) {
-    if (already_subscribed ($email) == true)
-      continue;
-
-    $pw = simple_pw_gen ();
-
-    $data = 'fullname=&email='.$email.'&pw='.$pw.'&pw-conf='.$pw.'&language=en&email-button=Subscribe';
-    /* Send http get request to mailing list server to subscribe
-     * persons to receive email updates.
-     */
-    file_get_contents ($url.$data, false);
-  }
-}
-
-function save_booking ()
-{
-  llg_db_connection ();
+/* save_booking:
+ * Requires POST _wpnonce, event_id, form_data
+ */
+function save_booking(){
   $config = config ();
 
-  $add_to_mailing_list = false;
-  $array = $_POST;
-
-  /* Test the anti spam answer */
-  if (strtolower($_POST['anti_spam']) != $config['antispam']){
-    http_response_code(500);
-    exit();
+  if (!isset($_POST['_wpnonce']) ||
+    !isset($_POST['event_id']) ||
+    !isset($_POST['form_data'])){
+    exit_with_error("E99");
   }
 
-  $sql = 'SELECT booking_person_email, password FROM event WHERE name=\''.mysql_real_escape_string ($_POST['event_name']).'\' LIMIT 1';
+  /* CSRF */
+  if (!wp_verify_nonce($_POST['_wpnonce'])){
+    exit_with_error("E100");
+  }
 
-  $res = mysql_query ($sql) or die ("Problem");
-  $details = mysql_fetch_assoc ($res);
+  $form_data = json_decode(stripslashes($_POST['form_data']), true);
 
-  $pw = $details['password'];
+  if (!$form_data){
+    exit_with_error("E101");
+  }
+
+
+  /* Test the anti spam answer */
+  if (strtolower($form_data['anti_spam']) != strtolower($config['antispam'])){
+    exit_with_error("E102");
+  }
+
+  $db = llg_db_connection();
+
+  $event_id = mysqli_real_escape_string($db, $_POST['event_id']);
+
+  $select_booking_det = 'SELECT `name`, `booking_person_email`, `password` FROM `events` WHERE id='.$event_id.' LIMIT 1';
+
+  $res = mysqli_query($db, $select_booking_det) or exit_with_error("E105", mysqli_error($db) . $select_booking_det);
+  $event_details = mysqli_fetch_assoc($res);
+
+  $pw = $event_details['password'];
   $salt = file_get_contents($config['saltfile'], FILE_USE_INCLUDE_PATH);
 
   if ($salt === false){
-    http_response_code(500);
-    exit();
+    exit_with_error("E103");
   }
 
   $pw .= $salt;
 
-  $booking_person_email = $details['booking_person_email'];
+  $json_string_booking = json_encode($form_data);
+  $json_string_booking = mysqli_real_escape_string($db, $json_string_booking);
 
-  $values ="";
-  $keys ="";
+  $insert_booking = 'INSERT INTO bookings (`event_id`, `data`) VALUES('.$event_id.',
+    AES_ENCRYPT("'.$json_string_booking.'", "'.$pw.'"))';
 
-  /* AES_ENCRYPT ('value', 'key') */
+  mysqli_query($db, $insert_booking) or exit_with_error("E104");
 
-  foreach ($array as $key => $val)
-  {
-    if ($key == 'llg_post_action' || $key == 'anti_spam')
-      continue;
+  $booking_person_email = $event_details['booking_person_email'];
 
-    $keys .= mysql_real_escape_string ($key).',';
-
-    /* Don't encrypt event name */
-    if ($key == 'event_name') {
-      $values .= '\''.mysql_real_escape_string ($val).'\',';
-      continue;
-    }
-
-    if ($key == 'use_contact_dets' && $value == 'yes')
-      $add_to_mailing_list = true;
-
-    $values .= 'AES_ENCRYPT (\'';
-    $values .= mysql_real_escape_string ($val);
-    $values .= '\',\'';
-    $values .= $pw;
-    $values .= '\'),';
-  }
-
-  /* remove the trailing comma */
-  $values = substr ($values, 0, -1);
-  $keys = substr ($keys, 0, -1);
-
-  $sql  = "INSERT INTO bookings";
-  $sql .= " (".$keys.")";
-  $sql .= " VALUES (".$values.")";
-
-  $result = mysql_query($sql) or die(http_response_code(500));
-
-  $mail_to = $_POST['parent_guardian_email'];
-  $subject = 'Booking received for: '.$_POST['event_name'];
-  $participant_email = $_POST['participant_email'];
+  $mail_to = filter_var($_POST['parent_guardian_email'], FILTER_SANITIZE_EMAIL);
+  $subject = 'Booking received for: '.$event_details['name'];
+  $participant_email = filter_var($_POST['participant_email'], FILTER_SANITIZE_EMAIL);
 
   if (isset ($participant_email)) {
     $mail_cc = $participant_email.','.$booking_person_email;
@@ -128,7 +80,7 @@ function save_booking ()
   }
 
   $mail_body = 'Hello,'."\n\n";
-  $mail_body .= 'We have received your booking for '.$_POST['full_name'].'.';
+  $mail_body .= 'We have received your booking for '.filter_var($_POST['full_name'], FILTER_SANITIZE_STRING).'.';
   $mail_body .= "\n";
   $mail_body .= 'If there any problems please don\'t hesitate to contact the bookings person for this event (CC d)';
   $mail_body .= "\n\n";
@@ -141,6 +93,7 @@ function save_booking ()
   $headers = 'From: '.$config['from'].''."\r\n";
   $headers .= 'Cc:'.$mail_cc."\r\n";
   $headers .= 'bcc: '.$config['admin_email']."\r\n";
+  $headers .= "Content-type: text/plain; charset=iso-8859-1\r\n";
   $headers .= 'Reply-To:'.$booking_person_email;
 
   mail ($mail_to, $subject, $mail_body, $headers, '-f '.$config['from']);

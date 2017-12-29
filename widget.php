@@ -8,7 +8,7 @@ class NextEventWidget extends WP_Widget {
   }
 
   //function can take $args, $instance
-  function widget() {
+  function widget($args, $instance) {
     llg_db_connection ();
 
      $sql = "SELECT `name`, `wp_page_id`, `event_start_date`, STR_TO_DATE(event_start_date, '%d/%m/%y') as 'realDate'  FROM `event` WHERE `enabled`=1 ORDER BY `realDate` ASC";

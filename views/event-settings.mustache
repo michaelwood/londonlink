@@ -47,7 +47,7 @@
         <a href="#" class="toggle-event-details" style="padding: 3px" data-for="llg-form-{{id}}" >{{name}}</a>
         <div class="event-details llg-form-{{id}}" style="display:none" id="llg-form-{{id}}">
           <h3>Event details</h3>
-          <form id="llg-update-event-form-{{id}}" method="POST" action="?page={{this_page}}">
+          <form class="llg-form" id="llg-update-event-form-{{id}}" method="POST" action="?page={{this_page}}">
             <table>
               <tr>
                 <td><label for="{{id}}-name">Event name</label></td>
@@ -126,13 +126,15 @@
               <tr>
                 <td />
                   <td>
-                    <input type="radio" name="output_type" value="csv" checked> Speadsheet<br/>
-                    <input type="radio" name="output_type" value="pdf"> PDF <br />
+                    <input type="radio" name="output_type" value="csv" checked> CSV Spreadsheet<br/>
+                    <input type="radio" name="output_type" value="pdf"> PDF document <br />
+                    <input type="radio" name="output_type" value="html"> Quick view <br />
                     <br />
                     <input type="submit" class="button button-primary" value="Download" />
                   </td>
                 </tr>
-                <input type="hidden" name="event_name_selected" value="{{name}}" />
+                <input type="hidden" name="event_id" value="{{id}}" />
+                <input type="hidden" name="event_name" value="{{name}}" />
                 <input type="hidden" name="llg_post_action" value="download_data" />
               </table>
             </form>

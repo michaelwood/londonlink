@@ -1,69 +1,59 @@
 <?php
 
-function get_event_data ($event_name)
+function get_event_data($event_name)
 {
-  llg_db_connection ();
+  $db = llg_db_connection();
 
   /* If we don't have an event name set then just get the latest one */
   if (!isset($event_name))
-    $sql = 'SELECT `name`, `booking_person_name`, `event_start_date`, `event_end_date` , `enabled`, `cost` FROM event ORDER BY id DESC LIMIT 1 ';
+    $sql = 'SELECT `id`, `name`, `booking_person_name`, `event_start_date`, `event_end_date` , `enabled`, `cost` FROM events ORDER BY id DESC LIMIT 1 ';
   else
-    $sql = 'SELECT `name`, `booking_person_name`, `event_start_date`, `event_end_date`, `enabled`, `cost` FROM event  WHERE name="'.$event_name.'" ORDER BY id DESC LIMIT 1 ';
+    $sql = 'SELECT `id`, `name`, `booking_person_name`, `event_start_date`, `event_end_date`, `enabled`, `cost` FROM events  WHERE name="'.$event_name.'" ORDER BY id DESC LIMIT 1 ';
 
-  $result = mysql_query($sql) or die(mysql_error());
-  if (mysql_num_rows ($result) > 0)
-    $event_data = mysql_fetch_assoc ($result);
+  $result = mysqli_query($db, $sql) or die(mysqli_error($db));
+  if (mysqli_num_rows ($result) > 0)
+    $event_data = mysqli_fetch_assoc ($result);
 
   return $event_data;
 }
 
-function booking_form_get_string ($event_name)
-{
-  $ret = "";
+function booking_form_get_string ($event_name){
+  $m = new Mustache_Engine(array(
+    'loader' => new Mustache_Loader_FilesystemLoader(dirname(__FILE__) . '/views'),
+  ));
 
   /* If we're not already using SSL don't allow continue, redirect instead */
-  if (empty ($_SERVER['HTTPS']))
+  if (empty($_SERVER['HTTPS']))
   {
     $correct_url = 'https://';
     $correct_url .= $_SERVER['HTTP_HOST'];
     $correct_url .= $_SERVER['REQUEST_URI'];
 
-    $ret = '<p><a href="'.$correct_url.'" title="Switch to SSL version">Please view this page using the secure server</a> Redirecting in 3 seconds..</p><script type="text/javascript">setTimeout("redirect()",3000); function redirect() { location.href = "'.$correct_url.'"; } </script>';
-    return $ret;
+    return '<p>&#x1f512; <a href="'.$correct_url.'"><span id="https-redirect-notice">Redirecting to secure server</a></p>';
   }
 
-  $event_data = get_event_data ($event_name);
+  $event_data = get_event_data($event_name);
   if ($event_data['enabled'] == 0)
     return '<p>Sorry bookings are now closed. <a href="/contact">Contact for further enquieries</a></p>';
-
-  $form_top = file_get_contents ("form-top.html", FILE_USE_INCLUDE_PATH);
-  $form_bottom = file_get_contents ("form-bottom.html", FILE_USE_INCLUDE_PATH);
-
-  if (!$form_top || !$form_bottom)
-    return '<p>Something went wrong :/ E12</p>';
-
-  $ret .= $form_top;
 
   if (isset ($event_data) == 0) {
     $ret .= "No event found E13";
     return $ret;
   }
 
-  if ($event_data['cost'] == 0){
-    $cost_string = 'FREE';
-    $ret .= '<style>#payment-selection { display: None }</style>';
-  } else {
-    $cost_string = $event_data['cost'];
-  }
+  $context = array(
+    'event' => $event_data,
+    'img_url' => plugins_url('/img/', __FILE__),
+  );
 
-  /* Add event data info */
-  $ret .= '
-    <ul><li>Booking for: <b>'.$event_data['name'].'</b></li><li>Date '.$event_data['event_start_date'].' to '.$event_data['event_end_date'].'</li><li>Contact person: '.$event_data['booking_person_name'].'<li>Cost: £'.$cost_string.'</ul>
-    <span id="booking-area">
-    <form id="llg-check-form"  method="POST">
-    <input type="hidden" name="event_name" value="'.$event_data['name'].'" />';
+  $ret = '
+  <script>
+    var llgCSRF = "'.wp_create_nonce().'";
+    var llgEventId = '.$event_data['id'].';
+  </script>';
 
-  $ret .= $form_bottom;
+  $ret .= $m->render("test-booking-form", $context);
+
   return $ret;
 }
 

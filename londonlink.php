@@ -1,17 +1,13 @@
 <?php
 /*
-Plugin Name: London Link bookings
+Plugin Name: QEventBookings
 Plugin URI: http://michaelwood.me.uk
 Description: Plugin to manage simple booking forms
 Author: Michael Wood
-Version: 1.0
+Version: 2.0
 Author URI: http://michaelwood.me.uk
 */
 
-
-/* The event table
- * $sql = "CREATE TABLE `llg_bookings`.`event` (`id` INT NOT NULL AUTO_INCREMENT, `name` TEXT NOT NULL, `booking_person_name` TEXT NOT NULL, `booking_person_email` TEXT NOT NULL, `event_start_date` TEXT NOT NULL, `event_end_date` TEXT NOT NULL, PRIMARY KEY (`id`)) ENGINE = MyISAM;";
- */
 
 include_once ('mustache/mustache.php');
 
@@ -24,30 +20,26 @@ include_once ('booking-form.php');
 include_once ('delete-data.php');
 include_once ('widget.php');
 
-
-$llg_db_connection;
-
-function llg_db_connection ()
-{
-  if ($llg_db_connection)
-    return;
-
+function llg_db_connection (){
   $config = config ();
 
-  $llg_db_connection = mysql_connect($config['host'],$config['user'],$config['pass']) or die ('Could not connect: ' . mysql_error ());
+  $llg_db_connection = new mysqli($config['host'],
+    $config['user'],
+    $config['pass'],
+    $config['database']);
 
-  if (!$llg_db_connection)
-  {
-    echo mysql_error ();
-    echo 'bye';
+  if ($llg_db_connection->connect_errno) {
+    echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
     exit ();
   }
-
-  mysql_select_db ($config['database']);
+  return $llg_db_connection;
 }
 
-function verify_domain ()
-{
+function llg_db_query($query){
+  return mysqli_query(llg_db_connection(), $query);
+}
+
+function verify_domain() {
   $config = config ();
 
   if ($_SERVER['HTTP_HOST'] == $config['domain'])
@@ -58,24 +50,20 @@ function verify_domain ()
   exit();
 }
 
-function llg_admin_page ()
-{
+function llg_admin_page(){
     main_page ();
 }
 
-function llg_admin_subpage ()
-{
+function llg_admin_subpage(){
   add_event_page();
 }
 
-function llg_register_admin_page ()
-{
-  add_menu_page ('London Link Bookings', 'London Link Events', 'manage_options', 'llg_booking_admin', 'llg_admin_page');
+function llg_register_admin_page(){
+  add_menu_page ('Qevent Bookings', 'Events', 'manage_options', 'llg_booking_admin', 'llg_admin_page');
   add_submenu_page ('llg_booking_admin', 'Add an event', 'Add an event', 'manage_options', 'llg_new_event', 'llg_admin_subpage');
 }
 
-function llg_form_shortcode_handler ($attr, $content, $tag)
-{
+function llg_form_shortcode_handler ($attr, $content, $tag){
   if ($attr && array_key_exists ('event', $attr))
     $form = booking_form_get_string ($attr['event']);
   else
@@ -126,29 +114,24 @@ function llg_process_post ()
   }
 }
 
-function llg_enqueue_scripts ()
-{
-  $js_url = plugins_url('js', __FILE__);
-  wp_enqueue_script('llg-custom-script', $js_url . '/llg-form-checker.js',
-    array( 'jquery' ),
-    false
-  );
+function llg_enqueue_scripts(){
+  wp_register_script('llg-custom-script', plugins_url('/js/llg-form-utils.js', __FILE__), array('jquery'));
+  wp_enqueue_script('llg-custom-script');
 
+  wp_register_style('llg-custom-style', plugins_url('/css/llg-style.css', __FILE__));
+  wp_enqueue_style('llg-custom-style');
 }
 
 function llg_enqueue_admin_scripts(){
   wp_register_script('llg-admin-scripts', plugins_url('/js/llg-admin-page.js', __FILE__), array('jquery'));
-
   wp_enqueue_script('llg-admin-scripts');
 }
 
-function llg_register_widgets ()
-{
+function llg_register_widgets(){
   register_widget ('NextEventWidget');
 }
 
-function llg_admin_init ()
-{
+function llg_admin_init(){
   verify_domain ();
 }
 
@@ -156,13 +139,12 @@ function llg_admin_init ()
 add_shortcode ('londonlinkbookingform', 'llg_form_shortcode_handler');
 add_shortcode ('londonlinknextevents', 'llg_next_events_shortcode_handler');
 
-add_action ('admin_menu', 'llg_register_admin_page');
-add_action ('wp_enqueue_scripts', 'llg_enqueue_scripts');
-add_action ('init', 'llg_process_post');
-add_action ('admin_enqueue_scripts', 'llg_enqueue_scripts');
-add_action ('admin_enqueue_scripts', 'llg_enqueue_admin_scripts');
-add_action ('admin_init', 'llg_admin_init');
-add_action ('widgets_init', 'llg_register_widgets');
-
+add_action('admin_menu', 'llg_register_admin_page');
+add_action('wp_enqueue_scripts', 'llg_enqueue_scripts');
+add_action('init', 'llg_process_post');
+add_action('admin_enqueue_scripts', 'llg_enqueue_scripts');
+add_action('admin_enqueue_scripts', 'llg_enqueue_admin_scripts');
+add_action('admin_init', 'llg_admin_init');
+add_action('widgets_init', 'llg_register_widgets');
 
 ?>

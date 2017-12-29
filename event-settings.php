@@ -5,29 +5,28 @@ $m = new Mustache_Engine(array(
 ));
 
 function update_event () {
-
-  llg_db_connection ();
-
+  $db = llg_db_connection();
   /* Check if the event already exists and update it
    * otherwise insert a new one.
    * Generates a query like:
    * INSERT INTO event (...) VALUES(...) ON DUPLICATE KEY UPDATE key=value
    */
 
-  $sql  = "INSERT INTO event ";
+  $sql  = "INSERT INTO events ";
   foreach ($_POST as $key => $value) {
-    if ($key == "llg_post_action" || $key == 'wp_page_id')
+    if ($key == "llg_post_action" || $key == 'wp_page_id' ||
+      $key == 'parent_page')
       continue;
 
     $keys .= $key;
     $keys .= ',';
-    $esc_val = mysql_real_escape_string ($value);
+    $esc_val = mysqli_real_escape_string($db, $value);
 
     /* Don't allow password updating, the password may have
      * been used to encrypt data already.
      */
     if ($key != 'password') {
-      $update_sql .= mysql_real_escape_string ($key);
+      $update_sql .= mysqli_real_escape_string($db, $key);
       $update_sql .= '=\'';
       $update_sql .= $esc_val;
       $update_sql .= '\',';
@@ -55,21 +54,20 @@ function update_event () {
   $sql .= $update_sql;
 
 //  echo $sql;
-
-  $result = mysql_query($sql) or die(mysql_error());
+  $result = mysqli_query($db, $sql) or die("E2422: ".mysqli_error($db));
 
   /* Update the form's own page */
-  $event_name = mysql_real_escape_string($_POST['name']);
+  $event_name = mysqli_real_escape_string($db, $_POST['name']);
 
-  $res = mysql_query ('SELECT wp_page_id FROM event WHERE name="'.$event_name.'"');
-  $wp_page_id = mysql_result ($res, 0);
+  $res = mysqli_query($db, 'SELECT wp_page_id FROM events WHERE name="'.$event_name.'"');
+  $wp_page_id = mysqli_fetch_array($res)[0];
 
   $new_page = array(
     'post_title'    => $_POST['name'],
     'post_content'  => '[londonlinkbookingform event="'.$_POST['name'].'"]',
     'post_status'   => 'publish',
     'post_author'   => 1,
-    'post_parent' => 498,
+    'post_parent' => $_POST['parent_page'],
     'post_type'     => 'page',
     'post_name' => $_POST['name'],
     'ID' => $wp_page_id,
@@ -79,9 +77,9 @@ function update_event () {
   $new_wp_post_id = wp_insert_post($new_page);
 
   /* Blindly update this */
-  $sql = 'UPDATE `event` SET `wp_page_id`='.$new_wp_post_id.' WHERE name="'.$event_name.'"';
+  $sql = 'UPDATE `events` SET `wp_page_id`='.$new_wp_post_id.' WHERE name="'.$event_name.'"';
 
-  mysql_query($sql) or die(mysql_error());
+  mysqli_query($db, $sql) or die("E9432: ".mysqli_error($db));
 }
 
 function toggle_event_status(){
@@ -98,34 +96,36 @@ function toggle_event_status(){
   if (!isset($enabled))
     return;
 
-  llg_db_connection ();
+  $db = llg_db_connection ();
 
-  $event_id = mysql_real_escape_string ($_POST['event_id']);
+  $event_id = mysqli_real_escape_string($db, $_POST['event_id']);
 
-  $sql = 'UPDATE `event` SET `enabled`='.$enabled.' WHERE id='.$event_id;
-  $result = mysql_query($sql) or die(mysql_error());
+  $sql = 'UPDATE `events` SET `enabled`='.$enabled.' WHERE id='.$event_id;
+  $result = mysqli_query($db, $sql) or die(mysqli_error());
 }
 
 
-function main_page ()
+function main_page()
 {
-  llg_db_connection ();
+  $db = llg_db_connection();
 
-  $result = mysql_query ('SELECT * FROM event ORDER BY id DESC') or die (mysql_error ());
+  $result = mysqli_query($db, 'SELECT * FROM events ORDER BY id DESC') or die (mysqli_error ());
 
   $i = 0;
 
   $events = array();
-  
-  while ($current_values = mysql_fetch_assoc ($result)) {
+
+  while ($current_values = mysqli_fetch_assoc($result)) {
     $current_values['page_link'] = get_permalink($current_values['wp_page_id']);
 
-    $bookings = mysql_query('SELECT COUNT(id) FROM bookings WHERE event_name="'.$current_values['name'].'"');
+    $bookings_res = mysqli_query($db, 'SELECT COUNT(id) FROM bookings WHERE event_id='.$current_values['id'].'');
 
-    $current_values['num_bookings'] = mysql_result($bookings, 0);
+    //echo $bookings_res;
+    $current_values['num_bookings'] = mysqli_fetch_array($bookings_res)[0];
 
     $events[] = $current_values;
   }
+
 
   $context = array(
     'events' => $events,
@@ -140,6 +140,8 @@ function add_event_page(){
   /* Nothing to see here yet */
   global $m;
   $context = array(
+    'pages' => get_pages(),
+    'org_name' => config()['org_name'],
   );
 
   echo $m->render("add-event", $context);
