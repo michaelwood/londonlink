@@ -69,18 +69,28 @@ function save_booking(){
 
   $booking_person_email = $event_details['booking_person_email'];
 
-  $mail_to = filter_var($_POST['parent_guardian_email'], FILTER_SANITIZE_EMAIL);
-  $subject = 'Booking received for: '.$event_details['name'];
-  $participant_email = filter_var($_POST['participant_email'], FILTER_SANITIZE_EMAIL);
 
-  if (isset ($participant_email)) {
+  $subject = 'Booking received for: '.$event_details['name'];
+
+  if (isset($form_data['primary_email'])) {
+    $mail_to = filter_var($form_data['primary_email'], FILTER_SANITIZE_EMAIL);
+  }
+
+  if (isset($form_data['participant_email'])) {
+    $participant_email = filter_var($form_data['participant_email'], FILTER_SANITIZE_EMAIL);
     $mail_cc = $participant_email.','.$booking_person_email;
   } else {
     $mail_cc = $booking_person_email;
   }
 
+  if (isset($form_data['full_name'])){
+    $participant_name = 'for '.filter_var($form_data['full_name'], FILTER_SANITIZE_STRING);
+  } else {
+    $participant_name = '';
+  }
+
   $mail_body = 'Hello,'."\n\n";
-  $mail_body .= 'We have received your booking for '.filter_var($_POST['full_name'], FILTER_SANITIZE_STRING).'.';
+  $mail_body .= 'We have received your booking '.$participant_name.'';
   $mail_body .= "\n";
   $mail_body .= 'If there any problems please don\'t hesitate to contact the bookings person for this event (CC d)';
   $mail_body .= "\n\n";
@@ -92,15 +102,12 @@ function save_booking(){
 
   $headers = 'From: '.$config['from'].''."\r\n";
   $headers .= 'Cc:'.$mail_cc."\r\n";
+  $headers .= 'To:'.$mail_to."\r\n";
   $headers .= 'bcc: '.$config['admin_email']."\r\n";
   $headers .= "Content-type: text/plain; charset=iso-8859-1\r\n";
   $headers .= 'Reply-To:'.$booking_person_email;
 
   mail ($mail_to, $subject, $mail_body, $headers, '-f '.$config['from']);
-  if ($add_to_mailing_list) {
-    $emails_to_add = array ($mail_to, $participant_email);
-    add_to_mailing_list ($emails_to_add);
-  }
 }
 
 ?>
