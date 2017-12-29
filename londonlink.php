@@ -45,7 +45,7 @@ function verify_domain() {
   if ($_SERVER['HTTP_HOST'] == $config['domain'])
     return true;
 
-  deactivate_plugins ("londonlink/londonlink.php");
+  deactivate_plugins( plugin_basename( __FILE__ ) );
   wp_redirect(admin_url('plugins.php?deactivate=true&plugin_status=all&paged=1'));
   exit();
 }
