@@ -145,23 +145,3 @@ function serialiseForm(formToSerialise){
   console.log(JSON.stringify(formObj));
   return formObj;
 }
-
-/* shallow serialize we don't want nested elements */
-function serializeArrayToObject(arr){
-  var obj = {};
-
-  for (var i in arr){
-    var key = arr[i].name;
-    var j = 0;
-
-    while (obj[key] != undefined){
-      j++;
-      key = key+'-'+j.toString();
-    }
-
-    obj[key] = arr[i].value;
-
-  }
-  console.log(JSON.stringify(obj));
-  return obj;
-}
