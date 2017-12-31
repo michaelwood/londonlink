@@ -38,7 +38,7 @@ jq(document).ready(function(){
 function redirect_to_https(){
   var i = 3;
   var countdown = setInterval(function(){
-    jq("#https-redirect-notice").text("Redirecting to secure server..."+i);
+    jq("#llg-https-redirect-notice").text("Redirecting to secure server..."+i);
     if (i===1){
       clearInterval(countdown);
       window.location.protocol = "https:";
@@ -55,17 +55,16 @@ function submit_form(formJson){
   postData += '&form_data='+formJson;
 
   console.log("About to submit: "+formJson)
-  jq("#spinner").show();
+  jq("#llg-spinner").show();
   jq.post("./",
     postData,
     function(retData) {
-      console.log(retData);
-      jq("#spinner").hide ();
-      jq("#booking-area").hide();
-      jq("#thankyou").show();
+      jq("#llg-spinner").hide();
+      jq("#llg-booking-area").hide();
+      jq("#llg-thank-you").show();
     }
   ).fail(function(retData) {
-    jq ("#spinner").hide ();
+    jq("#llg-spinner").hide();
     console.warn("Server responded with: "+retData.getResponseHeader("x-llg-booking"));
     alert("Sorry error submitting, did you provide the correct anti-spam answer? If so please Contact Us");
   });

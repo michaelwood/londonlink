@@ -1,13 +1,13 @@
-.thankyou { display: none; }
-#spinner {  display: none; }
+#llg-thank-you { display: none; }
+#llg-spinner {  display: none; }
 
 label { margin-left: 3px; }
 
 .llg-form *:required {
- border-left-color:  red !important; 
+ border-left: 1px solid red !important;
 }
 
-.options-container-required {
+.llg-options-container-required {
  border-left: 1px solid red;
 }
 
@@ -15,6 +15,6 @@ label { margin-left: 3px; }
   position: relative !important;
 }
 
-.llg-form .missing-value {
-  border-color: red;
+.llg-form .llg-missing-value {
+  outline: 1px solid red;
 }
