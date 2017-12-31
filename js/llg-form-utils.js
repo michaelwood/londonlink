@@ -83,7 +83,12 @@ function validate_form(formToValidate){
 
 			if (formToValidate.find("[name="+inputName+"]:checked").length == 0){
 
-				jq(this).addClass("missing-value");
+        var reqCon = jq(this).parents(".llg-options-container-required");
+          reqCon.addClass("missing-value");
+          reqCon.one('click', function(){
+            reqCon.removeClass("missing-value");
+          });
+
         missing_values.push(jq(this));
 			}
 
