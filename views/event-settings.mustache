@@ -48,6 +48,8 @@
         <div class="event-details llg-form-{{id}}" style="display:none" id="llg-form-{{id}}">
           <h3>Event details</h3>
           <form class="llg-form" id="llg-update-event-form-{{id}}" method="POST" action="?page={{this_page}}">
+            {{& csrf}}
+
             <table>
               <tr>
                 <td><label for="{{id}}-name">Event name</label></td>
@@ -102,6 +104,7 @@
         <div class="event-details llg-form-{{id}}">
           <h3>Bookings data</h3>
           <form method="POST" action="?page={{this_page}}">
+            {{& csrf}}
             <table>
               <tr>
                 <td>Change bookings status (currently {{#enabled}}open{{/enabled}}{{^enabled}}closed{{/enabled}})
@@ -116,6 +119,7 @@
           </form>
           <br />
           <form method="post" action="?page={{this_page}}">
+            {{& csrf}}
             <table>
               <tr>
                 <th><strong>Download current bookings data</strong></th>
@@ -141,6 +145,7 @@
             </form>
 
             <form id="{{id}}-form-delete" method="post" action="?page={{this_page}}">
+            {{& csrf}}
               <input type="hidden" id="{{id}}-event-name" name="event_name_selected" value="{{name}}" />
               <input type="hidden" name="llg_post_action"  value="delete_data" />
               <table>

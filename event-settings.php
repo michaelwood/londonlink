@@ -151,6 +151,7 @@ function main_page()
 
   $context = array(
     'events' => $events,
+    'csrf' => wp_nonce_field("llg_event_dash", "llg_event_dash_csrf"),
     'this_page' => $_GET['page'],
   );
 
@@ -163,6 +164,7 @@ function add_event_page(){
   global $m;
   $context = array(
     'pages' => get_pages(),
+    'csrf' => wp_nonce_field("llg_event_dash", "llg_event_dash_csrf"),
     'org_name' => config()['org_name'],
   );
 

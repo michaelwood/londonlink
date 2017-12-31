@@ -78,9 +78,13 @@ function llg_next_events_shortcode_handler($attr, $content, $tag){
   $widget->widget();
 }
 
+function llg_can_do_this(){
+  return (check_admin_referer('llg_event_dash', 'llg_event_dash_csrf') &&
+    current_user_can('publish_posts'));
+}
+
 function llg_process_post ()
 {
-//  print_r ($_POST);
   /* N.b These posts requests come from anywhere */
   switch ($_POST['llg_post_action']) {
 
@@ -89,25 +93,31 @@ function llg_process_post ()
     break;
 
   case 'download_data':
-    if (is_admin()) {
+    if (llg_can_do_this()) {
       export_data ();
     }
     break;
 
   case 'update_event':
-    if (is_admin ()) {
+    if (llg_can_do_this()) {
       update_event ();
     }
     break;
 
+  case 'insert_event':
+    if (llg_can_do_this()) {
+      insert_event();
+    }
+    break;
+
   case 'delete_data':
-    if (is_admin ()) {
+    if (llg_can_do_this()) {
       delete_data ();
     }
     break;
 
   case 'toggle_event_status':
-    if (is_admin ()) {
+    if (llg_can_do_this()) {
       toggle_event_status();
     }
     break;
