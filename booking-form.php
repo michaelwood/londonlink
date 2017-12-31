@@ -1,14 +1,13 @@
 <?php
 
-function get_event_data($event_name)
-{
+function get_event_data($event_name){
   $db = llg_db_connection();
 
   /* If we don't have an event name set then just get the latest one */
   if (!isset($event_name))
-    $sql = 'SELECT `id`, `name`, `booking_person_name`, `event_start_date`, `event_end_date` , `enabled`, `cost` FROM events ORDER BY id DESC LIMIT 1 ';
+    $sql = 'SELECT * FROM events ORDER BY id DESC LIMIT 1 ';
   else
-    $sql = 'SELECT `id`, `name`, `booking_person_name`, `event_start_date`, `event_end_date`, `enabled`, `cost` FROM events  WHERE name="'.$event_name.'" ORDER BY id DESC LIMIT 1 ';
+    $sql = 'SELECT * FROM events  WHERE name="'.$event_name.'" ORDER BY id DESC LIMIT 1 ';
 
   $result = mysqli_query($db, $sql) or die(mysqli_error($db));
   if (mysqli_num_rows ($result) > 0)
@@ -52,7 +51,13 @@ function booking_form_get_string ($event_name){
     var llgEventId = '.$event_data['id'].';
   </script>';
 
-  $ret .= $m->render("test-booking-form", $context);
+  $form_template = 'default-form';
+
+  if ($event_data['form_template']){
+    $form_template = $event_data['form_template'];
+  }
+
+  $ret .= $m->render($form_template, $context);
 
   return $ret;
 }

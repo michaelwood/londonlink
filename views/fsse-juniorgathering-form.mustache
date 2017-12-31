@@ -1,0 +1,89 @@
+<h2>Application for {{event.name}}</h2>
+<span id="llg-thank-you"> 
+  <p><b>Thank you for your application, we will send you a confirmation email to let you know we've received it</b> if you do not receive an email within 2 hours please check your spam folder or <a href="/contact">Contact us</a></p>
+  <p><a href="#" onClick="location.reload(true);">Make another booking</a></p>
+</span>
+
+<ul>
+  <li>Booking for: <b>{{event.name}}</b></li>
+  <li>Date {{event.event_start_date}} to {{event.event_end_date}}</li>
+  <li>Contact person: {{event.booking_person_name}}</li>
+  <li>Cost: £{{#event.cost}}{{event.cost}}{{/event.cost}}{{^event.cost}}Free{{/event.cost}}</li>
+</ul>
+
+<span id="llg-booking-area">
+  <form class="llg-form" id="llg-event-form" method="POST">
+
+    <h3>Participant information</h3>
+
+    <label>Full name of participant
+      <input type="text" name="full_name" required/>
+    </label>
+
+    <label>Home address
+      <textarea name="address" required></textarea>
+    </label>
+
+    <label>Date of birth (dd/mm/yyyy)
+      <input type="text" placeholder="dd/mm/yyyy" name="dob" required/>
+    </label>
+
+    <label for="local_meeting">Local meeting
+      <input type="text" name="local_meeting" required/>
+    </label>
+
+    <label for="area_meeting">Area meeting
+      <input type="text" name="area_meeting" required/>
+    </label>
+
+    <label >Gender
+      <input type="text" name="gender" required/>
+    </label>
+
+      <h3>Parent/Guardian information</h3>
+
+      <label>Address (if different from above)
+        <textarea name="parent_address_if_different"></textarea>
+      </label>
+
+      <label>Home phone number
+        <input type="text" name="parent_guardian_home_phone" />
+      </label>
+
+      <label>Mobile phone number
+        <input type="text" name="parent_guardian_mobile_phone" />
+      </label>
+
+      <label>Preferred email contact
+        <input type="text" name="parent_guardian_email" required/>
+      </label>
+
+      <label>
+        <input type="checkbox" name="correspond_by_post" value="yes" />We prefer to use email to save expense and paper. If you need correspondence sent by post, tick here.
+      </label>
+
+      <h3>Special information - we aim to be fully inclusive</h3>
+
+      <label>Diet: (Any special dietary needs)
+        <textarea name="dietary_info"></textarea>
+      </label>
+
+      <label>Financial: (No-one will should be prevented from attending by financial difficulties. Most AMs and LMs will help with payment, but if there are problems, FSSE can provide bursaries.
+        Please write here if you need FSSE to help with payment
+        <textarea name="financial_info"></textarea>
+      </label>
+
+      <label>Extra support: It is essential to disclose to the organisers anything they need to know about the health
+        or personal circumstances of the participant so that we can provide any necessary support
+        <textarea name="extra_support"></textarea>
+      </label>
+
+
+      <label for="anit_spam">Anti-spam complete the following: The founder of Quakerism has the first name: George and surname:</label>
+      <input type="text" name="anti_spam" placeholder="???" required>
+
+      <input type="button" id="llg-send-form-btn" value="Send!"/>
+      &nbsp;
+      <img src="{{img_url}}/spinner.gif" id="llg-spinner" alt="please wait..." />
+  </form>
+</span>

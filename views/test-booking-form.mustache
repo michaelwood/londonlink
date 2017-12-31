@@ -1,5 +1,5 @@
 <h2>Event {{event.name}}</h2>
-<span id="thankyou" class="thankyou">
+<span id="llg-thank-you">
   <p><b>Thank you for your booking, we will send you a confirmation email</b> if you do not receive confirmation within 2 hours please check your spam folder or <a href="/contact">Contact us</a></p>
   <p><a href="#" onClick="location.reload(true);">Make another booking</a></p>
 </span>
@@ -10,7 +10,7 @@
   <li>Contact person: {{event.booking_person_name}}</li>
   <li>Cost: £{{#event.cost}}{{event.cost}}{{/event.cost}}{{^event.cost}}Free{{/event.cost}}</li>
 </ul>
-<span id="booking-area">
+<span id="llg-booking-area">
   <form class="llg-form" id="llg-event-form" method="POST">
 
     <p>Additional details of the event will have been sent out by email, please <a href="/contact/">contact us</a> if you would like to receive them.<br />
@@ -33,135 +33,138 @@
       <input type="text" name="participant_email" />
     </label>
 
-<!--
     <label>Date of birth (dd/mm/yyyy)
       <input type="text" placeholder="dd/mm/yyyy" id="dob" name="dob" required/>
     </label>
 
-    <label >Gender
-      <img alt="additional info icon" src="{{img_url}}/i.png" title="If other, please contact us so we can best suit the needs of the participant">
-    </label>
-      <label>
-        <input type="radio" name="gender" value="female" required />Female
+      <label >Gender
+        <img alt="additional info icon" src="{{img_url}}/i.png" title="If other, please contact us so we can best suit the needs of the participant">
       </label>
-      <label>
-        <input type="radio" name="gender" value="male" required />Male
-      </label>
-      <label>
-        <input type="radio" name="gender" value="other" required />Other
-      </label>
-
-      <label for="local_meeting">Local meeting
-        <input type="text" name="local_meeting" required/>
-      </label>
-
-      <h3>Dietary information (this will be a vegetarian event)</h3>
-
-      <label>Any Allergies?, Vegan? etc
-        <textarea name="dietary"></textarea>
-      </label>
-
-      <h3>Medical information</h3>
-      <tr>
-        <label for="painkillers">Able to take</label>
-
-        <label> 
-          <input type="checkbox" name="can_take_ibuprofen" value="yes" />Ibuprofen
-        </label>
-        <label>
-          <input type="checkbox" name="can_take_paracetamol" value="yes" />Paracetamol
-        </label>
-
-
-        <label>Additional medical information
-          <img alt="additional info icon" src="{{img_url}}/i.png" title="Relevant information about participant physical or mental health, any medications taken (and how to administer), etc" />
-
-          <textarea name="medial_info"></textarea>
-        </label>
-
-
-        <h3>Parent/Guardian contact information</h3>
-
-        <label>Preferred email contact
-          <input type="text" name="parent_guardian_email" required/>
-        </label>
-
-
-        <p>Primary contact:</p>
-
-        <label>1. Name
-          <input type="text" name="parent_guardian_name1" required/>
-        </label>
-
-        <label>1. Phone no.
-          <input type="text" name="parent_guardian_phone1" required/>
-        </label>
-
-        <p>Secondary contact:</p>
-
-        <label>2. Name
-          <input type="text" name="parent_guardian_name2" required/>
-        </label>
-
-        <label>2. Phone no.
-          <input type="text" name="parent_guardian_phone2" required/>
-        </label>
-
--->
-        <h3>Data consent</h3>
-
-
-        <label><input type="checkbox" name="use_contact_dets" value="yes">Can we use contact details to tell you about future events?</label> 
-        <label><input type="checkbox" id="consent_photo_yes" name="consent_photo" value="yes">Can the participant be included in photographs taken that may be used for future publicity?</label>
-
-        <h3>Travel &amp; Money</h3>
-
-        <label>Travel arrangements
-          <img alt="additional info icon" src="/files/i.png" title="Please add details of travel arrangements if there are multiple options or the participant is making their own way to the event or will be arriving at a different time from others" />
-          <textarea name="travel_details"></textarea>
-        </label>
-
-
-        <p>It is London Link Group policy that no one should be prevented from attending an event due to the cost, please let us know if you'd like a busary."</p>
-        <label for="payment_method">Payment method:</label>
-        {{#event.cost}}
-        <div class="options-container-required">
+        <div class="llg-options-container-required">
           <label>
-            <input type="radio" name="payment_method" value="cheque_cash" >
-            Cheque or cash at event</label>
+            <input type="radio" name="gender" value="female" required />Female
           </label>
-
-          <label><input type="radio" name="payment_method" value="BACS" />
-            BACS Transfer with the young person's name as reference</label>
           <label>
-            <input type="radio" name="payment_method"  value="Bursary" />
-            Bursary</label>
-
+            <input type="radio" name="gender" value="male" required />Male
+          </label>
+          <label>
+            <input type="radio" name="gender" value="other" required />Other
+          </label>
         </div>
-          {{/event.cost}}
-          {{^event.cost}}
-            <label>
-              Not Applicable
-              <input type="radio" name="payment_method"  value="NA" checked="checked">
-            </label>
-        {{/event.cost}}
+    <label for="local_meeting">Local meeting
+      <input type="text" name="local_meeting" required/>
+    </label>
+
+    <h3>Dietary information (this will be a vegetarian event)</h3>
+
+    <label>Any Allergies?, Vegan? etc
+      <textarea name="dietary"></textarea>
+    </label>
+
+    <h3>Medical information</h3>
+    <tr>
+      <label for="painkillers">Able to take</label>
+
+      <label>
+        <input type="checkbox" name="can_take_ibuprofen" value="yes" />Ibuprofen
+      </label>
+      <label>
+        <input type="checkbox" name="can_take_paracetamol" value="yes" />Paracetamol
+      </label>
 
 
-        <h3>Consent</h3>
+      <label>Additional medical information
+        <img alt="additional info icon" src="{{img_url}}/i.png" title="Relevant information about participant physical or mental health, any medications taken (and how to administer), etc" />
+
+        <textarea name="medial_info"></textarea>
+      </label>
 
 
-        <label for="consent">I consider my child / ward to be medically &amp; psychologically fit to participate in this London link group event and I give permission for them to take part in this activity. The participant agrees to adhere to the <a href="//londonlinkgroup.org.uk/about/boundaries/">London Link group boundaries</a>.</label>
+      <h3>Parent/Guardian contact information</h3>
 
-        <label for="consent"><input type="checkbox" id="consent" value="yes" name="consent"/>I confirm</label>
-
-
-        <label for="anit_spam">Anti-spam complete the following: The founder of Quakerism has the first name: George and surname:</label>
-        <input type="text" name="anti_spam" id="anti_spam" placeholder="???" required>
+      <label>Preferred email contact
+        <input type="text" name="parent_guardian_email" required/>
+      </label>
 
 
-        <input type="button" id="llg-send-form-btn" value="Send!"/>
-        &nbsp;
-        <img src="{{img_url}}/spinner.gif" id="spinner" alt="please wait..." />
+      <p>Primary contact:</p>
+
+      <label>1. Name
+        <input type="text" name="parent_guardian_name1" required/>
+      </label>
+
+      <label>1. Phone no.
+        <input type="text" name="parent_guardian_phone1" required/>
+      </label>
+
+      <p>Secondary contact:</p>
+
+      <label>2. Name
+        <input type="text" name="parent_guardian_name2" required/>
+      </label>
+
+      <label>2. Phone no.
+        <input type="text" name="parent_guardian_phone2" required/>
+      </label>
+
+      <h3>Data consent</h3>
+
+      <div class="llg-options-container-required">
+        <label>
+          <input type="checkbox" name="use_contact_dets" value="yes">Can we use contact details to tell you about future events?</label>
+      </div>
+      <label><input type="checkbox" id="consent_photo_yes" name="consent_photo" value="yes">Can the participant be included in photographs taken that may be used for future publicity?</label>
+
+      <h3>Travel &amp; Money</h3>
+
+      <label>Travel arrangements
+        <img alt="additional info icon" src="/files/i.png" title="Please add details of travel arrangements if there are multiple options or the participant is making their own way to the event or will be arriving at a different time from others" />
+        <textarea name="travel_details"></textarea>
+      </label>
+
+
+      <p>It is London Link Group policy that no one should be prevented from attending an event due to the cost, please let us know if you'd like a busary."</p>
+      <label for="payment_method">Payment method:</label>
+      {{#event.cost}}
+      <div class="llg-options-container-required">
+        <label>
+          <input type="radio" name="payment_method" value="cheque_cash" required />
+          Cheque or cash at event</label>
+        </label>
+
+        <label><input type="radio" name="payment_method" value="BACS"  required />
+          BACS Transfer with the young person's name as reference</label>
+        <label>
+          <input type="radio" name="payment_method"  value="Bursary" required />
+          Bursary</label>
+
+      </div>
+      {{/event.cost}}
+      {{^event.cost}}
+      <label>
+        Not Applicable
+        <input type="radio" name="payment_method"  value="NA" checked="checked">
+      </label>
+      {{/event.cost}}
+
+
+      <h3>Consent</h3>
+
+
+      <label for="consent">I consider my child / ward to be medically &amp; psychologically fit to participate in this London link group event and I give permission for them to take part in this activity. The participant agrees to adhere to the <a href="//londonlinkgroup.org.uk/about/boundaries/">London Link group boundaries</a>.</label>
+
+      <div class="llg-options-container-required">
+        <label for="consent"><input type="checkbox" id="consent" value="yes" name="consent" required/>I confirm</label>
+      </div>
+
+
+      <label for="anit_spam">Anti-spam complete the following: The founder of Quakerism has the first name: George and surname:</label>
+      <input type="text" name="anti_spam" id="anti_spam" placeholder="???" required>
+
+
+      <input type="button" id="llg-send-form-btn" value="Send!"/>
+      &nbsp;
+      <img src="{{img_url}}/spinner.gif" id="llg-spinner" alt="please wait..." />
 
 
 
