@@ -4,56 +4,78 @@ $m = new Mustache_Engine(array(
   'loader' => new Mustache_Loader_FilesystemLoader(dirname(__FILE__) . '/views'),
 ));
 
-function update_event () {
+
+function update_event (){
   $db = llg_db_connection();
-  /* Check if the event already exists and update it
-   * otherwise insert a new one.
-   * Generates a query like:
-   * INSERT INTO event (...) VALUES(...) ON DUPLICATE KEY UPDATE key=value
+
+  $update_sql = "UPDATE `events` SET ";
+  foreach ($_POST as $key => $value) {
+    /* Don't allow updating of these fields as they could impact
+     * existing bookings made.
+     */
+    if ($key == "llg_post_action" ||
+      $key == 'wp_page_id' ||
+      $key == 'name' ||
+      $key == 'llg_event_dash_csrf' ||
+      $key == '_wp_http_referer' ||
+      $key == 'password' ||
+      $key == 'event_id'){
+      continue;
+    }
+
+    $esc_val = mysqli_real_escape_string($db, $value);
+    $update_sql .= mysqli_real_escape_string($db, $key);
+    $update_sql .= '=\'';
+    $update_sql .= $esc_val;
+    $update_sql .= '\',';
+  }
+
+  /* remove trailing comma */
+  $update_sql = substr ($update_sql, 0, -1);
+
+  $update_sql .= ' WHERE id='.$_POST['event_id'];
+
+  $res = mysqli_query($db, $update_sql) or die(mysqli_error($db));
+}
+
+function insert_event () {
+  /* wp_parent_page is the page in which the new form page will be parented to
+   * otherwise it is orphaned :(
    */
+  $db = llg_db_connection();
 
   $sql  = "INSERT INTO events ";
+
   foreach ($_POST as $key => $value) {
-    if ($key == "llg_post_action" || $key == 'wp_page_id' ||
-      $key == 'parent_page')
+    if ($key == "llg_post_action" ||
+      $key == 'llg_event_dash_csrf' ||
+      $key == 'wp_parent_page' ||
+      $key == '_wp_http_referer'){
       continue;
+    }
 
     $keys .= $key;
     $keys .= ',';
     $esc_val = mysqli_real_escape_string($db, $value);
-
-    /* Don't allow password updating, the password may have
-     * been used to encrypt data already.
-     */
-    if ($key != 'password') {
-      $update_sql .= mysqli_real_escape_string($db, $key);
-      $update_sql .= '=\'';
-      $update_sql .= $esc_val;
-      $update_sql .= '\',';
-    }
 
     if ($key == 'password') {
       $insert_sql .= "PASSWORD (\"$esc_val\"),";
       continue;
     }
 
-
     $insert_sql .= '\'';
     $insert_sql .= $esc_val;
     $insert_sql .= '\',';
   }
 
-  $update_sql = substr ($update_sql, 0, -1);
   $insert_sql = substr ($insert_sql, 0, -1);
   $keys = substr ($keys, 0, -1);
 
 
   $sql .= "($keys) VALUES(";
   $sql .= $insert_sql;
-  $sql .= ") ON DUPLICATE KEY UPDATE ";
-  $sql .= $update_sql;
+  $sql .= ')';
 
-//  echo $sql;
   $result = mysqli_query($db, $sql) or die("E2422: ".mysqli_error($db));
 
   /* Update the form's own page */
@@ -67,7 +89,7 @@ function update_event () {
     'post_content'  => '[qform event="'.$_POST['name'].'"]',
     'post_status'   => 'publish',
     'post_author'   => 1,
-    'post_parent' => $_POST['parent_page'],
+    'post_parent' => $_POST['wp_parent_page'],
     'post_type'     => 'page',
     'post_name' => $_POST['name'],
     'ID' => $wp_page_id,

@@ -37,7 +37,7 @@
       </div>
       <div class="form-field">
         <label for="page-parent">Parent page<br /></label>
-        <select id="parent-page" name="parent_page" />
+        <select id="parent-page" name="wp_parent_page" />
           <option value="">-</option>
           {{#pages}}
           <option value="{{ID}}">{{post_title}}</option>
@@ -47,7 +47,8 @@
       </div>
 
       <input type="button" class="button button-primary" value="Add event" id="add-new-event" />
-      <input type="hidden" name="llg_post_action" value="update_event" />
+      <input type="hidden" name="llg_post_action" value="insert_event" />
+      {{& csrf}}
     </form>
   </div>
 </div>
