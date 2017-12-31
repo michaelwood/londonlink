@@ -84,9 +84,9 @@ function validate_form(formToValidate){
 			if (formToValidate.find("[name="+inputName+"]:checked").length == 0){
 
         var reqCon = jq(this).parents(".llg-options-container-required");
-          reqCon.addClass("missing-value");
+          reqCon.addClass("llg-missing-value");
           reqCon.one('click', function(){
-            reqCon.removeClass("missing-value");
+            reqCon.removeClass("llg-missing-value");
           });
 
         missing_values.push(jq(this));
@@ -99,10 +99,10 @@ function validate_form(formToValidate){
 				console.log(jq(this));
 
 				jq(this).one('keyup', function(){
-					jq(this).removeClass("missing-value");
+					jq(this).removeClass("llg-missing-value");
 				});
 
-				jq(this).addClass("missing-value");
+				jq(this).addClass("llg-missing-value");
 			}
 
 		}
