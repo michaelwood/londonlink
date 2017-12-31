@@ -1,20 +1,38 @@
+/* LLG Bookings plugin css */
+
 #llg-thank-you { display: none; }
 #llg-spinner {  display: none; }
 
 label { margin-left: 3px; }
 
 .llg-form *:required {
- border-left: 1px solid red !important;
+  border-left: 1px solid red !important;
 }
 
 .llg-options-container-required {
- border-left: 1px solid red;
+  border-left: 1px solid red;
 }
 
 #wpfooter {
   position: relative !important;
 }
 
-.llg-form .llg-missing-value {
+.llg-missing-value {
   outline: 1px solid red;
+}
+
+.llg-form input[type="text"], textarea {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+.llg-form input:hover, textarea:hover {
+  background-color: #f8f8f8;
+}
+
+.llg-form label {
+  font-weight: bold;
 }
