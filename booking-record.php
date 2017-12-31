@@ -119,6 +119,7 @@ function save_booking(){
   $headers .= 'Reply-To:'.$booking_person_email;
 
   mail ($mail_to, $subject, $mail_body, $headers, '-f '.$config['from']);
+  exit();
 }
 
 ?>
