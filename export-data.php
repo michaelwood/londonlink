@@ -104,8 +104,8 @@ function output_as_csv($res, $event_name, $echo_out=true){
   $config = config();
 
   if ($echo_out == true){
-  //header ('Content-type:text/csv',true);
-    //  header ('Content-Disposition: attachment; filename="'.$config['org_name'].'-'.$event_name.'-'.date("d-m-y").'.csv"', true);
+    header ('Content-type:text/csv',true);
+    header ('Content-Disposition: attachment; filename="'.$config['org_name'].'-'.$event_name.'-'.date("d-m-y").'.csv"', true);
   }
 
   $csv_out = "";
