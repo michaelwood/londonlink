@@ -29,10 +29,21 @@ function save_booking(){
     exit_with_error("E100");
   }
 
-  $form_data = json_decode(stripslashes($_POST['form_data']), true);
+  /* We do this because PHP and everything inbetween likes to mess with
+   * the content, see also magic quotes, $_POST sanitisation, encoding issues
+   * etc..
+   */
+  $raw_post = file_get_contents("php://input");
+
+  preg_match('/(\{{1}.+?\}{1})/', $raw_post, $matches);
+
+  /* Take the 1st match and remove the form_data portion */
+  $json = substr($matches[0], strlen("form_data="));
+
+  $form_data = json_decode($matches[0], true);
 
   if (!$form_data){
-    exit_with_error("E101");
+    exit_with_error("E101", 'JSON '.json_last_error_msg());
   }
 
 
