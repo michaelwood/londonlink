@@ -136,8 +136,8 @@ function llg_admin_init(){
 }
 
 /* Adds [londonlinkbookingform] */
-add_shortcode ('londonlinkbookingform', 'llg_form_shortcode_handler');
-add_shortcode ('londonlinknextevents', 'llg_next_events_shortcode_handler');
+add_shortcode ('qform', 'llg_form_shortcode_handler');
+add_shortcode ('qformnextevents', 'llg_next_events_shortcode_handler');
 
 add_action('admin_menu', 'llg_register_admin_page');
 add_action('wp_enqueue_scripts', 'llg_enqueue_scripts');

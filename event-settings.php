@@ -64,7 +64,7 @@ function update_event () {
 
   $new_page = array(
     'post_title'    => $_POST['name'],
-    'post_content'  => '[londonlinkbookingform event="'.$_POST['name'].'"]',
+    'post_content'  => '[qform event="'.$_POST['name'].'"]',
     'post_status'   => 'publish',
     'post_author'   => 1,
     'post_parent' => $_POST['parent_page'],
