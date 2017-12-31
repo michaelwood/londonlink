@@ -59,7 +59,7 @@ function llg_admin_subpage(){
 }
 
 function llg_register_admin_page(){
-  add_menu_page ('Qevent Bookings', 'Events', 'manage_options', 'llg_booking_admin', 'llg_admin_page');
+  add_menu_page ('Qevent Bookings', 'QEvents', 'manage_options', 'llg_booking_admin', 'llg_admin_page');
   add_submenu_page ('llg_booking_admin', 'Add an event', 'Add an event', 'manage_options', 'llg_new_event', 'llg_admin_subpage');
 }
 
