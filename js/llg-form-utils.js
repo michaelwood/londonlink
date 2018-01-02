@@ -29,14 +29,10 @@ jq(document).ready(function(){
     submit_form(JSON.stringify(jsObj));
   });
 
-});
-
-jq("llg-https-redirect-notice").ready(function(){
-
-  if(window.location.protocol.indexOf("https") == -1){
-    redirect_to_https();
+  if (jq("#llg-https-redirect-notice").length > 0 &&
+    window.location.protocol.indexOf("https") == -1){
+      redirect_to_https();
   }
-
 });
 
 function redirect_to_https(){
