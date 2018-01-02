@@ -1,32 +1,29 @@
 <?php
 
-function delete_data ()
-{
-  llg_db_connection ();
+function delete_data(){
+  $db = llg_db_connection();
 
-  $event_name = mysql_real_escape_string($_POST['event_name_selected']);
-
-  if (!isset ($event_name)) {
-    return;
+  if (!isset ($_POST['event_id'])) {
+    echo 'E898: No event id';
+    exit();
   }
 
+  $event_id = mysqli_real_escape_string($db, $_POST['event_id']);
 
-  $res = mysql_query('SELECT wp_page_id FROM event WHERE name="'.$event_name.'"') or die (mysql_error());
+  $res = mysqli_query($db, 'SELECT wp_page_id FROM `events` WHERE id="'.$event_id.'"') or die (mysqli_error($db));
 
-  $wp_page_id = mysql_result ($res, 0);
+  $wp_page_id = mysqli_fetch_array($res)[0];
 
   wp_delete_post($wp_page_id, false);
 
 
-  $sql = 'DELETE FROM bookings WHERE event_name="'.$event_name.'"';
+  $sql = 'DELETE FROM bookings WHERE event_id="'.$event_id.'"';
 
-  mysql_query ($sql) or die (mysql_error ());
+  mysqli_query($db, $sql) or die (mysqli_error($db));
 
-  $sql = 'DELETE FROM event WHERE name="'.$event_name.'"';
+  $sql = 'DELETE FROM events WHERE id="'.$event_id.'"';
 
-  mysql_query ($sql) or die (mysql_error ());
-
-
+  mysqli_query($db, $sql) or die (mysqli_error($db));
 }
 
 ?>
