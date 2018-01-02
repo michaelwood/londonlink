@@ -62,6 +62,9 @@ function submit_form(formJson){
       jq("#llg-spinner").hide();
       jq("#llg-booking-area").hide();
       jq("#llg-thank-you").show();
+      try {
+        jq("#llg-thank-you").get(0).scrollIntoView();
+      } catch (e) {}
     }
   ).fail(function(retData) {
     jq("#llg-spinner").hide();
