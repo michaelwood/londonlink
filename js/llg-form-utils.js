@@ -4,10 +4,6 @@ var jq = jQuery;
 
 jq(document).ready(function(){
 
-  if(window.location.protocol.indexOf("https") == -1){
-    redirect_to_https();
-  }
-
   /* Expand text area while focused */
   jq("textarea").focusin (function(){
     jq(this).prop("rows", 10);
@@ -32,6 +28,14 @@ jq(document).ready(function(){
     var jsObj = serialiseForm(jq("#llg-event-form"));
     submit_form(JSON.stringify(jsObj));
   });
+
+});
+
+jq("llg-https-redirect-notice").ready(function(){
+
+  if(window.location.protocol.indexOf("https") == -1){
+    redirect_to_https();
+  }
 
 });
 
