@@ -143,7 +143,6 @@ function main_page()
 
     $bookings_res = mysqli_query($db, 'SELECT COUNT(id) FROM bookings WHERE event_id='.$current_values['id'].'');
 
-    //echo $bookings_res;
     $current_values['num_bookings'] = mysqli_fetch_array($bookings_res)[0];
 
     $events[] = $current_values;
@@ -161,7 +160,6 @@ function main_page()
 }
 
 function add_event_page(){
-  /* Nothing to see here yet */
   global $m;
   $context = array(
     'pages' => get_pages(),
