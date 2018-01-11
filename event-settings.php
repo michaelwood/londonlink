@@ -33,7 +33,8 @@ function update_event (){
   /* remove trailing comma */
   $update_sql = substr ($update_sql, 0, -1);
 
-  $update_sql .= ' WHERE id='.$_POST['event_id'];
+  $update_sql .= ' WHERE id='.mysqli_real_escape_string($db,
+    $_POST['event_id']);
 
   $res = mysqli_query($db, $update_sql) or die(mysqli_error($db));
 }
