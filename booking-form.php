@@ -18,7 +18,7 @@ function get_event_data($event_name){
 
 function booking_form_get_string ($event_name){
   $m = new Mustache_Engine(array(
-    'loader' => new Mustache_Loader_FilesystemLoader(dirname(__FILE__) . '/views'),
+    'loader' => new Mustache_Loader_FilesystemLoader(dirname(__FILE__) . '/forms'),
   ));
 
   /* If we're not already using SSL don't allow continue, redirect instead */
@@ -55,7 +55,11 @@ function booking_form_get_string ($event_name){
     $form_template = $event_data['form_template'];
   }
 
-  $ret .= $m->render($form_template, $context);
+  try{
+    $ret .= $m->render($form_template, $context);
+  } catch(Mustache_Exception_UnknownTemplateException $e) {
+    return "E656: Could not find form";
+  }
 
   return $ret;
 }
