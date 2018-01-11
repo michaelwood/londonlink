@@ -88,6 +88,18 @@
                 <td><input type="text" id="{{id}}-booking_person_email" name="booking_person_email" value="{{booking_person_email}}" required/></td>
               </tr>
               <tr>
+                <td><label for="{{id}}-form_template">Form</label></td>
+                <td>
+                  <select id="{{id}}-form_template" name="form_template" />
+                    {{#forms}}
+                    <option value="{{name}}"
+                            {{#in_use}}{{name}}:{{form_template}}{{/in_use}}>
+                            {{name}}</option>
+                    {{/forms}}
+                  </select>
+              </tr>
+
+              <tr>
                 <td></td>
                 <td>
                   <input type="button" class="button button-primary update-event-btn" value="Update" data-event-id="{{id}}" />

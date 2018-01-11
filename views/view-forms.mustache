@@ -1,0 +1,24 @@
+<div class="wrap">
+  <h2>Preview forms</h2>
+  <div class="form-wrap">
+    <form method="POST">
+
+      <div class="form-field">
+        <label for="select-form">Select a form to preview<br /></label>
+        <select id="select-form" name="form_template" />
+          <option value="">-</option>
+          {{#forms}}
+          <option value="{{name}}">{{name}}</option>
+          {{/forms}}
+        </select>
+        <p>Forms live in {{forms_dir}}</p>
+      </div>
+
+      <input type="submit" value="View" class="button button-primary"/>
+      {{& csrf}}
+    </form>
+  </div>
+
+  <p>Please note styling will change to match current theme</p>
+  {{#selected_form}}</p><b>{{selected_form}}:</b></p>{{/selected_form}}
+</div>

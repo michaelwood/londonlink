@@ -51,16 +51,21 @@ function verify_domain() {
 }
 
 function llg_admin_page(){
-    main_page ();
+  main_page ();
 }
 
-function llg_admin_subpage(){
+function llg_admin_add_event(){
   add_event_page();
+}
+
+function llg_admin_forms(){
+  forms_page();
 }
 
 function llg_register_admin_page(){
   add_menu_page ('Qevent Bookings', 'QEvents', 'manage_options', 'llg_booking_admin', 'llg_admin_page');
-  add_submenu_page ('llg_booking_admin', 'Add an event', 'Add an event', 'manage_options', 'llg_new_event', 'llg_admin_subpage');
+  add_submenu_page ('llg_booking_admin', 'Add an event', 'Add an event', 'manage_options', 'llg_new_event', 'llg_admin_add_event');
+  add_submenu_page ('llg_booking_admin', 'Forms', 'Forms', 'manage_options', 'llg_forms', 'llg_admin_forms');
 }
 
 function llg_form_shortcode_handler ($attr, $content, $tag){

@@ -36,3 +36,8 @@ label { margin-left: 3px; }
 .llg-form label {
   font-weight: bold;
 }
+
+.llg-form-preview {
+  padding: 10px;
+  border: 1px dashed black;
+}

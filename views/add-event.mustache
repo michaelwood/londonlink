@@ -33,7 +33,7 @@
       <div class="form-field">
         <label for="password">Bookings data password<br /><b>DO NOT LOSE THIS PASSWORD</b></label>
         <input type="text" id="password" name="password" required/>
-        <p>The data will be encrypted with this password there is no recovery once data has been encrypted.</p>
+        <p>The data will be encrypted with this password <b>there is NO recovery once data has been encrypted</b>.</p>
       </div>
       <div class="form-field">
         <label for="page-parent">Parent page<br /></label>
@@ -44,6 +44,17 @@
           {{/pages}}
         </select>
         <p>If this new form is to be a subpage of an existing one</p>
+      </div>
+
+      <div class="form-field">
+        <label for="select-form">Select a form template to use<br /></label>
+        <select id="select-form" name="form_template" />
+          <option value="">-</option>
+          {{#forms}}
+          <option value="{{name}}">{{name}}</option>
+          {{/forms}}
+        </select>
+        <p>See form <a href="?page=llg_forms" target="_blank">previews</a> to view available form templates</p>
       </div>
 
       <input type="button" class="button button-primary" value="Add event" id="add-new-event" />

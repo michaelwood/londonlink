@@ -152,11 +152,41 @@ function main_page()
   $context = array(
     'events' => $events,
     'csrf' => wp_nonce_field("llg_event_dash", "llg_event_dash_csrf"),
+    'forms' => find_available_forms(),
     'this_page' => $_GET['page'],
   );
 
   global $m;
   echo $m->render("event-settings", $context);
+}
+
+function find_available_forms(){
+  $forms_dir = dirname(__FILE__) . '/forms/';
+
+  $forms = array();
+
+  foreach (scandir($forms_dir) as $key => $val){
+    /* Remove the unix dir entries of .. and ../ */
+    if ($val == '.' || $val == '..'){
+      continue;
+    }
+
+    $forms[] = array(
+      'name' => $val,
+      'in_use' => function($compare, Mustache_LambdaHelper $helper){
+        /* Cheeky bit of logic */
+        $compare = $helper->render($compare);
+        $comparison = explode(":", trim($compare), 2);
+
+        if (strcmp($comparison[0], $comparison[1]) == 0){
+          return $helper->render("selected=selected");
+        }
+        return;
+      }
+    );
+  }
+
+  return $forms;
 }
 
 function add_event_page(){
@@ -165,9 +195,49 @@ function add_event_page(){
     'pages' => get_pages(),
     'csrf' => wp_nonce_field("llg_event_dash", "llg_event_dash_csrf"),
     'org_name' => config()['org_name'],
+    'forms' => find_available_forms(),
   );
 
   echo $m->render("add-event", $context);
+}
+
+function forms_page(){
+  global $m;
+  $form_dir = dirname(__FILE__) . '/forms/';
+
+  $context = array(
+    'csrf' => wp_nonce_field("llg_event_dash", "llg_event_dash_csrf"),
+    'org_name' => config()['org_name'],
+    'forms' => find_available_forms(),
+    'forms_dir' => $form_dir,
+    'selected_form' => $_POST['form_template'],
+  );
+
+  echo $m->render("view-forms", $context);
+
+  if (!isset($_POST['form_template'])){
+    return;
+  }
+
+  $fm = new Mustache_Engine(array(
+    'loader' => new Mustache_Loader_FilesystemLoader($form_dir),
+  ));
+
+  $form_dummy_context = array(
+    'event' => array(
+      'cost' => '23423',
+      'booking_person_name' => 'BOOKING PERSON NAME',
+      'enabled' => True,
+      'event_end_date' => '11/22/33',
+      'event_start_date' => '22/44/55',
+      'name' => 'EVENT NAME',
+    ),
+    'img_url' => plugins_url('/img/', __FILE__),
+  );
+
+  echo '<div class="wrap llg-form-preview">';
+  echo $fm->render($_POST['form_template'], $form_dummy_context);
+  echo '</div>';
 }
 
 ?>
