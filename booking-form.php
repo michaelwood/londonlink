@@ -49,7 +49,7 @@ function booking_form_get_string ($event_name){
     var llgEventId = '.$event_data['id'].';
   </script>';
 
-  $form_template = 'default-form';
+  $form_template = 'test-form';
 
   if ($event_data['form_template']){
     $form_template = $event_data['form_template'];
