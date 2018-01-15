@@ -9,12 +9,12 @@ class NextEventWidget extends WP_Widget {
 
   //function can take $args, $instance
   function widget($args, $instance) {
-    llg_db_connection ();
+    $db = llg_db_connection();
 
-     $sql = "SELECT `name`, `wp_page_id`, `event_start_date`, STR_TO_DATE(event_start_date, '%d/%m/%y') as 'realDate'  FROM `event` WHERE `enabled`=1 ORDER BY `realDate` ASC";
-    $result = mysql_query($sql) or die(mysql_error());
+     $sql = "SELECT `name`, `wp_page_id`, `event_start_date`, STR_TO_DATE(event_start_date, '%d/%m/%y') as 'realDate'  FROM `events` WHERE `enabled`=1 ORDER BY `realDate` DESC";
+    $result = mysqli_query($db, $sql) or die(mysqli_error($db));
 
-     if (mysql_num_rows ($result) == 0){
+     if (mysqli_num_rows($result) == 0){
        echo('<!-- no events currently -->');
        return;
      }
@@ -25,7 +25,7 @@ class NextEventWidget extends WP_Widget {
            <h3 class="widget-title">Upcoming events</h3>
            <ul>');
 
-     while($event_data = mysql_fetch_assoc ($result)){
+     while($event_data = mysqli_fetch_assoc ($result)){
        $page_link = get_permalink($event_data['wp_page_id']);
        echo('<li><a href="'.$page_link.'">');
        echo($event_data['event_start_date'].' - '.$event_data['name']);
