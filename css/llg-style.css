@@ -11,6 +11,7 @@ label { margin-left: 3px; }
 
 .llg-options-container-required {
   border-left: 1px solid red;
+  margin: 15px 0 15px 0;
 }
 
 #wpfooter {
@@ -35,6 +36,7 @@ label { margin-left: 3px; }
 
 .llg-form label {
   font-weight: bold;
+  display: block;
 }
 
 .llg-form-preview {
