@@ -4,7 +4,7 @@ class NextEventWidget extends WP_Widget {
 
   function __construct() {
     // Instantiate the parent object
-    parent::__construct( false, 'London link next event' );
+    parent::__construct( false, 'QForm next event' );
   }
 
   //function can take $args, $instance
