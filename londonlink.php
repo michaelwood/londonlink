@@ -131,10 +131,16 @@ function llg_process_post ()
 
 function llg_enqueue_scripts(){
   wp_register_script('llg-custom-script', plugins_url('/js/llg-form-utils.js', __FILE__), array('jquery'));
-  wp_enqueue_script('llg-custom-script');
-
   wp_register_style('llg-custom-style', plugins_url('/css/llg-style.css', __FILE__));
+
+  wp_enqueue_script('llg-custom-script');
   wp_enqueue_style('llg-custom-style');
+
+  wp_register_script('EasyAutocomplete-script', plugins_url('/js/EasyAutocomplete-1.3.5/jquery.easy-autocomplete.js', __FILE__), array('jquery'));
+  wp_register_style('EasyAutocomplete-style', plugins_url('/js/EasyAutocomplete-1.3.5/easy-autocomplete.min.css', __FILE__));
+
+  wp_enqueue_script('EasyAutocomplete-script');
+  wp_enqueue_style('EasyAutocomplete-style');
 }
 
 function llg_enqueue_admin_scripts(){
