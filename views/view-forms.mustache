@@ -8,7 +8,7 @@
         <select id="select-form" name="form_template" />
           <option value="">-</option>
           {{#forms}}
-          <option value="{{name}}">{{name}}</option>
+          <option value="{{name}}">{{basename}}</option>
           {{/forms}}
         </select>
         <p>Forms live in {{forms_dir}}</p>

@@ -171,8 +171,11 @@ function find_available_forms(){
       continue;
     }
 
+    $basename = basename($val, '.mustache');
+
     $forms[] = array(
       'name' => $val,
+      'basename' => $basename,
       'in_use' => function($compare, Mustache_LambdaHelper $helper){
         /* Cheeky bit of logic */
         $compare = $helper->render($compare);
