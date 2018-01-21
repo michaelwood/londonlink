@@ -54,7 +54,6 @@ function submit_form(formJson){
   postData += '&event_id='+llgEventId;
   postData += '&form_data='+formJson;
 
-  console.log("About to submit: "+formJson)
   jq("#llg-spinner").show();
   jq.post("./",
     postData,
@@ -99,7 +98,6 @@ function validate_form(formToValidate){
 
 			if(!jq(this).val()){
 				missing_values.push(jq(this));
-				console.log(jq(this));
 
 				jq(this).one('keyup', function(){
 					jq(this).removeClass("llg-missing-value");
@@ -111,7 +109,6 @@ function validate_form(formToValidate){
 		}
 	});
 
-  console.log(missing_values);
   return (missing_values.length === 0)
 }
 
@@ -147,9 +144,9 @@ function serialiseForm(formToSerialise){
     if (!val){
       val = "";
     }
+
     formObj[key] = val;
 
   });
-  console.log(JSON.stringify(formObj));
   return formObj;
 }
