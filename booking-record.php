@@ -20,7 +20,8 @@ function save_booking(){
 
   if (!isset($_POST['_wpnonce']) ||
     !isset($_POST['event_id']) ||
-    !isset($_POST['form_data'])){
+    !isset($_POST['form_data'])
+  ){
     exit_with_error("E99");
   }
 
@@ -35,7 +36,7 @@ function save_booking(){
    */
   $raw_post = file_get_contents("php://input");
 
-  preg_match('/(\{{1}.+?\}{1})/', $raw_post, $matches);
+  preg_match('/(\{{1}.+\})/', $raw_post, $matches);
 
   /* Take the 1st match and remove the form_data portion */
   $json = substr($matches[0], strlen("form_data="));
