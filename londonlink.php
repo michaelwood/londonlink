@@ -156,6 +156,12 @@ function llg_admin_init(){
   verify_domain ();
 }
 
+/* https://core.trac.wordpress.org/ticket/23318 */
+function llg_remove_update_notify($value) {
+  unset($value->response[ plugin_basename(__FILE__) ]);
+  return $value;
+}
+
 /* Adds [londonlinkbookingform] */
 add_shortcode ('qform', 'llg_form_shortcode_handler');
 add_shortcode ('qformnextevents', 'llg_next_events_shortcode_handler');
@@ -168,4 +174,5 @@ add_action('admin_enqueue_scripts', 'llg_enqueue_admin_scripts');
 add_action('admin_init', 'llg_admin_init');
 add_action('widgets_init', 'llg_register_widgets');
 
+add_filter('site_transient_update_plugins', 'llg_remove_update_notify');
 ?>
