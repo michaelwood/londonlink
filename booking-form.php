@@ -4,10 +4,12 @@ function get_event_data($event_name){
   $db = llg_db_connection();
 
   /* If we don't have an event name set then just get the latest one */
-  if (!isset($event_name))
+  if (!isset($event_name)){
     $sql = 'SELECT * FROM events ORDER BY id DESC LIMIT 1 ';
-  else
+  } else {
+    $event_name = mysqli_real_escape_string($db, $event_name);
     $sql = 'SELECT * FROM events  WHERE name="'.$event_name.'" ORDER BY id DESC LIMIT 1 ';
+  }
 
   $result = mysqli_query($db, $sql) or die(mysqli_error($db));
   if (mysqli_num_rows ($result) > 0)

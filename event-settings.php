@@ -115,8 +115,7 @@ function toggle_event_status(){
     $enabled = 0;
   elseif ($_POST['event_state'] == 'Open')
     $enabled = 1;
-
-  if (!isset($enabled))
+  else
     return;
 
   $db = llg_db_connection ();
