@@ -1,0 +1,218 @@
+<script>
+var lmOptions = {
+  url: "/webservices/quaker/local-quaker-meetings.json",
+  getValue: "lm",
+  theme: "square",
+
+  list: {
+    onSelectItemEvent: function(){
+
+      var am = jQuery("#local-meeting").getSelectedItemData().am;
+
+      if (am){
+        jQuery("#area-meeting").val(am);
+      }
+    },
+    match: { enabled: true } },
+};
+
+var amOptions = {
+  url: "/webservices/quaker/quaker-area-meetings.json",
+  getValue: "am",
+  theme: "square",
+
+  list: {
+    match: { enabled: true } },
+};
+
+
+jQuery(document).ready(function(){
+  jQuery("#local-meeting").easyAutocomplete(lmOptions);
+  jQuery("#area-meeting").easyAutocomplete(amOptions);
+});
+
+</script>
+
+<style scoped>
+.unbold {
+  font-weight: normal;
+}
+</style>
+
+<h2>Application for {{event.name}}</h2>
+<span id="llg-thank-you"> 
+  <h3>Thank you for your application</h3>
+  <p><b>We will send you a confirmation email to let you know we've received it</b> if you do not receive an email within 2 hours please check your spam folder or <a href="/contact">Contact us</a></p>
+
+  <img src="//fsse.org.uk/files/sunflower.jpg" class="aligncenter" alt="Sunflower"/>
+
+  <h3>What happens next?</h3>
+  <p>We hope to offer everyone who applies a place. When we have more applications than space, places are first offered to those in our <a href="//fsse.org.uk/fsse/catchment/" >catchment area</a> (basically the south east) and then on a first come first serve basis.</p>
+
+  <p><b>If we are able to offer a place, you will be sent information about how to pay. Keep an eye out for an email from {{event.booking_person_name}}.</b></p>
+  <p><b>Final details and a medical form will follow closer to the event.</b></p>
+
+  <p>Please don't hesitate to contact <b>{{event.booking_person_name}}</b> if you have any questions <b>{{event.booking_person_email}}</b></p>
+
+  <p><a href="?" title="Make another booking">Make another booking</a></p>
+
+</span>
+
+
+<span id="llg-booking-area">
+  <ul>
+    <li>Date {{event.event_start_date}} to {{event.event_end_date}}</li>
+    <li>Contact person: {{event.booking_person_name}}</li>
+    <li>Cost: £{{#event.cost}}{{event.cost}}{{/event.cost}}{{^event.cost}}Free{{/event.cost}}</li>
+    <li><a href="//fsse.org.uk/files/Senior_Conference_info_2018.pdf">2018 event info pack</a></li>
+  </ul>
+
+  <form class="llg-form" id="llg-event-form" method="POST">
+
+    <h3>Participant information</h3>
+
+    <label>Full name of the participant
+      <input type="text" name="full_name" required/>
+    </label>
+
+    <label>Name known by
+      <input type="text" name="name_known_by" required/>
+    </label>
+
+    <label>Home address
+      <textarea name="address" required></textarea>
+    </label>
+
+    <label>Date of birth (must be 15 by 1st Sept and under 19)
+      <input type="text" placeholder="dd/mm/yyyy" name="dob" required/>
+    </label>
+
+    <label>Mobile phone number
+      <input type="text" name="participant_mobile" />
+    </label>
+
+    <label >Email
+      <input type="text" name="participant_email" required/>
+    </label>
+
+    <label >Gender
+      <input type="text" name="gender" required/>
+    </label>
+
+    <br />
+
+    <label>
+      <input type="checkbox" name="on_arrangements_committee" value="yes" class="llg-toggler" data-toggle-selector="#committee-role" /> On the event's Arrangements Committee?
+    </label>
+    <div id="committee-role" class="llg-hidden">
+    <label>Arrangements Committee Role
+      <input type="text" name="arrangements_committee_role" />
+    </label>
+    </div>
+    <br />
+
+    <h3>Parent/Guardian information</h3>
+
+    <label>Name of parent/guardian
+      <input type="text" name="parent_name" />
+    </label>
+
+    <label>Address (if different from above)
+      <textarea name="parent_address_if_different"></textarea>
+    </label>
+
+    <label>Phone number(s)
+      <input type="text" name="parent_guardian_phone" required/>
+    </label>
+
+    <label>Preferred email contact
+      <input type="text" name="primary_email" required/>
+    </label>
+
+    <div class="llg-options-container-required">
+      <label for="consent"><input type="checkbox" id="consent" value="yes" name="event_consent" required/> I give permission for my child / ward to take part in this event. The participant agrees to adhere to the <a href="//fsse.org.uk/sc/boundaries/">event boundaries</a>.</label>
+    </div>   
+
+    <h3>Other details</h3>
+
+    <label>
+      <input type="checkbox" name="correspond_by_post" value="yes" />
+      We prefer to use email to save expense and paper. If you need correspondence sent by post, tick here.
+    </label>
+    <br />
+
+    <label>Diet <span class="unbold">(Any special dietary needs)</span>
+      <textarea name="dietary_info"></textarea>
+    </label>
+
+    <label>What can we do to help you have a safe and happy event? <span class="unbold">
+       We aim to be fully inclusive. Some participants may need extra support, in which case please write below about any issues you feel we need to know to support the participant more fully. Examples could include but are not limited to: social support (e.g. help in group activities and/or forming friendships); physical support (e.g. wheelchair user, mobility difficulties); behavioural or emotional support.<br /> <br /> All participants will be required to complete a medical form signed by their parent/ guardian once offer of a place is confirmed.<br /> <br /> The information provided will be read by the co-ordinators, the first aid team, and may be shared with other members of the staff team in confidence if this is necessary to help the participant have a happy and safe event.<span>
+      <textarea name="extra_support"></textarea>
+    </label>
+
+    <br />
+
+    <label for="local_meeting">Which Local Meeting are you connected to?
+      <input type="text" id="local-meeting" name="local_meeting" required/>
+    </label>
+
+    <label for="area_meeting">Area meeting
+      <input type="text" name="area_meeting" id="area-meeting" required/>
+    </label>
+
+    <label>
+      Please give the name and contact details of a Clerk, Elder, Overseer or Treasurer at your meeting who we can get in touch with.<br />
+      Name
+      <input type="text" name="quaker_ref_name" required/>
+    </label>
+    <label>Email or Phone no.
+      <input type="text" name="quaker_ref_contact" required/>
+    </label>
+
+    <br />
+    <label>
+      <input type="checkbox" name="been_before" value="yes" class="llg-toggler" data-toggle-selector="#llg-not-been-before" /> Have you been to Senior Conference before?
+    </label>
+    <div id="llg-not-been-before">
+      <label>
+        <input type="checkbox" name="been_to_JG" value="yes" /> Have you been to our sister event Junior Gathering (11-14)?
+      </label>
+
+      <label>How did you hear about Senior Conference?
+        <input type="text" name="how_heard_about_SC" />
+      </label>
+    </div>
+    <br />
+
+    <label>
+			Do you intend to be present for the entire event?
+			<span class="unbold">At Senior Confrence we aim to build a community of openness and safety, which can be harder to create if conferees arrive late or leave early. If not, please explain why not, so we can assess priority bookings. (Please note that priority will be given to attendees who are able to attend for the whole week.)</span>
+      <textarea name="present_for_event"></textarea>
+    </label>
+
+    <br />
+
+    <label>Financial <span class="unbold"> 
+
+It is FSSE policy that no one should be prevented from attending Senior Conference for financial reasons. Your Local Meeting or Area Meeting may have funds available; please get in touch if you would like advice with this. If they are not able to support, FSSE does have a small bursary fund. Do get in touch for more information. Please indicate here if you know that finances will be received from more than one source. Please include Treasurer contact details, if applicable.</span>
+
+
+        <textarea name="financial_info" placeholder="e.g. self funding, 50% parents 50% Area meeting etc"></textarea>
+      </label>
+
+      <br />
+      <label><input type="checkbox" name="future_contact_consent" value="yes" /> Can we use contact details to tell you about future events?
+      </label>
+
+      <label><input type="checkbox" name="photo_consent" value="yes" /> We'd be grateful if the participant can be included in photographs that may be used for future publicity. If that's OK please tick here.
+      </label>
+      <br />
+
+      <label for="anit_spam">Anti-spam please complete the following:<span class="unbold"> The founder of Quakerism has the first name: George and surname:</span></label>
+      <input type="text" name="anti_spam" placeholder="???" required>
+
+      <input type="button" id="llg-send-form-btn" value="Send!"/>
+      &nbsp;
+      <img src="{{img_url}}/spinner.gif" id="llg-spinner" alt="please wait..." />
+  </form>
+</span>

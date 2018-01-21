@@ -82,7 +82,7 @@ function save_booking(){
   $booking_person_email = $event_details['booking_person_email'];
 
 
-  $subject = 'Booking received for: '.$event_details['name'];
+  $subject = 'Application received for: '.$event_details['name'];
 
   if (isset($form_data['primary_email'])) {
     $mail_to = filter_var($form_data['primary_email'], FILTER_SANITIZE_EMAIL);
@@ -104,7 +104,7 @@ function save_booking(){
   /* TODO split out emailer functions */
 
   $mail_body = 'Hello,'."\n\n";
-  $mail_body .= 'We have received your booking '.$participant_name.'';
+  $mail_body .= 'We have received your application '.$participant_name.'';
   $mail_body .= "\n";
   $mail_body .= 'If there any problems please don\'t hesitate to contact the bookings person for this event (CC d)';
   $mail_body .= "\n\n";
