@@ -100,6 +100,10 @@ function output_as_html($res, $event_name){
   exit();
 }
 
+function clean_up_str($string){
+  return str_replace("\n", "; ", filter_var($string, FILTER_SANITIZE_STRING));
+}
+
 function output_as_csv($res, $event_name, $echo_out=true){
   $config = config();
 
@@ -115,8 +119,6 @@ function output_as_csv($res, $event_name, $echo_out=true){
 
     $csv_row = "";
     $col_headers = "";
-
-    /* This is to check that we have the same keys in each data set */
 
     foreach ($row_arr as $key => $value) {
 
@@ -139,12 +141,12 @@ function output_as_csv($res, $event_name, $echo_out=true){
           }
 
           /* first row so get the keys for the column header from the json */
-          $col_headers .= $key . ',';
-          $csv_row .= $value . ',';
+          $col_headers .= clean_up_str($key) . ',';
+          $csv_row .= clean_up_str($value) . ',';
         }
       } else {
-          $col_headers .= $key . ',';
-          $csv_row .= $value . ',';
+          $col_headers .= clean_up_str($key) . ',';
+          $csv_row .= clean_up_str($value) . ',';
       }
     }
 
@@ -152,7 +154,7 @@ function output_as_csv($res, $event_name, $echo_out=true){
     $csv_row = substr ($csv_row, 0, -1);
     $col_headers = substr($col_headers, 0, -1);
 
-    /* If the previous coluimn headers didn't match then output them again
+    /* If the previous column headers didn't match then output them again
      * this should avoid values appearing under the wrong column header in the
      * case that someone changes the form half way through collecting the data
      */
