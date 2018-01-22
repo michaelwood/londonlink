@@ -20,7 +20,7 @@ class NextEventWidget extends WP_Widget {
      }
 
      echo('
-       <div class="widget">
+       <div class="widget llg-upcoming-events-widget">
          <div class="widget-content">
            <h3 class="widget-title">Upcoming events</h3>
            <ul>');
