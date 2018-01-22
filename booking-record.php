@@ -96,7 +96,7 @@ function save_booking(){
   }
 
   if (isset($form_data['full_name'])){
-    $participant_name = 'for '.filter_var($form_data['full_name'], FILTER_SANITIZE_STRING);
+    $participant_name = 'for '.filter_var($form_data['full_name'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
   } else {
     $participant_name = '';
   }
