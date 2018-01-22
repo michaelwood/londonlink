@@ -100,14 +100,33 @@ function output_as_html($res, $event_name){
   exit();
 }
 
-function clean_up_str($string){
-  return str_replace("\n", "; ", filter_var($string, FILTER_SANITIZE_STRING));
+/* We want to avoid breaking the csv document so if the string contains a
+ * new line or comma or a quote then we process this to give either the output
+ * csv a fighting chance of being parsed correctly or to make the html output
+ * safe.
+ */
+function clean_up_str($string, $file_output){
+
+  if (!$file_output){
+    $string = filter_var($string, FILTER_SANITIZE_STRING,
+      FILTER_FLAG_NO_ENCODE_QUOTES);
+    $string = str_replace("\n", "<br /> ", $string);
+  } else {
+    $string = str_replace("\"", "'", $string);
+  }
+
+  if (strpos($string, "\n") !== false ||
+    strpos($string, ",") !== false){
+    return "\"".$string."\"";
+  }
+
+  return $string;
 }
 
-function output_as_csv($res, $event_name, $echo_out=true){
+function output_as_csv($res, $event_name, $file_output=true){
   $config = config();
 
-  if ($echo_out == true){
+  if ($file_output == true){
     header ('Content-type:text/csv',true);
     header ('Content-Disposition: attachment; filename="'.$config['org_name'].'-'.$event_name.'-'.date("d-m-y").'.csv"', true);
   }
@@ -141,12 +160,12 @@ function output_as_csv($res, $event_name, $echo_out=true){
           }
 
           /* first row so get the keys for the column header from the json */
-          $col_headers .= clean_up_str($key) . ',';
-          $csv_row .= clean_up_str($value) . ',';
+          $col_headers .= clean_up_str($key, $file_output) . ',';
+          $csv_row .= clean_up_str($value, $file_output) . ',';
         }
       } else {
-          $col_headers .= clean_up_str($key) . ',';
-          $csv_row .= clean_up_str($value) . ',';
+          $col_headers .= clean_up_str($key, $file_output) . ',';
+          $csv_row .= clean_up_str($value, $file_output) . ',';
       }
     }
 
@@ -167,7 +186,7 @@ function output_as_csv($res, $event_name, $echo_out=true){
     $csv_out .= $csv_row . "\n";
   }
 
-  if ($echo_out == true){
+  if ($file_output == true){
     echo $csv_out;
     exit();
   }
