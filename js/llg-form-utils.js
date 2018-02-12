@@ -33,6 +33,12 @@ jq(document).ready(function(){
     window.location.protocol.indexOf("https") == -1){
       redirect_to_https();
   }
+
+  jq(".llg-toggler").change(function(){
+    var toToggle = jq(this).data('toggle-selector');
+    jq(toToggle).slideToggle();
+  });
+
 });
 
 function redirect_to_https(){

@@ -43,3 +43,7 @@ label { margin-left: 3px; }
   padding: 10px;
   border: 1px dashed black;
 }
+
+.llg-hidden {
+  display: none;
+}
