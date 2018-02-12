@@ -44,7 +44,7 @@ function export_data(){
   $select_booking_data = '
     SELECT bookings.id, bookings.submit_timestamp,
      AES_DECRYPT(data, CONCAT(PASSWORD("'.$pass.'"), "'.$salt.'")) AS data
-     FROM bookings ORDER BY id ASC';
+     FROM bookings WHERE bookings.event_id='.$event_id.' ORDER BY id ASC';
 
 /*   Possible join for getting event information
  *   RIGHT JOIN events ON bookings.event_id=events.id
