@@ -153,7 +153,6 @@ function llg_register_widgets(){
 }
 
 function llg_admin_init(){
-  verify_domain ();
 }
 
 /* https://core.trac.wordpress.org/ticket/23318 */
