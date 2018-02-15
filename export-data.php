@@ -125,6 +125,7 @@ function clean_up_str($string, $file_output){
     $string = str_replace("\n", "<br /> ", $string);
   } else {
     $string = str_replace("\"", "'", $string);
+    $string = '"'.$string.'"';
   }
 
   if (strpos($string, "\n") !== false ||
