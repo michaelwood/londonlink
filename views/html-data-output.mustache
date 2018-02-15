@@ -1,27 +1,60 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>{{org_name}} - {{event_name}}</title>
+    <script src="{{js_dir}}/tablesorter/jquery-3.3.1.min.js"></script>
+    <script src="{{js_dir}}/tablesorter/jquery.tablesorter.js"></script>
+    <script>
+      $(document).ready(function(){
+        $("#wef").tablesorter();
+      });
+    </script>
     <style>
-table {
-  border-collapse: collapse;
-  width: 100%;
+/* based on tablesorter/theme/blue/style.css */
+/* tables */
+table.tablesorter {
+	font-family:arial;
+	background-color: #CDCDCD;
+	margin:10px 0pt 15px;
+	width: 100%;
+	text-align: left;
 }
-
-th, td {
-  text-align: left;
-  padding: 8px;
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+	background-color: #e6EEEE;
+	border: 1px solid #FFF;
+	padding: 4px;
+  padding-right: 20px;
 }
-
-tr:nth-child(even) {background-color: #f2f2f2;}
-
+table.tablesorter thead tr .header {
+  background-image: url("{{js_dir}}/tablesorter/bg.gif");
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+table.tablesorter tbody td {
+	color: #3D3D3D;
+	padding: 4px;
+	background-color: #FFF;
+	vertical-align: top;
+}
+table.tablesorter tbody tr.odd td {
+	background-color:#F0F0F6;
+}
+table.tablesorter thead tr .headerSortUp {
+  background-image: url("{{js_dir}}/tablesorter/asc.gif");
+}
+table.tablesorter thead tr .headerSortDown {
+  background-image: url("{{js_dir}}/tablesorter/desc.gif");
+}
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
+  background-color: #8dbdd8;
+}
     </style>
   </head>
   <body>
     <h1>{{org_name}} - {{event_name}}</h1>
-    <table>
-      <tbody>
+    <table id="wef" class="tablesorter">
         {{& table}}
-      </tbody>
     </table>
   </body>
 </html>

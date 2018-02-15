@@ -74,21 +74,33 @@ function skip_keys($key){
 
 function output_as_html($res, $event_name){
 	$csv = output_as_csv($res, $event_name, false);
-
 	$table = '';
 
-  foreach (str_getcsv($csv, "\n") as $row){
+  foreach (str_getcsv($csv, "\n") as $index => $row){
+
+    if ($index == 0){
+      $table .='<thead><tr>';
+      foreach (str_getcsv($row, ',') as $cell){
+        $table .="<th>$cell</th>";
+      }
+      $table .= '</tr></thead><tbody>';
+      continue;
+    }
+
+
     $table .='<tr>';
     foreach (str_getcsv($row, ',') as $cell){
       $table .="<td>$cell</td>";
     }
 		$table .='</tr>';
   }
+  $table .='</tbody>';
 
   $context = array(
     'table' => $table,
 		'event_name' => $event_name,
     'org_name' => config()['org_name'],
+    'js_dir' => plugins_url('/js/', __FILE__),
   );
 
 	$m = new Mustache_Engine(array(
