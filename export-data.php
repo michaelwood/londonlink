@@ -90,7 +90,7 @@ function output_as_html($res, $event_name){
 
     $table .='<tr>';
     foreach (str_getcsv($row, ',') as $cell){
-      $table .="<td>$cell</td>";
+      $table .="<td><div class=\"llg-data\">$cell</div></td>";
     }
 		$table .='</tr>';
   }
