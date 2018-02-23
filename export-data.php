@@ -128,11 +128,6 @@ function clean_up_str($string, $file_output){
     $string = '"'.$string.'"';
   }
 
-  if (strpos($string, "\n") !== false ||
-    strpos($string, ",") !== false){
-    return "\"".$string."\"";
-  }
-
   return $string;
 }
 
