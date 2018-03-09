@@ -6,7 +6,7 @@
     <script src="{{js_dir}}/tablesorter/jquery.tablesorter.js"></script>
     <script>
       $(document).ready(function(){
-        $("#wef").tablesorter();
+        $("#llg-quick-view").tablesorter();
       });
     </script>
     <style>
@@ -62,8 +62,30 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
   </head>
   <body>
     <h1>{{org_name}} - {{event_name}}</h1>
-    <table id="wef" class="tablesorter">
-        {{& table}}
+    <table id="llg-quick-view" class="tablesorter">
+      <thead>
+        <tr>
+          {{#col_headers}}
+          <th>
+            {{.}}
+          </th>
+          {{/col_headers}}
+        <tr>
+      <!-- todo -->
+      </thead>
+
+      <tbody>
+        {{#table_content}}
+        <tr>
+          {{#.}}
+          <td>
+            <div class="llg-data">{{.}}</div>
+          </td>
+          {{/.}}
+        </tr>
+      {{/table_content}}
+      </tbody>
+
     </table>
   </body>
 </html>

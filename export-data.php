@@ -73,71 +73,93 @@ function skip_keys($key){
 }
 
 function output_as_html($res, $event_name){
-	$csv = output_as_csv($res, $event_name, false);
-	$table = '';
+  $table_content = array();
 
-  foreach (str_getcsv($csv, "\n") as $index => $row){
+  $col_headers_initial;
+  $col_headers_previous = array();
 
-    if ($index == 0){
-      $table .='<thead><tr>';
-      foreach (str_getcsv($row, ',') as $cell){
-        $table .="<th>$cell</th>";
+  while ($row_arr = mysqli_fetch_assoc($res)) {
+    foreach ($row_arr as $key => $value) {
+
+      $col_headers = array();
+      $row = array();
+
+      if (skip_keys($key)){
+        continue;
       }
-      $table .= '</tr></thead><tbody>';
-      continue;
+
+      if ($key == 'data'){
+        $json_data = json_decode($value, true);
+        foreach ($json_data as $key => $value){
+
+          if (skip_keys($key)){
+            continue;
+          }
+
+          $row[] = $value;
+          $col_headers[] = $key;
+        }
+      } else {
+        $row[] = $value;
+        $col_headers[] = $key;
+      }
     }
 
-
-    $table .='<tr>';
-    foreach (str_getcsv($row, ',') as $cell){
-      $table .="<td><div class=\"llg-data\">$cell</div></td>";
+    /* If we're past the first row in the table and the keys suddenly change
+     * then write the keys out as a new row
+     */
+    if (count(array_diff($col_headers, $col_headers_previous)) != 0 &&
+        count($table_content) > 0) {
+      $table_content[] = $col_headers;
     }
-		$table .='</tr>';
+
+    if (!isset($col_headers_initial)){
+      $col_headers_initial = $col_headers;
+    }
+
+    $col_headers_previous = $col_headers;
+
+    $table_content[] = $row;
   }
-  $table .='</tbody>';
 
   $context = array(
-    'table' => $table,
+    'col_headers' => $col_headers_initial,
+    'table_content' => $table_content,
 		'event_name' => $event_name,
     'org_name' => config()['org_name'],
     'js_dir' => plugins_url('/js/', __FILE__),
   );
 
 	$m = new Mustache_Engine(array(
-		'loader' => new Mustache_Loader_FilesystemLoader(dirname(__FILE__) . '/views'),
+    'loader' => new Mustache_Loader_FilesystemLoader(
+      dirname(__FILE__) . '/views'),
 	));
 
-  echo $m->render("html-data-output", $context);
+  try {
+    echo $m->render("html-data-output", $context);
+  } catch (Exception $e){
+    echo $e;
+  }
 
   exit();
 }
 
-/* We want to avoid breaking the csv document so if the string contains a
- * new line or comma or a quote then we process this to give either the output
- * csv a fighting chance of being parsed correctly or to make the html output
- * safe.
- */
-function clean_up_str($string, $file_output){
 
-  if (!$file_output){
-    $string = filter_var($string, FILTER_SANITIZE_STRING,
-      FILTER_FLAG_NO_ENCODE_QUOTES);
-    $string = str_replace("\n", "<br /> ", $string);
-  } else {
-    $string = str_replace("\"", "'", $string);
-    $string = '"'.$string.'"';
-  }
+/* We want to avoid breaking the csv document so if the string contains a
+ * quote then we replace this and also quote the whole value.
+ */
+function clean_up_str($string){
+  $string = str_replace("\"", "'", $string);
+  $string = '"'.$string.'"';
 
   return $string;
 }
 
-function output_as_csv($res, $event_name, $file_output=true){
+function output_as_csv($res, $event_name){
   $config = config();
 
-  if ($file_output == true){
-    header ('Content-type:text/csv',true);
-    header ('Content-Disposition: attachment; filename="'.$config['org_name'].'-'.$event_name.'-'.date("d-m-y").'.csv"', true);
-  }
+  header ('Content-type:text/csv',true);
+  header ('Content-Disposition: attachment; filename="'.$config['org_name'].'-'.$event_name.'-'.date("d-m-y").'.csv"', true);
 
   $csv_out = "";
   $col_headers_previous = '';
@@ -168,12 +190,12 @@ function output_as_csv($res, $event_name, $file_output=true){
           }
 
           /* first row so get the keys for the column header from the json */
-          $col_headers .= clean_up_str($key, $file_output) . ',';
-          $csv_row .= clean_up_str($value, $file_output) . ',';
+          $col_headers .= clean_up_str($key) . ',';
+          $csv_row .= clean_up_str($value) . ',';
         }
       } else {
-          $col_headers .= clean_up_str($key, $file_output) . ',';
-          $csv_row .= clean_up_str($value, $file_output) . ',';
+          $col_headers .= clean_up_str($key) . ',';
+          $csv_row .= clean_up_str($value) . ',';
       }
     }
 
@@ -181,7 +203,7 @@ function output_as_csv($res, $event_name, $file_output=true){
     $csv_row = substr ($csv_row, 0, -1);
     $col_headers = substr($col_headers, 0, -1);
 
-    /* If the previous column headers didn't match then output them again
+    /* If the previous column headers didn't match then we output them again,
      * this should avoid values appearing under the wrong column header in the
      * case that someone changes the form half way through collecting the data
      */
@@ -194,12 +216,8 @@ function output_as_csv($res, $event_name, $file_output=true){
     $csv_out .= $csv_row . "\n";
   }
 
-  if ($file_output == true){
-    echo $csv_out;
-    exit();
-  }
-
-  return $csv_out;
+  echo $csv_out;
+  exit();
 }
 
 /* format the text a bit nicer */
