@@ -101,6 +101,8 @@ function save_booking(){
     $participant_name = '';
   }
 
+  /* TODO split out emailer functions */
+
   $mail_body = 'Hello,'."\n\n";
   $mail_body .= 'We have received your booking '.$participant_name.'';
   $mail_body .= "\n";

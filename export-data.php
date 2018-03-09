@@ -17,14 +17,14 @@ function export_data(){
   $db = llg_db_connection();
   $config = config();
 
-  $pass = $_POST['password'];
+  $pass = mysqli_real_escape_string($db, $_POST['password']);
   $event_id = mysqli_real_escape_string($db, $_POST['event_id']);
   $event_name = mysqli_real_escape_string($db, $_POST['event_name']);
 
   if (!isset ($pass))
     return;
 
-  $select_password = 'SELECT COUNT(password) FROM events WHERE id="'.$event_id.'" AND password=PASSWORD("'.mysqli_real_escape_string($db, $pass).'") LIMIT 1';
+  $select_password = 'SELECT COUNT(password) FROM events WHERE id="'.$event_id.'" AND password=PASSWORD("'.$pass.'") LIMIT 1';
   $pass_res = mysqli_query($db, $select_password) or die (mysqli_error($db));
 
   if (mysqli_fetch_assoc($pass_res)['COUNT(password)'] != 1){
