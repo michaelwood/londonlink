@@ -81,7 +81,7 @@ function submit_form(formJson){
 function validate_form(formToValidate){
 	var missing_values = [];
 
-	formToValidate.find(":required").each(function(){
+	formToValidate.find(":required").not(":hidden").each(function(){
 
 		var type = jq(this).prop("type");
 
