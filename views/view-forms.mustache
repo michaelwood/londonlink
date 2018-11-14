@@ -5,20 +5,18 @@
 
       <div class="form-field">
         <label for="select-form">Select a form to preview<br /></label>
-        <select id="select-form" name="form_template" />
-          <option value="">-</option>
+        <select id="select-form" name="form_template">
+          <option value="" >-</option>
           {{#forms}}
-          <option value="{{name}}">{{basename}}</option>
+          <option value="{{name}}" {{#in_use}}{{name}}:{{selected_form}}{{/in_use}}>{{basename}}</option>
           {{/forms}}
         </select>
-        <p>Forms live in {{forms_dir}}</p>
+        <input type="submit" value="View" class="button button-primary"/>
+        <p>Forms live in {{forms_dir}} .Please note styling will change to match current theme</p>
       </div>
-
-      <input type="submit" value="View" class="button button-primary"/>
       {{& csrf}}
     </form>
   </div>
 
-  <p>Please note styling will change to match current theme</p>
   {{#selected_form}}</p><b>{{selected_form}}:</b></p>{{/selected_form}}
 </div>
