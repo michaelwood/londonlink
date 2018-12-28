@@ -49,7 +49,7 @@ function save_booking(){
 
 
   /* Test the anti spam answer */
-  if (strtolower($form_data['anti_spam']) != strtolower($config['antispam'])){
+  if (trim(strtolower($form_data['anti_spam'])) != strtolower($config['antispam'])){
     exit_with_error("E102");
   }
 
