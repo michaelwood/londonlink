@@ -24,10 +24,8 @@ function booking_form_get_string ($event_name){
   ));
 
   /* If we're not already using SSL don't allow continue, redirect instead */
-  if (empty($_SERVER['HTTPS']))
-  {
+  if (empty($_SERVER['HTTPS'])) {
     $correct_url = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-
     return '<p>&#x1f512; <a href="'.$correct_url.'"><span id="llg-https-redirect-notice">Redirecting to secure server</span></a></p>';
   }
 

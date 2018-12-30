@@ -42,15 +42,8 @@ jq(document).ready(function(){
 });
 
 function redirect_to_https(){
-  var i = 3;
-  var countdown = setInterval(function(){
-    jq("#llg-https-redirect-notice").text("Redirecting to secure server..."+i);
-    if (i===1){
-      clearInterval(countdown);
-      window.location.protocol = "https:";
-    }
-    i--;
-   }, 1000);
+  jq("#llg-https-redirect-notice").text("Redirecting to secure server...");
+  window.location.protocol = "https:";
 }
 
 function submit_form(formJson){
