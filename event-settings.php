@@ -4,9 +4,50 @@ $m = new Mustache_Engine(array(
   'loader' => new Mustache_Loader_FilesystemLoader(dirname(__FILE__) . '/views'),
 ));
 
+/* Page util functions */
+
+function find_available_forms(){
+  $forms_dir = dirname(__FILE__) . '/forms/';
+
+  $forms = array();
+
+  foreach (scandir($forms_dir) as $key => $val){
+    /* Skip the unix dir entries of .. and ../ */
+    if ($val == '.' || $val == '..'){
+      continue;
+    }
+
+    $basename = basename($val, '.mustache');
+
+    $forms[] = array(
+      'name' => $val,
+      'basename' => $basename,
+      'in_use' => function($compare, Mustache_LambdaHelper $helper){
+        /* Cheeky bit of logic */
+        $compare = $helper->render($compare);
+        $comparison = explode(":", trim($compare), 2);
+
+        if (strcmp($comparison[0], $comparison[1]) == 0){
+          return $helper->render("selected=selected");
+        }
+        return;
+      }
+    );
+  }
+
+  return $forms;
+}
+
 
 function update_event (){
   $db = llg_db_connection();
+
+  $event_id = mysqli_real_escape_string($db, $_POST['event_id']);
+  $pass = mysqli_real_escape_string($db, $_POST['password']);
+
+  if(!llg_validate_pass($db, $event_id, $pass)){
+    exit();
+  }
 
   $update_sql = "UPDATE `events` SET ";
   foreach ($_POST as $key => $value) {
@@ -33,8 +74,7 @@ function update_event (){
   /* remove trailing comma */
   $update_sql = substr ($update_sql, 0, -1);
 
-  $update_sql .= ' WHERE id='.mysqli_real_escape_string($db,
-    $_POST['event_id']);
+  $update_sql .= ' WHERE id='.$event_id;
 
   $res = mysqli_query($db, $update_sql) or die(mysqli_error($db));
 }
@@ -105,35 +145,14 @@ function insert_event () {
   mysqli_query($db, $sql) or die("E9432: ".mysqli_error($db));
 }
 
-function toggle_event_status(){
 
-  if (!isset($_POST['event_id']) ||
-      !isset($_POST['event_state']))
-      return;
+/* Page render functions */
 
-  if ($_POST['event_state'] == 'Close')
-    $enabled = 0;
-  elseif ($_POST['event_state'] == 'Open')
-    $enabled = 1;
-  else
-    return;
-
-  $db = llg_db_connection ();
-
-  $event_id = mysqli_real_escape_string($db, $_POST['event_id']);
-
-  $sql = 'UPDATE `events` SET `enabled`='.$enabled.' WHERE id='.$event_id;
-  $result = mysqli_query($db, $sql) or die(mysqli_error());
-}
-
-
-function main_page()
+function llg_admin_page()
 {
   $db = llg_db_connection();
 
   $result = mysqli_query($db, 'SELECT * FROM events ORDER BY id DESC') or die (mysqli_error ());
-
-  $i = 0;
 
   $events = array();
 
@@ -156,42 +175,11 @@ function main_page()
   );
 
   global $m;
-  echo $m->render("event-settings", $context);
+  echo $m->render("events-list", $context);
 }
 
-function find_available_forms(){
-  $forms_dir = dirname(__FILE__) . '/forms/';
 
-  $forms = array();
-
-  foreach (scandir($forms_dir) as $key => $val){
-    /* Remove the unix dir entries of .. and ../ */
-    if ($val == '.' || $val == '..'){
-      continue;
-    }
-
-    $basename = basename($val, '.mustache');
-
-    $forms[] = array(
-      'name' => $val,
-      'basename' => $basename,
-      'in_use' => function($compare, Mustache_LambdaHelper $helper){
-        /* Cheeky bit of logic */
-        $compare = $helper->render($compare);
-        $comparison = explode(":", trim($compare), 2);
-
-        if (strcmp($comparison[0], $comparison[1]) == 0){
-          return $helper->render("selected=selected");
-        }
-        return;
-      }
-    );
-  }
-
-  return $forms;
-}
-
-function add_event_page(){
+function llg_admin_add_event_page(){
   global $m;
   $context = array(
     'pages' => get_pages(),
@@ -203,7 +191,8 @@ function add_event_page(){
   echo $m->render("add-event", $context);
 }
 
-function forms_page(){
+
+function llg_admin_forms_page(){
   global $m;
   $form_dir = dirname(__FILE__) . '/forms/';
 
@@ -240,6 +229,44 @@ function forms_page(){
   echo '<div class="wrap llg-form-preview">';
   echo $fm->render($_POST['form_template'], $form_dummy_context);
   echo '</div>';
+}
+
+function llg_admin_event_details_page(){
+
+  if (!isset($_GET['event_id'])){
+    return;
+  }
+
+  $db = llg_db_connection();
+
+  $id = mysqli_escape_string($db, $_GET['event_id']);
+
+  $result = mysqli_query($db, 'SELECT * FROM events WHERE id ='.$id.'') or die (mysqli_error ());
+  $bookings_res = mysqli_query($db, 'SELECT COUNT(id) FROM bookings WHERE event_id='.$id.'');
+
+  $event = mysqli_fetch_assoc($result);
+
+  /* Couldn't find the event. Either an incorrect id or has been deleted */
+  if (!isset($event)){
+    echo '<p>Event has been deleted (or never existed). <a href="?page=llg_booking_admin">All events</a></p>';
+    return;
+  }
+
+  $event['page_link'] = get_permalink($event['wp_page_id']);
+  $event['edit_page_link'] = get_edit_post_link($event['wp_page_id']);
+  $event['num_bookings'] = mysqli_fetch_array($bookings_res)[0];
+
+
+  $context = array(
+    'event' => $event,
+    'csrf' => wp_nonce_field("llg_event_dash", "llg_event_dash_csrf"),
+    'forms' => find_available_forms(),
+    'this_page' => $_GET['page'],
+    'bad_pass' => ($_GET['bad_pass'] == 1),
+  );
+
+  global $m;
+  echo $m->render("event-details", $context);
 }
 
 ?>

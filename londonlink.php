@@ -66,22 +66,11 @@ function verify_domain() {
   exit();
 }
 
-function llg_admin_page(){
-  main_page ();
-}
-
-function llg_admin_add_event(){
-  add_event_page();
-}
-
-function llg_admin_forms(){
-  forms_page();
-}
-
 function llg_register_admin_page(){
   add_menu_page ('Qevent Bookings', 'QEvents', 'manage_options', 'llg_booking_admin', 'llg_admin_page');
-  add_submenu_page ('llg_booking_admin', 'Add an event', 'Add an event', 'manage_options', 'llg_new_event', 'llg_admin_add_event');
-  add_submenu_page ('llg_booking_admin', 'Forms', 'Forms', 'manage_options', 'llg_forms', 'llg_admin_forms');
+  add_submenu_page ('llg_booking_admin', 'Add an event', 'Add an event', 'manage_options', 'llg_new_event', 'llg_admin_add_event_page');
+  add_submenu_page ('llg_booking_admin', 'Forms', 'Forms', 'manage_options', 'llg_forms', 'llg_admin_forms_page');
+  add_submenu_page ('llg_booking_admin',  'Event details', NULL, 'manage_options', 'llg_event_details', 'llg_admin_event_details_page');
 }
 
 function llg_form_shortcode_handler ($attr, $content, $tag){
@@ -180,6 +169,13 @@ function llg_remove_update_notify($value) {
   return $value;
 }
 
+function llg_admin_head(){
+  /* We want this registered but not viewable as it doesn't make sense
+   * to navigate to the event details page until you select one
+  */
+  remove_submenu_page('llg_booking_admin', 'llg_event_details');
+}
+
 /* Adds [londonlinkbookingform] */
 add_shortcode ('qform', 'llg_form_shortcode_handler');
 add_shortcode ('qformnextevents', 'llg_next_events_shortcode_handler');
@@ -191,6 +187,7 @@ add_action('admin_enqueue_scripts', 'llg_enqueue_scripts');
 add_action('admin_enqueue_scripts', 'llg_enqueue_admin_scripts');
 add_action('admin_init', 'llg_admin_init');
 add_action('widgets_init', 'llg_register_widgets');
+add_action('admin_head', 'llg_admin_head');
 
 add_filter('site_transient_update_plugins', 'llg_remove_update_notify');
 ?>
