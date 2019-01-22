@@ -1,0 +1,30 @@
+<!-- event-settings.mustache -->
+
+<div class="wrap">
+  <h2>Events <a href="?page=llg_new_event" class="add-new-h2">Add new</a></h2>
+
+  <table class="wp-list-table widefat fixed striped events">
+    <thead>
+      <tr>
+        <th class="manage-column column-primary">Title</th>
+        <th class="manage-column">Bookings</th>
+        <th class="manage-column">Booking person</th>
+        <th class="manage-column">Event Date</th>
+        <th class="manage-column">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+    {{#events}}
+      <tr>
+        <td><a href="?page=llg_event_details&amp;event_id={{id}}" class="row-title">{{name}}</a></td>
+        <td><a href="?page=llg_event_details&amp;event_id={{id}}" class="row-title">{{num_bookings}}</a></td>
+        <td title="{{booking_person_email}}">{{booking_person_name}}</td>
+        <td>{{event_start_date}} - {{event_end_date}}</td>
+        <td>{{#enabled}}Open{{/enabled}}{{^enabled}}Closed{{/enabled}}</td>
+      </tr>
+    {{/events}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+<!-- / event-settings.mustache -->
