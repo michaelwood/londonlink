@@ -37,7 +37,8 @@ function export_data(){
 
   $select_booking_data = '
     SELECT bookings.id, bookings.submit_timestamp,
-     AES_DECRYPT(data, CONCAT(PASSWORD("'.$pass.'"), "'.$salt.'")) AS data
+     AES_DECRYPT(data, CONCAT(PASSWORD("'.$pass.'"), "'.$salt.'")) AS data,
+     AES_DECRYPT(admin_notes, CONCAT(PASSWORD("'.$pass.'"), "'.$salt.'")) AS notes
      FROM bookings WHERE bookings.event_id='.$event_id.' ORDER BY id ASC';
 
 /*   Possible join for getting event information
@@ -54,7 +55,7 @@ function export_data(){
       output_as_pdf($res, $event_name);
       break;
     case 'html':
-      output_as_html($res, $event_name);
+      output_as_html($res, $event_name, $event_id);
       break;
     default:
       echo "Err Unknown output type";
@@ -66,21 +67,23 @@ function skip_keys($key){
   return in_array($key, ['anti_spam', 'llg_post_action', 'event_id']);
 }
 
-function output_as_html($res, $event_name){
+function output_as_html($res, $event_name, $event_id){
   $table_content = array();
 
   $col_headers_initial;
   $col_headers_previous = array();
 
   while ($row_arr = mysqli_fetch_assoc($res)) {
-    foreach ($row_arr as $key => $value) {
 
-      $col_headers = array();
-      $row = array();
+    $col_headers = array();
+    $row = array();
+
+    foreach ($row_arr as $key => $value) {
 
       if (skip_keys($key)){
         continue;
       }
+
 
       if ($key == 'data'){
         $json_data = json_decode($value, true);
@@ -90,11 +93,23 @@ function output_as_html($res, $event_name){
             continue;
           }
 
-          $row[] = $value;
+          $row[] = array('value' => $value,
+          'key' => $key,
+        );
           $col_headers[] = $key;
         }
+      } else if($key == 'notes'){
+        $row[] = array(
+          'value' => $value,
+          'key' => $key,
+          'admin_notes' => True,
+          'booking_id' => $row_arr['id'],
+        );
+
+        $col_headers[] = $key;
       } else {
-        $row[] = $value;
+        $row[] = array('value' => $value,
+        'key' => $key);
         $col_headers[] = $key;
       }
     }
@@ -119,9 +134,11 @@ function output_as_html($res, $event_name){
   $context = array(
     'col_headers' => $col_headers_initial,
     'table_content' => $table_content,
-		'event_name' => $event_name,
+    'event_name' => $event_name,
+    'event_id' => $event_id,
     'org_name' => config()['org_name'],
     'js_dir' => plugins_url('/js/', __FILE__),
+    'csrf' => wp_nonce_field("llg_event_dash", "llg_event_dash_csrf"),
   );
 
 	$m = new Mustache_Engine(array(

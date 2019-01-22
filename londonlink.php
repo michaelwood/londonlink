@@ -18,7 +18,10 @@ include_once ('event-settings.php');
 include_once ('booking-record.php');
 include_once ('booking-form.php');
 include_once ('delete-data.php');
+include_once ('update-admin-notes.php');
 include_once ('widget.php');
+
+//error_reporting(E_ALL);
 
 function llg_db_connection (){
   $config = config ();
@@ -129,11 +132,14 @@ function llg_process_post ()
     }
     break;
 
-  case 'toggle_event_status':
-    if (llg_can_do_this()) {
-      toggle_event_status();
+  case 'update_admin_notes':
+    if (llg_can_do_this()){
+      update_admin_notes();
     }
     break;
+
+  default:
+    exit();
   }
 }
 
