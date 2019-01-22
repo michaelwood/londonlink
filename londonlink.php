@@ -106,6 +106,9 @@ function llg_can_do_this(){
 
 function llg_process_post ()
 {
+  if (!isset($_POST['llg_post_action'])){
+    return;
+  }
   /* N.b These posts requests come from anywhere */
   switch ($_POST['llg_post_action']) {
 
