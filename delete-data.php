@@ -8,7 +8,18 @@ function delete_data(){
     exit();
   }
 
+  $pass = mysqli_real_escape_string($db, $_POST['password']);
   $event_id = mysqli_real_escape_string($db, $_POST['event_id']);
+  $event_name = mysqli_real_escape_string($db, $_POST['event_name']);
+
+  if (!isset ($pass)) {
+    exit();
+  }
+
+  if(!llg_validate_pass($db, $event_id, $pass)){
+    exit();
+  }
+
 
   $res = mysqli_query($db, 'SELECT wp_page_id FROM `events` WHERE id="'.$event_id.'"') or die (mysqli_error($db));
 

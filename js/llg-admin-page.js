@@ -52,7 +52,26 @@ jq(document).ready(function(){
       form.submit();
     } 
   });
-});
+
+
+  jq("#llg-bad-pass-msg a").click(function(e){
+    e.preventDefault();
+
+    jq(this).parent().fadeOut();
+
+    window.history.pushState(null, null,
+       window.location.search.replace('bad_pass=1',''));
+
+  });
+
+  jq("input[type=password]").focus(function(){
+    jq("#llg-bad-pass-msg:visible a").click();
+  });
+
+}); /* End on ready */
+
+
+
 
 function check_inputs_val(inputs){
   var errors = inputs.length;
