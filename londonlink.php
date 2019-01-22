@@ -35,8 +35,24 @@ function llg_db_connection (){
   return $llg_db_connection;
 }
 
-function llg_db_query($query){
-  return mysqli_query(llg_db_connection(), $query);
+function llg_validate_pass($db, $event_id, $password){
+
+  $pass = mysqli_real_escape_string($db, $password);
+  $event_id = mysqli_real_escape_string($db, $event_id);
+
+  $select_password = 'SELECT COUNT(password) FROM events WHERE id="'.$event_id.'" AND password=PASSWORD("'.$pass.'") LIMIT 1';
+  $pass_res = mysqli_query($db, $select_password) or die (mysqli_error($db));
+
+  if (mysqli_fetch_assoc($pass_res)['COUNT(password)'] != 1){
+
+    header('location:'.$_SERVER['REQUEST_URI'].'&bad_pass=1');
+    exit();
+  } else {
+    return True;
+  }
+
+  /* not that we're going to reach here but just in case */
+  return False;
 }
 
 function verify_domain() {
