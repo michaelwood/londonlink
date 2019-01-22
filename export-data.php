@@ -21,19 +21,13 @@ function export_data(){
   $event_id = mysqli_real_escape_string($db, $_POST['event_id']);
   $event_name = mysqli_real_escape_string($db, $_POST['event_name']);
 
-  if (!isset ($pass))
+  if (!isset ($pass)) {
     return;
-
-  $select_password = 'SELECT COUNT(password) FROM events WHERE id="'.$event_id.'" AND password=PASSWORD("'.$pass.'") LIMIT 1';
-  $pass_res = mysqli_query($db, $select_password) or die (mysqli_error($db));
-
-  if (mysqli_fetch_assoc($pass_res)['COUNT(password)'] != 1){
-    echo "Sorry that is not the correct password <a href=\"";
-    echo $_SERVER["REQUEST_URI"];
-    echo "\">back</a>";
-    exit();
   }
 
+  if(!llg_validate_pass($db, $event_id, $pass)){
+    exit();
+  }
 
   $salt = file_get_contents($config['saltfile'], FILE_USE_INCLUDE_PATH);
   if ($salt === false){
