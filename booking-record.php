@@ -2,7 +2,7 @@
 
 include_once ('config.php');
 
-function exit_with_error($err_msg, $details){
+function exit_with_error($err_msg, $details=null){
   if (config()['debug'] == true){
     $err_msg .= ' '.$details;
   }
