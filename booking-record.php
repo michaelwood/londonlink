@@ -121,7 +121,12 @@ function save_booking(){
   $headers .= "Content-type: text/plain; charset=iso-8859-1\r\n";
   $headers .= 'Reply-To:'.$booking_person_email;
 
-  mail ($mail_to, $subject, $mail_body, $headers, '-f '.$config['from']);
+  try {
+    mail ($mail_to, $subject, $mail_body, $headers, '-f '.$config['from']);
+  } catch (Exception $e){
+    exit_with_error('Mailing exception: '.$e->get_message().'');
+  }
+
   exit();
 }
 
