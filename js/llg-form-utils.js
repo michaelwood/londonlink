@@ -127,7 +127,13 @@ function serialiseForm(formToSerialise){
     var key = jq(this).prop("name");
 
     if (type == "radio" || type == "checkbox"){
-      val = formToSerialise.find("[name="+key+"]:checked").val();
+
+      formToSerialise.find("[name="+key+"]:checked").each(function(){
+        val += jq(this).val() + ' ';
+      });
+
+      val = val.trim();
+
     } else {
       val = jq(this).val();
       /* Make sure we don't overwrite nested keys whilst
