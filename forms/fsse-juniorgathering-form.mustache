@@ -44,7 +44,7 @@ input[type=checkbox], input[type=radio] {
 </style>
 
 <h2>Application for {{event.name}}</h2>
-<span id="llg-thank-you">
+<div id="llg-thank-you">
   <h3>Thank you for your application</h3>
   <p><b>We will send you a confirmation email to let you know we've received it</b> if you do not receive an email within 2 hours please check your spam folder or <a href="/contact">Contact us</a></p>
 
@@ -59,10 +59,10 @@ input[type=checkbox], input[type=radio] {
 
   <p><a href="?" title="Make another booking">Make another booking</a></p>
 
-</span>
+</div>
 
 
-<span id="llg-booking-area">
+<div id="llg-booking-area">
   <ul style="list-style: none">
     <li><strong>Date:</strong> {{event.event_start_date}} to {{event.event_end_date}}</li>
     <li><strong>Contact person:</strong> <a href="/contact">{{event.booking_person_name}}</a></li>
@@ -75,15 +75,15 @@ input[type=checkbox], input[type=radio] {
 
     <h2>Participant information</h2>
 
-    <label>Full name of participant (and name known by)
+    <label>Full Name (and name known by)
       <input type="text" name="full_name" required/>
     </label>
 
-    <label>Home address
+    <label>Home Address
       <textarea name="address" required></textarea>
     </label>
 
-    <label>Date of birth (must be 11 by 1st Sept and under 15)
+    <label>Date of Birth (must be 11 by 1st Sept and under 15)
       <input type="text" placeholder="dd/mm/yyyy" name="dob" required/>
     </label>
 
@@ -91,21 +91,32 @@ input[type=checkbox], input[type=radio] {
       <input type="text" name="gender" required/>
     </label>
 
+    <label >Dietary Requirements
+      <textarea name="diet"></textarea>
+    </label>
+
+    <label title="Especially important if the participant takes prescription drugs, has a medical condition or allergies">General practitioner (Doctor contact)
+      <textarea name="GP" placeholder="Practice name and phone"></textarea>
+    </label>
+
+    <label >Allergies
+      <textarea name="allergies"></textarea>
+    </label>
 
     <label>
-      <input type="checkbox" name="first_time" value="yes">First time at a FSSE event?
+      <input type="checkbox" name="first_time" value="yes">First time at a <abbr title="Friends Southern Summer Events">FSSE</abbr> event?
     </label>
 
     <br />
-      <label>Additional Information: <span class="unbold">It is essential to disclose to the organisers anything they need to know about the <strong>health or personal circumstances</strong> of the participant so that we can best support their needs. <a href="#" class="llg-toggler" data-toggle-selector="#additional-info-extra">More info on additional details</a>
-        <div class="llg-hidden" id="additional-info-extra">
+    <label>Any Additional Information: <span class="unbold">It is essential to disclose to the organisers anything they need to know about the <strong>health or personal circumstances</strong> of the participant so that we can best support their needs.</span> <a href="#" class="llg-toggler" data-toggle-selector="#additional-info-extra">More info on additional details</a>
+        <span class="llg-hidden" id="additional-info-extra">
           <p>
-        {{event.name}} is an event underpinned by the Quaker values of inclusivity and acceptance and, as such, we endeavour to accommodate a range of needs, both emotional and physical. We would ask that you disclose any information that you think we should know that will help us meet your child’s needs at the event. That could include information about additional emotional or learning needs or context about homelife that you think it would be beneficial for us to know. Physical needs should be listed in the medical section of the form.
+        {{event.name}} is an event underpinned by the Quaker values of inclusivity and acceptance and, as such, we endeavour to accommodate a range of needs, both emotional and physical. We would ask that you disclose any information that you think we should know that will help us meet the participant's needs at the event. That could include information about additional emotional or learning needs or context about homelife that you think it would be beneficial for us to know.
           </p>
           <p>
-          All information provided here will be confidential. We would not normally discuss any information given, with the participant. This information will used to help us to be sensitive to any additional needs the participant may have and we would ask you to share information honestly.  Whilst our volunteers are trained annually in safeguarding principles and are equipped to deal with young people at an event such as {{event.name}}, if there is information that we have not been made aware prior to the event then this may result in us being unable to fully accommodate a young person at the event. In more serious instances could result in us asking a parent/guardian to collect the participant from the event.
+          All information provided here will be confidential. We would not normally discuss any information given, with the participant. This information will be used to help us to be sensitive to any additional needs the participant may have and we would ask you to share information honestly.  Whilst our volunteers are trained annually in safeguarding principles and are equipped to deal with young people at an event such as {{event.name}}, if there is information that we have not been made aware prior to the event then this may result in us being unable to fully accommodate a participant at the event. In more serious instances could result in us asking a parent/guardian to collect the participant from the event.
           </p>
-      </div>
+      </span>
 
       <textarea name="extra_support"></textarea>
     </label>
@@ -114,11 +125,11 @@ input[type=checkbox], input[type=radio] {
 
     <p><strong>Are you known at a UK Quaker Meeting?</strong> This information helps us gauge how familiar the participants are with Quakers and who they might already know at the event. When requested we can also help facilitate financial assistance with your AM/LM. We also use it generally for event planning purposes.</p>
 
-    <label for="local_meeting">Meeting name
+    <label for="local-meeting">Meeting name
       <input type="text" id="local-meeting" name="local_meeting"/>
     </label>
 
-    <label for="area_meeting">Area meeting name
+    <label for="area-meeting">Area meeting name
       <input type="text" name="area_meeting" id="area-meeting"/>
     </label>
 
@@ -132,7 +143,7 @@ input[type=checkbox], input[type=radio] {
       <label><input type="checkbox" name="payment_method" value="self_funded">To be confirmed</label>
     </div>
 
-    <label>Additional financial info: <span class="unbold">
+    <label>Additional financial info
       <textarea name="financial_info" placeholder="e.g. Contact details for Area meeting treasurer"></textarea>
     </label>
 
@@ -165,31 +176,44 @@ input[type=checkbox], input[type=radio] {
       </label>
 
       <h2>Consent</h2>
+
+
+      <h3>First Aid</h3>
+      <p>Consent for {{event.name}} First Aiders to give medicines if needed:</p>
+      <label>
+        <input type="checkbox" name="medicines" value="ibuprofen">Ibuprofen
+      </label>
+      <label>
+        <input type="checkbox" name="medicines" value="paracetamol">Paracetamol
+      </label>
+
+
       <h3>Photos/Multimedia</h3>
-      <p>
-      Notes on terms: <br />
-      <strong>Publicity</strong> - We'd be grateful if the participant can be included in photographs/media that may be used for our own future publicity materials and for any externally produced publicity (For example: <a href="http://thefriend.org" target="_blank">The Friend magazine</a>).
-      <br />
-
-      <strong>FSSE Community</strong> - FSSE volunteers, parents and participants (For example: Photos in a FSSE {{event.name}} photo album that parents can view).
-      </p>
-
       <div class="llg-options-container-required">
 
-        <label><input type="radio" name="multimedia_consent" value="no">No consent for any photos/media</label>
+        <label><input type="radio" name="multimedia_consent" value="no">No consent for <i>any</i> photos/media</label>
 
-        <label><input type="radio" name="multimedia_consent" value="all_uses" />Yes photos/media for publicity and within the FSSE community
+        <label><input type="radio" name="multimedia_consent" value="all_uses" />Yes photos/media for general publicity use <i>and</i> within the FSSE community
 
         </label>
 
-        <label><input type="radio" name="multimedia_consent" value="only_within_fsse" />Yes photos/media only within FSSE community
+        <label><input type="radio" name="multimedia_consent" value="only_within_fsse" />Yes photos/media <i>only</i> within FSSE community
         </label>
 
       </div>
+      <p>
+      Notes on terms: <br />
+      <strong>General Publicity</strong> - We'd be grateful if the participant can be included in photographs/media that may be used for our own future publicity materials and for any externally produced publicity (For example: <a href="http://thefriend.org" target="_blank">The Friend magazine</a>).
+      <br />
+
+      <strong><abbr title="Friends Southern Summer Events">FSSE</abbr> Community</strong> - FSSE volunteers, parents and participants (For example: Photos in a FSSE {{event.name}} photo album that parents can view).
+      </p>
+
+
 
       <h3>Other consent</h3>
 
-      <label><input type="checkbox" name="future_contact_consent" value="yes" /> Can we use contact details to tell you about our future events?
+      <label><input type="checkbox" name="future_contact_consent" value="yes" /> Use contact details to tell you about our future events?
       </label>
 
 
@@ -208,13 +232,13 @@ input[type=checkbox], input[type=radio] {
 
       <p>By completing the application form, you agree for us to securely store the information you have provided to help us plan for the event. We will only retain your personal information for as long as is necessary to fulfil the purposes we collected it for, including for the purposes of satisfying any legal, accounting or reporting requirements.</p>
       <p>You can request a copy of your information which we hold or ask for any information we have that concerns you to be deleted. Our Nominated Officer for data protection is the Clerk of FSSE, who can be contacted on info@fsse.org.</p>
-      <p>For more information on how we store and process your data, please see our <a href="TODO!" >FSSE Data Protection and Security Policy Data Statement</a>. </p>
+      <p>For more information on how we store and process your data, please see our <a href="TODO!" >TODO ! FSSE Data Protection and Security Policy Data Statement</a>. </p>
 
 
       <label for="anit_spam">Anti-spam question please complete the following:<span class="unbold"> <a href="https://en.wikipedia.org/wiki/George_Fox" target="_blank">The founder of Quakerism</a> has the first name George and surname?:</span></label>
-      <input type="text" name="anti_spam" placeholder="???" required>
+      <input type="text" id="anit_spam" name="anti_spam" placeholder="???" required>
       <input type="button" id="llg-send-form-btn" value="Send!"/>
       &nbsp;
       <img src="{{img_url}}/spinner.gif" id="llg-spinner" alt="please wait..." />
   </form>
-</span>
+</div>
