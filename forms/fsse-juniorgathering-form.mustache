@@ -91,8 +91,13 @@ input[type=checkbox], input[type=radio] {
       <input type="text" name="gender" required/>
     </label>
 
-    <label >Dietary Requirements
-      <textarea name="diet"></textarea>
+    <label >Mobile
+      <input type="text" name="mobile"/>
+    </label>
+
+
+    <label>Dietary Requirements
+      <textarea name="diet" placeholder="e.g. Vegetarian, Vegan"></textarea>
     </label>
 
     <label title="Especially important if the participant takes prescription drugs, has a medical condition or allergies">General practitioner (Doctor contact)
@@ -110,13 +115,13 @@ input[type=checkbox], input[type=radio] {
 
     <br />
     <label>Any Additional Information: <span class="unbold">It is essential to disclose to the organisers anything they need to know about the <strong>health or personal circumstances</strong> of the participant so that we can best support their needs.</span> <a href="#" class="llg-toggler" data-toggle-selector="#additional-info-extra">More info on additional details</a>
-        <span class="llg-hidden" id="additional-info-extra">
-          <p>
+        <span class="llg-hidden unbold" id="additional-info-extra">
+          <br />
         {{event.name}} is an event underpinned by the Quaker values of inclusivity and acceptance and, as such, we endeavour to accommodate a range of needs, both emotional and physical. We would ask that you disclose any information that you think we should know that will help us meet the participant's needs at the event. That could include information about additional emotional or learning needs or context about homelife that you think it would be beneficial for us to know.
-          </p>
-          <p>
+          <br />
+          <br />
           All information provided here will be confidential. We would not normally discuss any information given, with the participant. This information will be used to help us to be sensitive to any additional needs the participant may have and we would ask you to share information honestly.  Whilst our volunteers are trained annually in safeguarding principles and are equipped to deal with young people at an event such as {{event.name}}, if there is information that we have not been made aware prior to the event then this may result in us being unable to fully accommodate a participant at the event. In more serious instances could result in us asking a parent/guardian to collect the participant from the event.
-          </p>
+          <br />
       </span>
 
       <textarea name="extra_support"></textarea>
