@@ -43,7 +43,7 @@ input[type=checkbox], input[type=radio] {
 }
 </style>
 
-<h2>Application for {{event.name}}</h2>
+<h2>We look forward to reciving your application for {{event.name}}!</h2>
 <div id="llg-thank-you">
   <h3>Thank you for your application</h3>
   <p><b>We will send you a confirmation email to let you know we've received it</b> if you do not receive an email within 2 hours please check your spam folder or <a href="/contact">Contact us</a></p>
@@ -53,9 +53,9 @@ input[type=checkbox], input[type=radio] {
   <h3>What happens next?</h3>
   <p>Keep an eye out for an email from our bookings person ({{event.booking_person_name}}) in response to your application.</p>
   <p>We hope to offer everyone who applies a place. When we have more applications than space, places are first offered to those in our <a href="//fsse.org.uk/fsse/catchment/" >catchment area</a> (basically the south east) and then on a first come first serve basis.</p>
-  <p>Once you are offered a place and have accepted it we will send you information on payment, final details and a medical update form.</p>
+  <p>Once you are offered a place and have accepted it we will send you information on payment, final event details, travel information and a medical update form.</p>
 
-  <p>Please don't hesitate to contact {{event.booking_person_name}} if you have any questions</p>
+  <p>Please don't hesitate to contact <a href="/contact">{{event.booking_person_name}}</a> if you have any questions</p>
 
   <p><a href="?" title="Make another booking">Make another booking</a></p>
 
@@ -70,7 +70,6 @@ input[type=checkbox], input[type=radio] {
     <li><strong>More info:</strong> <a href="//fsse.org.uk/files/TODO ">2019 event info pack TODO</a></li>
   </ul>
 
-  <p>Required fields are denoted by a red left border</p>
   <form class="llg-form" id="llg-event-form" method="POST">
 
     <h2>Participant information</h2>
@@ -83,15 +82,15 @@ input[type=checkbox], input[type=radio] {
       <textarea name="address" required></textarea>
     </label>
 
-    <label>Date of Birth (must be 11 by 1st Sept and under 15)
-      <input type="text" placeholder="dd/mm/yyyy" name="dob" required/>
+    <label>Date of Birth <span class="unbold">format dd/mm/yyyy (must be 11 by 1st Sept and under 15)</span>
+      <input type="text" placeholder="dd/mm/yyyy" name="dob" pattern="\d\d?/\d\d?\/\d{4}" required/>
     </label>
 
     <label >Gender
       <input type="text" name="gender" required/>
     </label>
 
-    <label >Mobile
+    <label >Mobile number
       <input type="text" name="mobile"/>
     </label>
 
@@ -100,8 +99,12 @@ input[type=checkbox], input[type=radio] {
       <textarea name="diet" placeholder="e.g. Vegetarian, Vegan"></textarea>
     </label>
 
-    <label title="Especially important if the participant takes prescription drugs, has a medical condition or allergies">General practitioner (Doctor contact)
+    <label title="Especially important if the participant takes prescription medication, has a medical condition or allergies">General practitioner (Doctor contact)
       <textarea name="GP" placeholder="Practice name and phone"></textarea>
+    </label>
+
+    <label >Health issues <span class="unbold">Please state any health issues we might need to know about, if the participant takes any medication and who will be responsible for administering this medication? (staff/participant)
+      <textarea name="health"></textarea>
     </label>
 
     <label >Allergies
@@ -109,10 +112,6 @@ input[type=checkbox], input[type=radio] {
     </label>
 
     <br />
-    <label>
-      <input type="checkbox" name="first_time" value="yes">First time at a <abbr title="Friends Southern Summer Events">FSSE</abbr> event?
-    </label>
-
     <br />
     <label>Any Additional Information: <span class="unbold">It is essential to disclose to the organisers anything they need to know about the <strong>health or personal circumstances</strong> of the participant so that we can best support their needs.</span> <a href="#" class="llg-toggler" data-toggle-selector="#additional-info-extra">More info on additional details</a>
         <span class="llg-hidden unbold" id="additional-info-extra">
@@ -129,7 +128,7 @@ input[type=checkbox], input[type=radio] {
 
     <h3>Quaker Meeting</h3>
 
-    <p><strong>Are you known at a UK Quaker Meeting?</strong> This information helps us gauge how familiar the participants are with Quakers and who they might already know at the event. When requested we can also help facilitate financial assistance with your AM/LM. We also use it generally for event planning purposes.</p>
+    <p><strong>Are you known at a Quaker Meeting in the UK?</strong> This information helps us gauge how familiar the participants are with Quakers and who they might already know at the event. When requested we can also help facilitate financial assistance with your Area Meeting or Local Meeting.</p>
 
     <label for="local-meeting">Meeting name
       <input type="text" id="local-meeting" name="local_meeting"/>
@@ -145,8 +144,8 @@ input[type=checkbox], input[type=radio] {
     <div class="llg-options-container-required">
       <label><input type="checkbox" name="payment_method" value="self_funded">Self funded</label>
       <label><input type="checkbox" name="payment_method" value="AM_LM_funded">Area/Local Meeting Funds</label>
-      <label><input type="checkbox" name="payment_method" value="contact_me_about_busary_funding">Please contact me about a Busary</label>
-      <label><input type="checkbox" name="payment_method" value="self_funded">To be confirmed</label>
+      <label><input type="checkbox" name="payment_method" value="contact_me_about_busary_funding">Please contact me about a Busary/Funding</label>
+      <label><input type="checkbox" name="payment_method" value="to_be_confirmed">To be confirmed</label>
     </div>
 
     <label>Additional financial info
@@ -164,6 +163,12 @@ input[type=checkbox], input[type=radio] {
         <textarea name="parent_address_if_different"></textarea>
       </label>
 
+      <label>
+        <input type="checkbox" name="correspond_by_post" value="yes" />Correspondence by post<span class="unbold">
+          We prefer to use email to save expense and paper. If you need correspondence sent by post, tick here.</span>
+      </label>
+
+
       <label>Home phone number
         <input type="text" name="parent_guardian_home_phone" required/>
       </label>
@@ -173,13 +178,18 @@ input[type=checkbox], input[type=radio] {
       </label>
 
       <label>Parent/Guardian email contact<span class="unbold"> This is the email address that we will correspond with you on regarding this application.</span>
-        <input type="text" name="primary_email" required/>
+        <input type="text" name="primary_email" pattern=".*@.*" required/>
       </label>
 
-      <label>
-        <input type="checkbox" name="correspond_by_post" value="yes" />Correspondence by post<span class="unbold">
-          We prefer to use email to save expense and paper. If you need correspondence sent by post, tick here.</span>
+      <label>Secondary Contact name <span class="unbold">This person must be fully available during the event ({{event.event_start_date}} to {{event.event_end_date}})</span>
+
+        <input type="text" name="secondary_contact_name" required />
       </label>
+
+      <label>Secondary Contact phone number
+        <input type="text" name="secondary_contact_phone" required />
+      </label>
+
 
       <h2>Consent</h2>
 
@@ -192,6 +202,9 @@ input[type=checkbox], input[type=radio] {
       <label>
         <input type="checkbox" name="medicines" value="paracetamol">Paracetamol
       </label>
+      <label>
+        <input type="checkbox" name="medicines" value="lemsip">Lemsip
+      </label>
 
 
       <h3>Photos/Multimedia</h3>
@@ -199,27 +212,27 @@ input[type=checkbox], input[type=radio] {
 
         <label><input type="radio" name="multimedia_consent" value="no">No consent for <i>any</i> photos/media</label>
 
-        <label><input type="radio" name="multimedia_consent" value="all_uses" />Yes photos/media for general publicity use <i>and</i> within the FSSE community
+        <label><input type="radio" name="multimedia_consent" value="all_uses" />Yes consent for photos/media for general publicity use <i>and</i> within the FSSE community
 
         </label>
 
-        <label><input type="radio" name="multimedia_consent" value="only_within_fsse" />Yes photos/media <i>only</i> within FSSE community
+        <label><input type="radio" name="multimedia_consent" value="only_within_fsse" />Yes consent for photos/media <i>only</i> within FSSE community
         </label>
 
       </div>
       <p>
-      Notes on terms: <br />
-      <strong>General Publicity</strong> - We'd be grateful if the participant can be included in photographs/media that may be used for our own future publicity materials and for any externally produced publicity (For example: <a href="http://thefriend.org" target="_blank">The Friend magazine</a>).
+      Notes on terms<br />
+      <strong>General Publicity:</strong> We'd be grateful if the participant can be included in photographs/media that may be used for our own future publicity materials and for any externally produced publicity (For example: <a href="http://thefriend.org" target="_blank">The Friend magazine</a>).
       <br />
 
-      <strong><abbr title="Friends Southern Summer Events">FSSE</abbr> Community</strong> - FSSE volunteers, parents and participants (For example: Photos in a FSSE {{event.name}} photo album that parents can view).
+      <strong><abbr title="Friends Southern Summer Events">FSSE</abbr> Community:</strong> FSSE volunteers, parents and participants (For example: Photos in a FSSE {{event.name}} photo album that parents can view).
       </p>
 
 
 
       <h3>Other consent</h3>
 
-      <label><input type="checkbox" name="future_contact_consent" value="yes" /> Use contact details to tell you about our future events?
+      <label><input type="checkbox" name="future_contact_consent" value="yes" /> Yes to using contact details to tell you about our future events?
       </label>
 
 
@@ -228,20 +241,26 @@ input[type=checkbox], input[type=radio] {
         <label for="consent"><input type="checkbox" id="consent" value="yes" name="event_consent" required/> I give permission for my child / ward to take part in this event and the participant agrees to adhere to the <a href="//fsse.org.uk/jg/boundaries/">event boundaries</a>.</label>
       </div>
 
-      <h3>Questionnaire</h3>
+      <h2>Questionnaire</h2>
 
       <label>Please could you tell us how you heard about the event
         <textarea name="how_heard_about_event" placeholder="e.g. Friend from Meeting, online search, family member"></textarea>
       </label>
 
-      <h3>And finally</h3>
+      <label>
+        <input type="checkbox" name="first_time" value="yes">First time at a <abbr title="Friends Southern Summer Events">FSSE</abbr> event?
+      </label>
+
+
+
+      <h2>And finally</h2>
 
       <p>By completing the application form, you agree for us to securely store the information you have provided to help us plan for the event. We will only retain your personal information for as long as is necessary to fulfil the purposes we collected it for, including for the purposes of satisfying any legal, accounting or reporting requirements.</p>
       <p>You can request a copy of your information which we hold or ask for any information we have that concerns you to be deleted. Our Nominated Officer for data protection is the Clerk of FSSE, who can be contacted on info@fsse.org.</p>
       <p>For more information on how we store and process your data, please see our <a href="TODO!" >TODO ! FSSE Data Protection and Security Policy Data Statement</a>. </p>
 
 
-      <label for="anit_spam">Anti-spam question please complete the following<span class="unbold"> <a href="https://en.wikipedia.org/wiki/George_Fox" target="_blank">The founder of Quakerism</a> has the first name George and surname?:</span></label>
+      <label for="anit_spam">Anti-spam question please complete the following<span class="unbold"> <a href="https://en.wikipedia.org/wiki/George_Fox" title="George Fox" target="_blank">The founder of Quakerism</a> has the first name George and surname?:</span></label>
       <input type="text" id="anit_spam" name="anti_spam" placeholder="???" required>
       <input type="button" id="llg-send-form-btn" value="Send!"/>
       &nbsp;
