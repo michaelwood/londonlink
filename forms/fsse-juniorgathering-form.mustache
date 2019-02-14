@@ -43,9 +43,8 @@ input[type=checkbox], input[type=radio] {
 }
 </style>
 
-<h2>Application for {{event.name}}</h2>
 <div id="llg-thank-you">
-  <h3>Thank you for your application</h3>
+  <h2>Thank you for your application</h2>
   <p><b>We will send you a confirmation email to let you know we've received it</b> if you do not receive an email within 2 hours please check your spam folder or <a href="/contact">Contact us</a></p>
 
   <img src="//fsse.org.uk/files/sunflower.jpg" class="aligncenter" alt="Sunflower"/>
@@ -63,11 +62,14 @@ input[type=checkbox], input[type=radio] {
 
 
 <div id="llg-booking-area">
+
+  <h2>We look forward to reciving your application for {{event.name}}!</h2>
+
   <ul style="list-style: none">
     <li><strong>Date:</strong> {{event.event_start_date}} to {{event.event_end_date}}</li>
     <li><strong>Contact person:</strong> <a href="/contact">{{event.booking_person_name}}</a></li>
     <li><strong>Cost:</strong> £{{#event.cost}}{{event.cost}}{{/event.cost}}{{^event.cost}}Free{{/event.cost}}</li>
-    <li><strong>More info:</strong> <a href="//fsse.org.uk/files/TODO ">2019 event info pack TODO</a></li>
+    <li><strong>More info:</strong> <a href="//fsse.org.uk/files/junior-gathering-info-pack-2019.pdf" target="_blank">2019 event info pack</a></li>
   </ul>
 
   <p>Required fields are denoted by a red left border</p>
@@ -109,7 +111,7 @@ input[type=checkbox], input[type=radio] {
       <textarea name="GP" placeholder="Practice name and phone"></textarea>
     </label>
 
-    <label >Health Information<span class="unbold">Please state any health issues and information we might need to know about, if the participant takes any medication and who will be responsible for administering this medication? (staff/participant)
+    <label >Health Information <span class="unbold">Please state any health issues and information we might need to know about, if the participant takes any medication and who will be responsible for administering this medication? (staff/participant)
       <textarea name="health"></textarea>
     </label>
 
@@ -243,11 +245,18 @@ input[type=checkbox], input[type=radio] {
         <textarea name="how_heard_about_event" placeholder="e.g. Friend from Meeting, online search, family member"></textarea>
       </label>
 
+      <br />
+      <label>
+        <input type="checkbox" name="first_time" value="yes">First time at a <abbr title="Friends Southern Summer Events">FSSE</abbr> event?
+      </label>
+
+
+
       <h2>And finally</h2>
 
       <p>By completing the application form, you agree for us to securely store the information you have provided to help us plan for the event. We will only retain your personal information for as long as is necessary to fulfil the purposes we collected it for, including for the purposes of satisfying any legal, accounting or reporting requirements.</p>
       <p>You can request a copy of your information which we hold or ask for any information we have that concerns you to be deleted. Our Nominated Officer for data protection is the Clerk of FSSE, who can be contacted on info@fsse.org.</p>
-      <p>For more information on how we store and process your data, please see our <a href="TODO!" >TODO ! FSSE Data Protection and Security Policy Data Statement</a>. </p>
+      <p>For more information on how we store and process your data, please see our <a href="//fsse.org.uk/files/FSSE-Data-Protection-and-Security-Policy-Data-protection-statement.pdf" target="_blank">FSSE Data Protection and Security Policy Data Statement</a>. </p>
 
 
       <label for="anit_spam">Anti-spam question please complete the following<span class="unbold"> <a href="https://en.wikipedia.org/wiki/George_Fox" target="_blank">The founder of Quakerism</a> has the first name George and surname?:</span></label>
