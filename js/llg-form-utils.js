@@ -35,7 +35,6 @@ jq(document).ready(function(){
   }
 
   jq(".llg-toggler").click(function(e){
-    e.preventDefault();
     var toToggle = jq(this).data('toggle-selector');
     jq(toToggle).slideToggle();
   });
