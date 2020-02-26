@@ -57,7 +57,7 @@ function save_booking(){
 
   $event_id = mysqli_real_escape_string($db, $_POST['event_id']);
 
-  $select_booking_det = 'SELECT `name`, `booking_person_email`, `password` FROM `events` WHERE id='.$event_id.' LIMIT 1';
+  $select_booking_det = 'SELECT `name`, `booking_person_name`, `booking_person_email`, `password` FROM `events` WHERE id='.$event_id.' LIMIT 1';
 
   $res = mysqli_query($db, $select_booking_det) or exit_with_error("E105", mysqli_error($db) . $select_booking_det);
   $event_details = mysqli_fetch_assoc($res);
@@ -104,15 +104,20 @@ function save_booking(){
   /* TODO split out emailer functions */
 
   $mail_body = 'Hello,'."\n\n";
-  $mail_body .= 'We have received your application '.$participant_name.'';
+  $mail_body .= 'Thank you, We have received your application '.$participant_name.'';
   $mail_body .= "\n";
-  $mail_body .= 'If there any problems please don\'t hesitate to contact the bookings person for this event (CC d)';
+  $mail_body .= "\n";
+  $mail_body .= 'The bookings person ('.$event_details['booking_person_name'].') will process your application and respond with further information.';
+  $mail_body .= "\n";
+  $mail_body .= 'If there any problems please don\'t hesitate to contact the bookings person for this event '.$mail_cc.' (CC d)';
   $mail_body .= "\n\n";
-  $mail_body .= 'Thank you';
+  $mail_body .= 'In Friendship,';
+  $mail_body .= "\n";
+  $mail_body .= 'Friends Southern Summer Events';
   $mail_body .= "\n\n";
   $mail_body .= '---';
   $mail_body .= "\n";
-  $mail_body .= 'http://'.$config['domain'].'';
+  $mail_body .= 'http://'.$config['domain'].' Tell your friends!';
 
   $headers = 'From: '.$config['from'].''."\r\n";
   $headers .= 'Cc:'.$mail_cc."\r\n";
