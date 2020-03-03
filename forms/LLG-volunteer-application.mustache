@@ -1,0 +1,239 @@
+<h2>Volunteer application</h2>
+
+<span id="llg-thank-you">
+  <p><b>Thank you for your application, we will send you a confirmation of receipt email</b> if you do not receive confirmation within 2 hours please check your spam folder or <a href="/contact">Contact us</a></p>
+</span>
+
+<span id="llg-booking-area">
+
+  <p>Please <a href="/contact/">contact us</a> if you have any questions.</p>
+
+  <br />
+
+<script>
+var lmOptions = {
+  url: "/webservices/quaker/local-quaker-meetings.json",
+  getValue: "lm",
+  list: {
+    match: {
+      enabled: true
+    },
+    maxNumberOfElements: 8
+  },
+};
+
+var amOptions = {
+  url: "/webservices/quaker/quaker-area-meetings.json",
+  getValue: "am",
+  theme: "square",
+
+  list: {
+    match: { enabled: true } },
+};
+
+jQuery(document).ready(function(){
+  jQuery("#local-meeting").easyAutocomplete(lmOptions);
+  jQuery("#area-meeting").easyAutocomplete(amOptions);
+});
+
+</script>
+
+<style scoped>
+textarea {
+  height: initial !important;
+  margin-bottom: 15px !important;
+}
+
+  .easy-autocomplete-container ul {
+    margin-left: initial !important;
+  }
+
+  .easy-autocomplete-container li {
+    margin-bottom: initial !important;
+  }
+</style>
+
+<span id="llg-booking-area">
+  <form class="llg-form" id="llg-event-form" method="POST">
+
+    <section>
+
+    <h3>Please complete if you would like to be considered as a staff volunteer for London Link
+        Group: </h3>
+    <label>Name
+      <input type="text" name="name" required/>
+    </label><br>
+
+    <label>Preferred Name
+        <input type="text" name="preffered_name" maxlength="255"/>
+    </label><br>
+
+    <label>Gender Information
+        <input type="text" name="gender_information" maxlength="255" required/>
+    </label><br>
+
+    <label>Preferred Pronouns
+        <input type="text" name="preffered_pronouns" maxlength="255"/>
+      </label><br>
+
+    <label> Date of Birth (dd/mm/yy):
+      <input type="date" placeholder="dd/mm/yy" name="dob" maxlength="8" size="8" required>
+    </label><br>
+
+    <label>Address
+      <textarea name="address" required></textarea>
+    </label><br>
+
+    <label>Telephone Number
+        <input type="tel" name="telephone_number" size="10" required>
+    </label><br>
+
+    <label>Email
+        <input type="email" name="primary_email" required/>
+      </label><br>
+
+    <label>Local Meeting
+        <input type="text" id="local-meeting" name="local_meeting" maxlength="255"/>
+    </label>
+
+    <label>Area Meeting
+        <input type="text" id="area-meeting" name="area_meeting" maxlength="255"/>
+      </label><br>
+
+
+      <h3>Emergency contacts:</h3>
+
+      <label>1. Name
+        <input type="text" name="emergency_contact_name1" maxlength="255" required/>
+      </label>
+
+      <label>1. Phone no.
+        <input type="tel" name="emergency_contact_phone1" size="10" required/>
+      </label>
+
+      <p>Secondary contact:</p>
+
+      <label>2. Name
+        <input type="text" name="emergency_contact_name2" maxlength="255"/>
+      </label>
+
+      <label>2. Phone no.
+        <input type="tel" name="emergency_contact_phone2" size="10"/>
+      </label><br>
+
+
+      <label>If you do not have contact with a Quaker meeting what is your involvement/contact with Quakers?
+        <textarea name="involvement"></textarea><br></label>
+
+      <label>Please tell us a little bit about you.</label><p> Please include whether you have any experience working with young people.</p>
+      <textarea name="about"></textarea><br>
+
+    <h3>If Applicable: </h3>
+    <label>Do you have First Aid Qualification?</label><br>
+    <input type="radio" name="first_aid" value="Yes"> Yes<br>
+    <input type="radio" name="first_aid" value="No" checked> No <br>
+
+    <label>First Aid Qualification <br>
+        <textarea name="first_aid_qualification" maxlength="255"></textarea>
+      </label><br>
+
+     <label>Other:
+        <textarea name="other"></textarea>
+     </label> <br>
+
+     <label>Do you have any medical condition, disability, food allergy, etc that you think we should know about?
+         <textarea name="medical_conditions" required></textarea>
+     </label>
+
+      <br>
+      <label>Are you likely to have a child or sibling attending London Link Events?</label><br>
+      <input type="radio" name="child_sibling_attend" value="Yes"> Yes<br>
+      <input type="radio" name="child_sibling_attend" value="No" checked> No <br>
+
+      <br>
+      <label>Do you have a current DBS certificate?</label><br>
+      <input type="radio" name="DBS_certificate" value="Yes"> Yes<br>
+      <input type="radio" name="DBS_certificate" value="No" checked> No <br>
+
+    <label>DBS Number:
+        <input type="text" name="DBS_number">
+    </label><br>
+
+    <label>DBS Expiry (dd/mm/yy):
+        <input type="date" name="DBS_expiry" maxlength="8" size="8" placeholder="dd/mm/yy" >
+    </label><br>
+
+    <label>Any further information?
+        <textarea name="further_information"></textarea>
+    </label><br>
+
+    <h3>CONFIDENTIAL: Personal Details Form</h3>
+    <p>This form must be completed by any person volunteering to be a member of staff. Details are kept by the
+        member of the management committee responsible for volunteer recruitment and will remain confidential
+        among the members of that management committee. Procedures for appointing volunteers are intended to
+        ensure that all who work with children and young people will contribute to their safety, spiritual development
+        and overall well-being.</p>
+
+    <h4>References:</h4>
+
+    <p>
+        Please give details of two people who are not related to you to whom reference can be made.
+        <ul>
+            <li>Both should know you well.</li>
+            <li>At least one should have known you for at least two years.</li>
+            <li>At least one should be able to comment on your experience of, attitudes towards, and behaviour with,
+                children/young people.</li>
+            <li>One should be a Quaker.</li>
+            <li>One should know you from some other area of life (for example, as neighbour, employer, work
+                colleague).</li>
+            <li>They should not be a member of your family.</li>
+        </ul>
+    </p>
+    <br>
+    <label>Reference 1 Name:
+        <input type="text" name="reference_1name" maxlength="255" required>
+    </label><br>
+    <label>Address:
+        <textarea name="reference_1address"></textarea>
+    </label><br>
+    <label>Email:
+        <input type="email" name="reference_1email" required>
+    </label><br>
+    <label>Telephone:
+        <input type="tel" name="reference_1number" required>
+    </label><br>
+
+    <label>Reference 2 Name:
+        <input type="text" name="reference_2name" maxlength="255" required>
+    </label><br>
+    <label>Address:
+        <textarea name="reference_2address"></textarea>
+    </label><br>
+    <label>Email:
+        <input type="email" name="reference_2email" required>
+    </label><br>
+    <label>Telephone:
+        <input type="tel" name="reference_2number" required>
+    </label><br><br>
+
+
+    <label>E-Signature
+        <input type="text" name="signature" maxlength="255" required>
+    </label><br>
+
+    <label>Date dd/mm/yy
+        <input type="date" name="signature_date" placeholder="dd/mm/yy" required>
+    </label>
+    <br>
+
+      <label for="anit_spam" title="Hint: George ???">Anti-spam question: The last name of the founder of Quakerism is?:
+      <input type="text" title="Hint: George ???" name="anti_spam" id="anti_spam" placeholder="???" required>
+      </label>
+
+
+      <input type="button" id="llg-send-form-btn" value="Send!"/>
+
+    </section>
+
+    </form>
+</span>
