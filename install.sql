@@ -25,7 +25,8 @@ CREATE TABLE `events` (
   `enabled` tinyint(1) NOT NULL DEFAULT '1',
   `cost` float DEFAULT '0',
   `wp_page_id` int(11) DEFAULT NULL,
-  `form_template` text
+  `form_template` text,
+  `listed` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 

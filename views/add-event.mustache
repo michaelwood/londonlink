@@ -30,11 +30,18 @@
         <input type="text" id="new-booking_person_email" name="booking_person_email" placeholder="e.g. bob@bob.example.com" required />
         <p>This person will receive the notifications for bookings</p>
       </div>
+
       <div class="form-field">
-        <label for="password">Bookings data password<br /><b>DO NOT LOSE THIS PASSWORD</b></label>
-        <input type="text" id="password" name="password" required/>
-        <p>The data will be encrypted with this password <b>there is NO recovery once data has been encrypted</b>.</p>
+        <label for="listed">Visibility</label>
+        <label>
+          <input type="radio" name="listed" value="1" checked="checked" />Listed
+        </label>
+        <label>
+          <input type="radio" name="listed" value="0" />Unlisted
+        </label>
+        <p>Whether a link to this form is listed in the "Upcoming events" area(s)</p>
       </div>
+
       <div class="form-field">
         <label for="page-parent">Parent page<br /></label>
         <select id="parent-page" name="wp_parent_page" />
@@ -43,7 +50,7 @@
           <option value="{{ID}}">{{post_title}}</option>
           {{/pages}}
         </select>
-        <p>If this new form is to be a subpage of an existing one</p>
+        <p>If this new form is to be a subpage/menu item of an existing one</p>
       </div>
 
       <div class="form-field">
@@ -56,6 +63,13 @@
         </select>
         <p>See form <a href="?page=llg_forms" target="_blank">previews</a> to view available form templates</p>
       </div>
+
+      <div class="form-field">
+        <label for="password">Bookings data password<br /><b>DO NOT LOSE THIS PASSWORD</b></label>
+        <input type="text" id="password" name="password" required/>
+        <p>The data will be encrypted with this password <b>there is NO recovery once data has been encrypted</b>.</p>
+      </div>
+
 
       <input type="button" class="button button-primary" value="Add event" id="add-new-event" />
       <input type="hidden" name="llg_post_action" value="insert_event" />

@@ -53,7 +53,7 @@
     {{& csrf}}
     <table class="form-table">
     <tr>
-        <th>Bookings status</th>
+        <th>Status</th>
         <td>
             <label>
                 <input type="radio" name="enabled" value="1" {{#event.enabled}}checked="checked"{{/event.enabled}} />Open
@@ -61,6 +61,20 @@
             <label>
                 <input type="radio" name="enabled" value="0" {{^event.enabled}}checked="checked"{{/event.enabled}} />Closed
             </label>
+            <p class="description">Whether the form is accepting new submissions</p>
+        </td>
+    </tr>
+
+    <tr>
+        <th>Visibility</th>
+        <td>
+          <label>
+                <input type="radio" name="listed" value="1" {{#event.listed}}checked="checked"{{/event.listed}} />Listed
+            </label>
+            <label>
+                <input type="radio" name="listed" value="0" {{^event.listed}}checked="checked"{{/event.listed}} />Unlisted
+            </label>
+            <p class="description">Whether a link to this form listed in the "Upcoming events" area(s)</p>
         </td>
     </tr>
 

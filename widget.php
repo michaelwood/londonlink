@@ -14,7 +14,7 @@ class NextEventWidget extends WP_Widget {
 
     $db = llg_db_connection();
 
-     $sql = "SELECT `name`, `wp_page_id`, `event_start_date`, STR_TO_DATE(event_start_date, '%d/%m/%y') as 'realDate'  FROM `events` WHERE `enabled`=1 ORDER BY `realDate` ASC";
+     $sql = "SELECT `name`, `wp_page_id`, `event_start_date`, STR_TO_DATE(event_start_date, '%d/%m/%y') as 'realDate'  FROM `events` WHERE `enabled`=1 AND `listed`=1 ORDER BY `realDate` ASC";
     $result = mysqli_query($db, $sql) or die(mysqli_error($db));
 
      if (mysqli_num_rows($result) == 0){
