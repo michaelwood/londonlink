@@ -24,6 +24,11 @@ function config () {
   /* Salt file for the encryption password */
   $config['saltfile'] = '';
 
+  /* debug */
+  $config['debug'] = true;
+
+  $config['require_ssl'] = true;
+
   return $config;
 }
 ?>
