@@ -2,6 +2,7 @@
 
 <span id="llg-thank-you">
   <p><b>Thank you for your booking, we will send you a confirmation email</b> if you do not receive confirmation within 2 hours please check your spam folder or <a href="/contact">Contact us</a></p>
+  <p>Please do not forget to update us with any new information by contacting us</p>
   <p><a href="#" onClick="location.reload(true);">Make another booking</a></p>
 </span>
 
@@ -16,8 +17,6 @@
 
   <p>Additional details of the event will have been sent out by email, please <a href="/contact/">contact us</a> if you would like to receive them.
   Please fill in the form below to book onto the event:</p>
-
-  <br />
 
 <script>
 var options = {
@@ -59,7 +58,7 @@ textarea {
       <input type="text" name="full_name" required />
     </label>
 
-    <label>Pronoun (if you/the participant would like to express a preffered pronoun e.g. he/she/they)
+    <label>Pronoun (if the participant would like to express a preffered pronoun e.g. he/she/they)
       <input type="text" name="pronoun" >
     </label>
 
@@ -84,7 +83,9 @@ textarea {
       <input type="text" name="local_meeting" id="local-meeting" />
     </label>
 
-    <h3>Dietary and Allergies (there will only be simple refreshments but please tell us of any allergies or dietary requirements e.g. vegan)</h3>
+    <h3>Dietary and Allergies</h3>
+    <p>There will only be simple refreshments but please tell us of any allergies or dietary requirements e.g. vegan)</p>
+    <textarea name="dietary_and_allergies"></textarea>
 
     <h3>Medical information</h3>
     <label for="painkillers">Able to take
@@ -159,25 +160,31 @@ textarea {
 
     <h3>Consent</h3>
 
-    <h4>Parent/guardian consent - Aged 13-16</h4>
+    <h4>Parent/guardian consent - Aged 13 - 16</h4>
 
-    <p>I consider my child / ward to be medically &amp; psychologically fit to participate in this London link group event and I give permission for them to take part in this activity. </p>
-    <p>I understand that my child / ward is responsible for themselves outside of London Teenage Quaker Meeting. This includes getting themselves to and from Westminster house.</p>
-    <p>The participant agrees to adhere to the <a href="//londonlinkgroup.org.uk/ltqm/boundaries/">London Teenage Quaker Meeting boundaries</a></p>
+    <ul>
+      <li>I consider my child / ward to be medically &amp; psychologically fit to participate in this London link group event and I give permission for them to take part in this activity.</li>
+      <li>I understand that my child / ward is responsible for themselves outside of London Teenage Quaker Meeting. This includes getting themselves to and from Westminster house.</li>
+      <li>The participant agrees to adhere to the <a href="//londonlinkgroup.org.uk/ltqm/boundaries/" target="_blank">London Teenage Quaker Meeting boundaries</a></li>
+    </ul>
 
     <h4>Aged 17 - 18</h4>
 
-    <p>I consider myself to be medically & psychologically fit to participate in London Teenage Meeting.</p>
-    <p>I understand that I am fully responsible for myself outside of London Teenage Quaker Meeting. This includes getting to and from Westminster.</p>
-    <p>I agree to adhere to the <a href="//londonlinkgroup.org.uk/ltqm/boundaries/">London Teenage Quaker Meeting boundaries</a></p>
+    <ul>
+      <li>I consider myself to be medically &amp; psychologically fit to participate in London Teenage Meeting.</li>
+      <li>I understand that I am fully responsible for myself outside of London Teenage Quaker Meeting. This includes getting to and from Westminster.</li>
+      <li>I agree to adhere to the <a href="//londonlinkgroup.org.uk/ltqm/boundaries/" target="_blank">London Teenage Quaker Meeting boundaries</a></li>
+    </ul>
+
+    <hr />
 
     <div class="llg-options-container-required">
       <label for="consent">
-        <input type="checkbox" id="consent" value="yes" name="consent" required/>I confirm
+        <input type="checkbox" id="consent" value="yes" name="consent" required/>Confirm and agree
       </label>
     </div>
 
-    <label for="anit_spam" title="Hint: George ???">Anti-spam question: The last name of the founder of Quakerism is?:
+    <label for="anit_spam" title="Hint: George ???">Anti-spam question: The last name of the <a href="https://en.wikipedia.org/wiki/George_Fox" target="_blank">founder of Quakerism</a> is?:
       <input type="text" title="Hint: George ???" name="anti_spam" id="anti_spam" placeholder="???" required>
     </label>
 
