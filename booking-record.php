@@ -116,8 +116,7 @@ function save_booking(){
 
   $headers = 'From: '.$config['from'].''."\r\n";
   $headers .= 'Cc:'.$mail_cc."\r\n";
-  $headers .= 'To:'.$mail_to."\r\n";
-  $headers .= 'bcc: '.$config['admin_email']."\r\n";
+  $headers .= 'Bcc: '.$config['admin_email']."\r\n";
   $headers .= "Content-type: text/plain; charset=iso-8859-1\r\n";
   $headers .= 'Reply-To:'.$booking_person_email;
 
