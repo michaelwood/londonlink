@@ -43,6 +43,7 @@ input[type=checkbox], input[type=radio] {
 }
 </style>
 
+<!-- Start section that is shown after successful booking -->
 <div id="llg-thank-you">
   <h2>Thank you for your application</h2>
   <p><b>We will send you a confirmation email to let you know we've received it</b> if you do not receive an email within 2 hours please check your spam folder or <a href="/contact">Contact us</a></p>
@@ -59,8 +60,9 @@ input[type=checkbox], input[type=radio] {
   <p><a href="?" title="Make another booking">Make another booking</a></p>
 
 </div>
+<!-- End of successful booking section -->
 
-
+<!-- Start booking form -->
 <div id="llg-booking-area">
 
   <h2>We look forward to receiving your application for {{event.name}}!</h2>
@@ -69,26 +71,34 @@ input[type=checkbox], input[type=radio] {
     <li><strong>Date:</strong> {{event.event_start_date}} to {{event.event_end_date}}</li>
     <li><strong>Contact person:</strong> <a href="/contact">{{event.booking_person_name}}</a></li>
     <li><strong>Cost:</strong> £{{#event.cost}}{{event.cost}}{{/event.cost}}{{^event.cost}}Free{{/event.cost}}</li>
-    <li><strong>More info:</strong> <a href="//fsse.org.uk/files/senior-conference-info-pack-2020.pdf" target="_blank">2020 event info pack</a></li>
+    <li><strong>More info:</strong> <a href="https://fsse.org.uk/files/Senior-Conference-info-2022.docx" target="_blank">2022 Event Additional Info</a> </li>
   </ul>
 
   <form class="llg-form" id="llg-event-form" method="POST">
 
     <h2>Participant information</h2>
 
-    <label>Full Name (and name known by)
+    <label>Full Name
       <input type="text" name="full_name" required/>
+    </label>
+
+    <label>Name known by
+      <input type="text" name="name_known_by" />
+    </label>
+
+    <label>Pronoun<span class="unbold">  if the participant wishes to have a particular pronoun used e.g. he/she/they/..</span>
+      <input type="text" name="pronoun" />
     </label>
 
     <label>Home Address
       <textarea name="address" required></textarea>
     </label>
 
-    <label>Date of Birth <span class="unbold">format dd/mm/yyyy (must be 15 by 1st Sept and under 19)</span>
+    <label>Date of Birth <span class="unbold">please format</span> dd/mm/yyyy <span class="unbold">(must be 15 by 1st Sept and under 19)</span>
       <input type="text" placeholder="dd/mm/yyyy" name="dob" pattern="\d\d?/\d\d?\/\d{4}" required/>
     </label>
 
-    <label >Gender
+    <label >Gender <span class="unbold"> please use "Any additional information" section to give us more information if needed (dorms are usually allocated based on genders)</span>
       <input type="text" name="gender" required/>
     </label>
 
@@ -96,7 +106,7 @@ input[type=checkbox], input[type=radio] {
       <input type="text" name="mobile"/>
     </label>
 
-    <label >Email
+    <label >Email <span class="unbold"> we will also send a confirmation of application to this email address</span> 
       <input type="text" name="email" />
     </label>
 
@@ -106,20 +116,20 @@ input[type=checkbox], input[type=radio] {
       <textarea name="diet" placeholder="e.g. Vegetarian, Vegan"></textarea>
     </label>
 
-    <label title="Especially important if the participant takes prescription medication, has a medical condition or allergies">General practitioner (Doctor contact)
-      <textarea name="GP" placeholder="Practice name and phone"></textarea>
-    </label>
-
-    <label >Health Information <span class="unbold">Please state any health issues and information we might need to know about, if the participant takes any medication and who will be responsible for administering this medication? (staff/participant)
-      <textarea name="health"></textarea>
-    </label>
-
     <label >Allergies
       <textarea name="allergies"></textarea>
     </label>
 
+    <label title="Especially important if the participant takes prescription medication, has a medical condition or allergies">General practitioner (Doctor contact)
+      <textarea name="GP" placeholder="Practice name and phone"></textarea>
+    </label>
+
+    <label >Health Information <span class="unbold">Please state any physical/mental health issues (including Covid-related), and any other information we might need to know about. If the participant takes any medication and who will be responsible for administering this medication? (staff/participant)
+      <textarea name="health"></textarea>
+    </label>
+
     <br />
-    <label>Any Additional Information: <span class="unbold">It is essential to disclose to the organisers anything they need to know about the <strong>health or personal circumstances</strong> of the participant so that we can best support their needs.</span> <a href="#" class="llg-toggler" data-toggle-selector="#additional-info-extra">More info on additional details</a>
+    <label>Any Additional Information: <span class="unbold">It is essential to disclose to the organisers anything they need to know about the <strong>personal circumstances</strong> of the participant so that we can best support their needs.</span> <a href="#" class="llg-toggler" data-toggle-selector="#additional-info-extra">More info on additional details</a>
         <span class="llg-hidden unbold" id="additional-info-extra">
           <br />
         {{event.name}} is an event underpinned by the Quaker values of inclusivity and acceptance and, as such, we endeavour to accommodate a range of needs, both emotional and physical. We would ask that you disclose any information that you think we should know that will help us meet the participant's needs at the event. That could include information about additional emotional or learning needs or context about homelife that you think it would be beneficial for us to know.
@@ -186,7 +196,7 @@ input[type=checkbox], input[type=radio] {
         <input type="text" name="parent_guardian_mobile_phone" />
       </label>
 
-      <label>Parent/Guardian email contact<span class="unbold"> This is the email address that we will correspond with you on regarding this application.</span>
+      <label>Primary email contact<span class="unbold"> This is the email address that we will correspond with you on regarding this application.</span>
         <input type="text" name="primary_email" pattern=".*@.*" required/>
       </label>
 
@@ -231,10 +241,10 @@ input[type=checkbox], input[type=radio] {
       </div>
       <p>
       Notes on terms<br />
-      <strong>General Publicity:</strong> We'd be grateful if the participant can be included in photographs/media that may be used for our own future publicity materials and for any externally produced publicity (For example: <a href="http://thefriend.org" target="_blank">The Friend magazine</a>).
+      <strong>General Publicity:</strong> We'd be grateful if the participant can be included in photographs/media that may be used for our own future publicity materials and for any externally produced articles (For example: <a href="http://thefriend.org" target="_blank">The Friend magazine</a>).
       <br />
 
-      <strong><abbr title="Friends Southern Summer Events">FSSE</abbr> Community:</strong> FSSE volunteers, parents and participants (For example: Photos in a FSSE {{event.name}} photo album that parents can view).
+      <strong><abbr title="Friends Southern Summer Events">FSSE</abbr> Community:</strong> FSSE volunteers, parents, guardians and participants.
       </p>
 
 
@@ -277,3 +287,4 @@ input[type=checkbox], input[type=radio] {
       <img src="{{img_url}}/spinner.gif" id="llg-spinner" alt="please wait..." />
   </form>
 </div>
+<!-- End booking form -->

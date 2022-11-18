@@ -88,8 +88,8 @@ function save_booking(){
     $mail_to = filter_var($form_data['primary_email'], FILTER_SANITIZE_EMAIL);
   }
 
-  if (isset($form_data['participant_email'])) {
-    $participant_email = filter_var($form_data['participant_email'], FILTER_SANITIZE_EMAIL);
+  if (isset($form_data['email'])) {
+    $participant_email = filter_var($form_data['email'], FILTER_SANITIZE_EMAIL);
     $mail_cc = $participant_email.','.$booking_person_email;
   } else {
     $mail_cc = $booking_person_email;
@@ -109,7 +109,7 @@ function save_booking(){
   $mail_body .= "\n";
   $mail_body .= 'The bookings person ('.$event_details['booking_person_name'].') will process your application and respond with further information.';
   $mail_body .= "\n";
-  $mail_body .= 'If there any problems please don\'t hesitate to contact the bookings person for this event '.$mail_cc.' (CC d)';
+  $mail_body .= 'If there any problems please don\'t hesitate to contact the bookings person for this event '.$booking_person_email.' (CC d)';
   $mail_body .= "\n\n";
   $mail_body .= 'In Friendship,';
   $mail_body .= "\n";

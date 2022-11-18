@@ -30,9 +30,6 @@ label { margin-left: 3px; }
   box-sizing: border-box;
 }
 
-.llg-form input:hover, textarea:hover {
-  background-color: #f8f8f8;
-}
 
 .llg-form label {
   font-weight: bold;
