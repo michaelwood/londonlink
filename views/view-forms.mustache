@@ -1,22 +1,40 @@
 <div class="wrap">
-  <h2>Preview forms</h2>
+  <h2 style="display: inline-block">Forms</h2>
+  <form style="display: inline-block" method="POST">
+    <input type="hidden" name="llg-new-form" value="true" />
+    <input type="submit" value="Add new" class="add-new-h2" />
+  </form>
   <div class="form-wrap">
     <form method="POST">
 
       <div class="form-field">
-        <label for="select-form">Select a form to preview<br /></label>
-        <select id="select-form" name="form_template">
+        <label for="select-form">Select a form to review<br /></label>
+        <select id="select-form" name="form_id">
           <option value="" >-</option>
           {{#forms}}
-          <option value="{{name}}" {{#in_use}}{{name}}:{{selected_form}}{{/in_use}}>{{basename}}</option>
+          <option value="{{id}}" >{{name}}</option>
           {{/forms}}
         </select>
-        <input type="submit" value="View" class="button button-primary"/>
-        <p>Forms live in {{forms_dir}} .Please note styling will change to match current theme</p>
+        <input type="submit" value="Open" class="button button-primary"/>
+        <p>Please note styling will change to match current theme.</p>
       </div>
       {{& csrf}}
     </form>
   </div>
 
-  {{#selected_form}}</p><b>{{selected_form}}:</b></p>{{/selected_form}}
+  {{#selected_form}}
+  </p><b>{{form.name}}:</b></p>
+  <p>Available tokens:
+  <i>Tokens get replaced with the actual values specified in the event settings.</i>
+   <pre><code> &#123;&#123;event.name}} ...</code></pre></p>
+
+  <a href="#code">Edit</a> | <a href="#preview">Preview</a>
+  <form action="" method="POST">
+  <textarea name="template" style="width:100%; height: 60vh" >
+    {{form.template}}
+  </textarea>
+  </form>
+
+
+  {{/selected_form}}
 </div>

@@ -7,12 +7,22 @@ $m = new Mustache_Engine(array(
 /* Page util functions */
 
 function find_available_forms(){
+  $db = llg_db_connection();
+
+  $res = mysqli_query($db, 'SELECT id, name from forms');
+  $forms = mysqli_fetch_assoc($res);
+
+  print_r($forms);
+  return $forms;
+/*
+
+
   $forms_dir = dirname(__FILE__) . '/forms/';
 
   $forms = array();
 
   foreach (scandir($forms_dir) as $key => $val){
-    /* Skip the unix dir entries of .. and ../ */
+    /* Skip the unix dir entries of .. and ../ *//*
     if ($val == '.' || $val == '..'){
       continue;
     }
@@ -23,7 +33,7 @@ function find_available_forms(){
       'name' => $val,
       'basename' => $basename,
       'in_use' => function($compare, Mustache_LambdaHelper $helper){
-        /* Cheeky bit of logic */
+        /* Cheeky bit of logic *//*
         $compare = $helper->render($compare);
         $comparison = explode(":", trim($compare), 2);
 
@@ -35,7 +45,7 @@ function find_available_forms(){
     );
   }
 
-  return $forms;
+  return $forms;*/
 }
 
 
@@ -194,41 +204,43 @@ function llg_admin_add_event_page(){
 
 function llg_admin_forms_page(){
   global $m;
-  $form_dir = dirname(__FILE__) . '/forms/';
 
   $context = array(
     'csrf' => wp_nonce_field("llg_event_dash", "llg_event_dash_csrf"),
     'org_name' => config()['org_name'],
     'forms' => find_available_forms(),
-    'forms_dir' => $form_dir,
-    'selected_form' => $_POST['form_template'],
+    'selected_form' => $_POST['form_id'],
+    'form_html' => '',
   );
 
-  echo $m->render("view-forms", $context);
+  if (isset($_POST['form_id'])){
+    $fm = new Mustache_Engine;
+    $db = llg_db_connection();
 
-  if (!isset($_POST['form_template'])){
-    return;
+    $form_id = mysqli_real_escape_string($db, $_POST['form_id']);
+
+    $q = mysqli_query($db, "SELECT * FROM forms WHERE id = $form_id") or die (mysqli_error ());
+    $form = mysqli_fetch_assoc($q);
+
+
+    $form_dummy_context = array(
+      'event' => array(
+        'cost' => '23423',
+        'booking_person_name' => 'BOOKING PERSON NAME',
+        'enabled' => True,
+        'event_end_date' => '11/22/33',
+        'event_start_date' => '22/44/55',
+        'name' => 'EVENT NAME',
+      ),
+      'img_url' => plugins_url('/img/', __FILE__),
+    );
+
+    $context['form'] = $form;
+    $context['form_rendered'] = $fm->render($form['template'], $form_dummy_context);
   }
 
-  $fm = new Mustache_Engine(array(
-    'loader' => new Mustache_Loader_FilesystemLoader($form_dir),
-  ));
 
-  $form_dummy_context = array(
-    'event' => array(
-      'cost' => '23423',
-      'booking_person_name' => 'BOOKING PERSON NAME',
-      'enabled' => True,
-      'event_end_date' => '11/22/33',
-      'event_start_date' => '22/44/55',
-      'name' => 'EVENT NAME',
-    ),
-    'img_url' => plugins_url('/img/', __FILE__),
-  );
-
-  echo '<div class="wrap llg-form-preview">';
-  echo $fm->render($_POST['form_template'], $form_dummy_context);
-  echo '</div>';
+  echo $m->render("view-forms", $context);
 }
 
 function llg_admin_event_details_page(){

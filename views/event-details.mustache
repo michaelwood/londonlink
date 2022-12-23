@@ -9,12 +9,13 @@
     <h2>Summary</h2>
     <ul>
         <li>Number of bookings: <strong>{{event.num_bookings}}</strong></li>
-        <li title="Link to booking form">Page link: <a href="{{event.page_link}}">{{event.page_link}}</a> | <a href="{{& event.edit_page_link}}" title="Edit page contents">Edit</a></li>
-        <li title="Insert into any page to embed online form">Embed short code: [qevent="{{event.name}}"]</li>
+        <li title="Link to booking form">Form page: <a href="{{event.page_link}}">{{event.page_link}}</a> | <a href="{{& event.edit_page_link}}" title="Edit page contents">Edit</a></li>
+        <li title="">Embed short code: <pre style="display: inline-block"><code>[qevent="{{event.name}}"]</code></pre> <i>Insert the code into any page to embed online form.</i></li>
     </ul>
 
     <hr />
 
+    <a id="data"></a>
     <h2>Data</h2>
 
     <form method="post" class="llg-form" action="?page={{this_page}}&amp;event_id={{event.id}}">
@@ -47,6 +48,7 @@
 
     <hr />
 
+    <a id="details"></a>
     <h2 class="title">Update details</h2>
 
     <form class="llg-form" id="llg-update-event-form-{{event.id}}" method="POST" action="?page={{this_page}}&amp;event_id={{event.id}}">

@@ -9,17 +9,17 @@ Author URI: http://michaelwood.me.uk
 */
 
 
-include_once ('mustache/mustache.php');
+require_once('mustache/mustache.php');
 
 
-include_once ('config.php');
-include_once ('export-data.php');
-include_once ('event-settings.php');
-include_once ('booking-record.php');
-include_once ('booking-form.php');
-include_once ('delete-data.php');
-include_once ('update-admin-notes.php');
-include_once ('widget.php');
+require_once('config.php');
+require_once('export-data.php');
+require_once('event-settings.php');
+require_once('booking-record.php');
+require_once('booking-form.php');
+require_once('delete-data.php');
+require_once('update-admin-notes.php');
+require_once('widget.php');
 
 //error_reporting(E_ALL);
 

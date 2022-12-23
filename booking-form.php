@@ -19,19 +19,21 @@ function get_event_data($event_name){
 }
 
 function booking_form_get_string ($event_name){
+  $config = config();
+
   $m = new Mustache_Engine(array(
     'loader' => new Mustache_Loader_FilesystemLoader(dirname(__FILE__) . '/forms'),
   ));
 
   /* If we're not already using SSL don't allow continue, redirect instead */
-  if (empty($_SERVER['HTTPS'])) {
+  if (empty($_SERVER['HTTPS']) && $config['debug'] == false) {
     $correct_url = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
     return '<p>&#x1f512; <a href="'.$correct_url.'"><span id="llg-https-redirect-notice">Redirecting to secure server</span></a></p>';
   }
 
   $event_data = get_event_data($event_name);
   if ($event_data['enabled'] == 0)
-    return '<p>Sorry bookings are now closed. <a href="/contact">Contact for further enquieries</a></p>';
+    return '<p>Sorry bookings are now closed. <a href="/contact">Contact for further enquiries.</a></p>';
 
   if (isset ($event_data) == 0) {
     $ret .= "No event found E13";
