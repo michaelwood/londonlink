@@ -138,6 +138,12 @@ function llg_process_post ()
     }
     break;
 
+  case 'update_form_template':
+    if (llg_can_do_this()){
+      update_form_template();
+    }
+    break;
+
   default:
     exit();
   }

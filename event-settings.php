@@ -1,5 +1,7 @@
 <?php
 
+/* These are mostly all the admin page handlers */
+
 $m = new Mustache_Engine(array(
   'loader' => new Mustache_Loader_FilesystemLoader(dirname(__FILE__) . '/views'),
 ));
@@ -209,15 +211,15 @@ function llg_admin_forms_page(){
     'csrf' => wp_nonce_field("llg_event_dash", "llg_event_dash_csrf"),
     'org_name' => config()['org_name'],
     'forms' => find_available_forms(),
-    'selected_form' => $_POST['form_id'],
+    'selected_form' => $_GET['form_id'],
     'form_html' => '',
   );
 
-  if (isset($_POST['form_id'])){
+  if (isset($_GET['form_id'])){
     $fm = new Mustache_Engine;
     $db = llg_db_connection();
 
-    $form_id = mysqli_real_escape_string($db, $_POST['form_id']);
+    $form_id = mysqli_real_escape_string($db, $_GET['form_id']);
 
     $q = mysqli_query($db, "SELECT * FROM forms WHERE id = $form_id") or die (mysqli_error ());
     $form = mysqli_fetch_assoc($q);
@@ -279,6 +281,33 @@ function llg_admin_event_details_page(){
 
   global $m;
   echo $m->render("event-details", $context);
+}
+
+
+function new_form_template(){
+  mysqli_query("INSERT INTO `forms` (`form_template`, `form_name`) VALUES ('form_template_here', 'Untitled form')") or die (mysqli_error ($db));
+
+}
+
+function update_form_template(){
+  if (
+    !isset($_POST['form_id']) ||
+    !isset($_POST['form_template']) ||
+    !isset($_POST['form_name'])){
+
+    echo "E45 form or template not set";
+    return;
+  }
+
+  $db = llg_db_connection();
+
+  $form_id = mysqli_real_escape_string($db, $_POST["form_id"]);
+  /* <warning> unescaped input */
+  $form_template = $_POST["form_template"];
+  /* </warning> */
+  $form_name = mysqli_real_escape_string($db, $_POST["form_name"]);
+
+  mysqli_query($db, 'UPDATE `forms` SET `template`="'.$form_template.'", `name`="'.$form_name.'" WHERE `id`='.$form_id.'') or die (mysqli_error());
 }
 
 ?>
