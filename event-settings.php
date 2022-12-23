@@ -1,45 +1,40 @@
 <?php
 
+/* These are mostly all the admin page handlers */
+
 $m = new Mustache_Engine(array(
   'loader' => new Mustache_Loader_FilesystemLoader(dirname(__FILE__) . '/views'),
 ));
 
 /* Page util functions */
 
-function find_available_forms(){
-  $forms_dir = dirname(__FILE__) . '/forms/';
+function find_available_forms($selected_id=null){
+  $db = llg_db_connection();
 
-  $forms = array();
+  $res = mysqli_query($db, 'SELECT id, name from forms');
+  $forms = mysqli_fetch_all($res, MYSQLI_ASSOC);
 
-  foreach (scandir($forms_dir) as $key => $val){
-    /* Skip the unix dir entries of .. and ../ */
-    if ($val == '.' || $val == '..'){
-      continue;
+  if (isset($selected_id)){
+    foreach ($forms as &$form){
+      if ($form['id'] == $selected_id){
+        $form['selected'] = true;
+      }
     }
 
-    $basename = basename($val, '.mustache');
-
-    $forms[] = array(
-      'name' => $val,
-      'basename' => $basename,
-      'in_use' => function($compare, Mustache_LambdaHelper $helper){
-        /* Cheeky bit of logic */
-        $compare = $helper->render($compare);
-        $comparison = explode(":", trim($compare), 2);
-
-        if (strcmp($comparison[0], $comparison[1]) == 0){
-          return $helper->render("selected=selected");
-        }
-        return;
-      }
-    );
+    unset($form);
   }
 
   return $forms;
 }
 
 
-function update_event (){
+function update_event(){
+
+  if (!isset($_POST['password'])){
+    echo "No password supplied";
+    return;
+  }
+
   $db = llg_db_connection();
 
   $event_id = mysqli_real_escape_string($db, $_POST['event_id']);
@@ -100,7 +95,7 @@ function insert_event () {
     $esc_val = mysqli_real_escape_string($db, $value);
 
     if ($key == 'password') {
-      $insert_sql .= "PASSWORD (\"$esc_val\"),";
+      $insert_sql .= "SHA2(\"$esc_val\", 256),";
       continue;
     }
 
@@ -194,41 +189,43 @@ function llg_admin_add_event_page(){
 
 function llg_admin_forms_page(){
   global $m;
-  $form_dir = dirname(__FILE__) . '/forms/';
 
   $context = array(
     'csrf' => wp_nonce_field("llg_event_dash", "llg_event_dash_csrf"),
     'org_name' => config()['org_name'],
-    'forms' => find_available_forms(),
-    'forms_dir' => $form_dir,
-    'selected_form' => $_POST['form_template'],
+    'forms' => find_available_forms($_GET['form_id']),
+    'selected_form' => $_GET['form_id'],
+    'form_html' => '',
   );
 
-  echo $m->render("view-forms", $context);
+  if (isset($_GET['form_id'])){
+    $fm = new Mustache_Engine;
+    $db = llg_db_connection();
 
-  if (!isset($_POST['form_template'])){
-    return;
+    $form_id = mysqli_real_escape_string($db, $_GET['form_id']);
+
+    $q = mysqli_query($db, "SELECT * FROM forms WHERE id = $form_id") or die (mysqli_error ());
+    $form = mysqli_fetch_assoc($q);
+
+
+    $form_dummy_context = array(
+      'event' => array(
+        'cost' => '23423',
+        'booking_person_name' => 'BOOKING PERSON NAME',
+        'enabled' => True,
+        'event_end_date' => '11/22/33',
+        'event_start_date' => '22/44/55',
+        'name' => 'EVENT NAME',
+      ),
+      'img_url' => plugins_url('/img/', __FILE__),
+    );
+
+    $context['form'] = $form;
+    $context['form_rendered'] = $fm->render($form['template'], $form_dummy_context);
   }
 
-  $fm = new Mustache_Engine(array(
-    'loader' => new Mustache_Loader_FilesystemLoader($form_dir),
-  ));
 
-  $form_dummy_context = array(
-    'event' => array(
-      'cost' => '23423',
-      'booking_person_name' => 'BOOKING PERSON NAME',
-      'enabled' => True,
-      'event_end_date' => '11/22/33',
-      'event_start_date' => '22/44/55',
-      'name' => 'EVENT NAME',
-    ),
-    'img_url' => plugins_url('/img/', __FILE__),
-  );
-
-  echo '<div class="wrap llg-form-preview">';
-  echo $fm->render($_POST['form_template'], $form_dummy_context);
-  echo '</div>';
+  echo $m->render("view-forms", $context);
 }
 
 function llg_admin_event_details_page(){
@@ -260,13 +257,42 @@ function llg_admin_event_details_page(){
   $context = array(
     'event' => $event,
     'csrf' => wp_nonce_field("llg_event_dash", "llg_event_dash_csrf"),
-    'forms' => find_available_forms(),
+    'forms' => find_available_forms($event["form_id"]),
     'this_page' => $_GET['page'],
     'bad_pass' => ($_GET['bad_pass'] == 1),
   );
 
   global $m;
   echo $m->render("event-details", $context);
+}
+
+
+function new_form_template(){
+  $db = llg_db_connection();
+  mysqli_query($db, 'INSERT INTO `forms` (`template`, `name`) VALUES (\'<!-- form_template_here --!> \', \'Untitled form\')') or die (mysqli_error ($db));
+  $new_form_id = mysqli_insert_id($db);
+  header('Location:'.$_SERVER['REQUEST_URI'].'&form_id='.$new_form_id.'');
+}
+
+function update_form_template(){
+  if (
+    !isset($_POST['form_id']) ||
+    !isset($_POST['form_template']) ||
+    !isset($_POST['form_name'])){
+
+    echo "E45 form or template not set";
+    return;
+  }
+
+  $db = llg_db_connection();
+
+  $form_id = mysqli_real_escape_string($db, $_POST["form_id"]);
+  /* if magic quotes is enabled this will end up double escaped */
+  /* https://stackoverflow.com/questions/1522313/php-mysql-real-escape-string-stripslashes-leaving-multiple-slashes */
+  $form_template = mysqli_real_escape_string($db, stripslashes(trim($_POST["form_template"])));
+  $form_name = mysqli_real_escape_string($db, $_POST["form_name"]);
+
+  mysqli_query($db, 'UPDATE `forms` SET `template`=\''.$form_template.'\', `name`="'.$form_name.'" WHERE `id`='.$form_id.'') or die (mysqli_error());
 }
 
 ?>

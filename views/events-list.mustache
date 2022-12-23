@@ -16,11 +16,11 @@
     <tbody>
     {{#events}}
       <tr>
-        <td><a href="?page=llg_event_details&amp;event_id={{id}}" class="row-title">{{name}}</a></td>
-        <td><a href="?page=llg_event_details&amp;event_id={{id}}" class="row-title">{{num_bookings}}</a></td>
-        <td title="{{booking_person_email}}">{{booking_person_name}}</td>
-        <td>{{event_start_date}} - {{event_end_date}}</td>
-        <td>{{#enabled}}Open{{/enabled}}{{^enabled}}Closed{{/enabled}}</td>
+        <td><a href="?page=llg_event_details&amp;event_id={{id}}" class="row-title">{{name}}</td>
+        <td><a href="?page=llg_event_details&amp;event_id={{id}}#data" class="row-title">{{num_bookings}}</a></td>
+        <td title="{{booking_person_email}}"><a href="?page=llg_event_details&amp;event_id={{id}}#details">{{booking_person_name}}</a></td>
+        <td><a href="?page=llg_event_details&amp;event_id={{id}}#details">{{event_start_date}} - {{event_end_date}}</a></td>
+        <td><a href="?page=llg_event_details&amp;event_id={{id}}#details">{{#enabled}}Open{{/enabled}}{{^enabled}}Closed{{/enabled}}</a></td>
       </tr>
     {{/events}}
         </tbody>

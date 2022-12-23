@@ -4,25 +4,32 @@
     <p style="background-color: #ffe7e7; border: 1px solid red; padding: 0.5em;" id="llg-bad-pass-msg">You have entered an incorrect password <a style="float: right; text-decoration:none" href="#">&times;</a></p>
     {{/bad_pass}}
 
-    <h1 class="wp-heading-inline">Event - {{event.name}}</h1>
+    <h1 class="wp-heading-inline">{{event.name}}</h1>
     <hr />
     <h2>Summary</h2>
     <ul>
-        <li>Number of bookings: <strong>{{event.num_bookings}}</strong></li>
-        <li title="Link to booking form">Page link: <a href="{{event.page_link}}">{{event.page_link}}</a> | <a href="{{& event.edit_page_link}}" title="Edit page contents">Edit</a></li>
-        <li title="Insert into any page to embed online form">Embed short code: [qevent="{{event.name}}"]</li>
+        <li>Number of responses: <strong>{{event.num_bookings}}</strong></li>
+        <li title="Link to form">Published at: <a href="{{event.page_link}}">{{event.page_link}}</a> | <a href="{{& event.edit_page_link}}" title="Edit page contents">Edit</a></li>
+        <li>Cost: {{event.cost}}</li>
+        <li>Contact person: {{event.booking_person_name}} ({{event.booking_person_email}})</li>
+        <li>Status: {{#event.enabled}}Open{{/event.enabled}} {{^event.enabled}}Closed{{/event.enabled}} </li>
+        <li title="">Embed short code: <pre style="display: inline-block"><code>[qevent="{{event.name}}"]</code></pre> <i>Insert this code into any page to embed the online form.</i></li>
     </ul>
 
-    <hr />
+    <a href="#data" class="button">View Responses</a>
+    <a href="#change-details" class="button">Change Details</a>
+    <a href="#delete-event" class="button">Delete</a>
 
-    <h2>Data</h2>
+    <div id="data" style="display:none">
+
+    <h2>View Responses</h2>
 
     <form method="post" class="llg-form" action="?page={{this_page}}&amp;event_id={{event.id}}">
         {{& csrf}}
         <div class="form-wrap" style="width:50%">
             <p>View the current bookings data</p>
             <div class="form-field">
-                Select
+                Format:
                     <label>
                         <input type="radio" name="output_type" value="csv" checked>CSV Spreadsheet
                     </label>
@@ -34,7 +41,7 @@
                     </label>
             </div>
             <div class="form-field">
-                <label for="password-0">Password</label>
+                <label for="password-0">Enter event password</label>
                 <input type="password" autocomplete="off" id="password-0" name="password" required/>
            </div>
 
@@ -45,126 +52,149 @@
         </div>
     </form>
 
-    <hr />
+    </div>
 
-    <h2 class="title">Update details</h2>
+    <div id="change-details" style="display:none">
+        <h2 class="title">Change Details</h2>
 
-    <form class="llg-form" id="llg-update-event-form-{{event.id}}" method="POST" action="?page={{this_page}}&amp;event_id={{event.id}}">
-    {{& csrf}}
-    <table class="form-table">
-    <tr>
-        <th>Status</th>
-        <td>
-            <label>
-                <input type="radio" name="enabled" value="1" {{#event.enabled}}checked="checked"{{/event.enabled}} />Open
-            </label>
-            <label>
-                <input type="radio" name="enabled" value="0" {{^event.enabled}}checked="checked"{{/event.enabled}} />Closed
-            </label>
-            <p class="description">Whether the form is accepting new submissions</p>
-        </td>
-    </tr>
-
-    <tr>
-        <th>Visibility</th>
-        <td>
-          <label>
-                <input type="radio" name="listed" value="1" {{#event.listed}}checked="checked"{{/event.listed}} />Listed
-            </label>
-            <label>
-                <input type="radio" name="listed" value="0" {{^event.listed}}checked="checked"{{/event.listed}} />Unlisted
-            </label>
-            <p class="description">Whether a link to this form listed in the "Upcoming events" area(s)</p>
-        </td>
-    </tr>
-
-    <tr>
-        <th>
-            <label for="{{event.id}}-event_start_date">Start date</label>
-        </th>
-        <td>
-            <input type="text" id="{{event.id}}-event_start_date" name="event_start_date" value="{{event.event_start_date}}" placeholder="dd/mm/yyyy" required/>
-            <p class="description">Date format dd/mm/yyyy</p>
-        </td>
-    </tr>
-
-    <tr>
-        <th>
-            <label for="{{event.id}}-event_end_date">End date</label>
-        </th>
-        <td>
-            <input type="text" id="{{event.id}}-event_end_date" name="event_end_date" value="{{event.event_end_date}}" placeholder="dd/mm/yyyy" required/>
-            <p class="description">Date format dd/mm/yyyy</p>
-        </td>
-    </tr>
-
-    <tr>
-        <th><label for="{{event.id}}-cost">Cost</label></th>
-        <td>
-            <input type="text" id="{{event.id}}-cost" name="cost" value="{{event.cost}}" required/>
-            <p class="description">Enter 0 for free</p>
-        </td>
-    </tr>
-
-    <tr>
-        <th><label for="{{event.id}}-booking_person_name">Bookings person name</label></th>
-        <td><input type="text" id="{{event.id}}-booking_person_name" name="booking_person_name" value="{{event.booking_person_name}}" required/></td>
-    </tr>
-
-    <tr>
-        <th><label for="{{event.id}}-booking_person_email">Bookings person email</label></th>
-        <td><input type="text" id="{{event.id}}-booking_person_email" name="booking_person_email" value="{{event.booking_person_email}}" required/></td>
-    </tr>
-
-    <tr>
-        <th><label for="{{event.id}}-form_template">Form</label></th>
-        <td>
-            <select id="{{event.id}}-form_template" name="form_template" />
-            {{#forms}}
-            <option value="{{name}}"
-                    {{#in_use}}{{name}}:{{event.form_template}}{{/in_use}}>
-                    {{basename}}</option>
-            {{/forms}}
-            </select>
-            <p class="description">The form template to be used. See <a href="?page=llg_forms">form previews</a> to view available form templates. Changing the form whilst in use is not recommended.</p>
-        </td>
-    </tr>
-
-    <tr>
-        <th><label for="password-3">Confirm password</label></th>
-        <td><input type="password" id="password-3" name="password" required/></td>
-    </tr>
-
-    </table>
-        <p class="submit">
-            <input type="button" class="button button-primary update-event-btn" value="Update" data-event-id="{{event.id}}" />
-        </p>
-        <input value="{{event.name}}" type="hidden" name="name" />
-        <input value="{{event.id}}" type="hidden" name="event_id" />
-        <input type="hidden" name="llg_post_action" value="update_event" />
-    </form>
-
-    <hr />
-
-    <h2 class="title">Delete event and data</h2>
-    <div style="border: 1px solid red; padding: 2em; margin-top: 1em;">
-
-        <p>WARNING This cannot be undone!</p>
-        <form id="{{event.id}}-form-delete" method="post" action="?page={{this_page}}&amp;event_id={{event.id}}">
+        <form class="llg-form" id="llg-update-event-form-{{event.id}}" method="POST" action="?page={{this_page}}&amp;event_id={{event.id}}">
         {{& csrf}}
-            <input type="hidden" id="{{event.id}}-event-name" name="event_name_selected" value="{{event.name}}" />
-            <input type="hidden" name="llg_post_action"  value="delete_data" />
-            <input type="hidden" name="event_id"  value="{{event.id}}" />
+        <table class="form-table">
+        <tr>
+            <th>Status</th>
+            <td>
+                <label>
+                    <input type="radio" name="enabled" value="1" {{#event.enabled}}checked="checked"{{/event.enabled}} />Open
+                </label>
+                <label>
+                    <input type="radio" name="enabled" value="0" {{^event.enabled}}checked="checked"{{/event.enabled}} />Closed
+                </label>
+                <p class="description">Whether the form is accepting new submissions</p>
+            </td>
+        </tr>
 
-            <table class="form-table">
-                <th><label for="password-1">Password</label></th>
-                <td><input type="password" id="password-1" autocomplete="off" name="password" required/></td>
-                <tr>
-                    <th>Delete event and data</th>
-                    <td><input type="button" class="button button-primary delete-event" value="Delete" data-event-id="{{event.id}}"></td>
-                </tr>
-            </table>
+        <tr>
+            <th>Visibility</th>
+            <td>
+            <label>
+                    <input type="radio" name="listed" value="1" {{#event.listed}}checked="checked"{{/event.listed}} />Listed
+                </label>
+                <label>
+                    <input type="radio" name="listed" value="0" {{^event.listed}}checked="checked"{{/event.listed}} />Unlisted
+                </label>
+                <p class="description">Whether a link to this form listed in the "Upcoming events" area(s)</p>
+            </td>
+        </tr>
+
+        <tr>
+            <th>
+                <label for="{{event.id}}-event_start_date">Start date</label>
+            </th>
+            <td>
+                <input type="text" id="{{event.id}}-event_start_date" name="event_start_date" value="{{event.event_start_date}}" placeholder="dd/mm/yyyy" required/>
+                <p class="description">Date format dd/mm/yyyy</p>
+            </td>
+        </tr>
+
+        <tr>
+            <th>
+                <label for="{{event.id}}-event_end_date">End date</label>
+            </th>
+            <td>
+                <input type="text" id="{{event.id}}-event_end_date" name="event_end_date" value="{{event.event_end_date}}" placeholder="dd/mm/yyyy" required/>
+                <p class="description">Date format dd/mm/yyyy</p>
+            </td>
+        </tr>
+
+        <tr>
+            <th><label for="{{event.id}}-cost">Cost</label></th>
+            <td>
+                <input type="text" id="{{event.id}}-cost" name="cost" value="{{event.cost}}" required/>
+                <p class="description">Enter 0 for free</p>
+            </td>
+        </tr>
+
+        <tr>
+            <th><label for="{{event.id}}-booking_person_name">Bookings person name</label></th>
+            <td><input type="text" id="{{event.id}}-booking_person_name" name="booking_person_name" value="{{event.booking_person_name}}" required/></td>
+        </tr>
+
+        <tr>
+            <th><label for="{{event.id}}-booking_person_email">Bookings person email</label></th>
+            <td><input type="text" id="{{event.id}}-booking_person_email" name="booking_person_email" value="{{event.booking_person_email}}" required/></td>
+        </tr>
+
+        <tr>
+            <th><label for="{{event.id}}-form_template">Form</label></th>
+            <td>
+                <select id="{{event.id}}-form_template" name="form_id" />
+                {{#forms}}
+                <option value="{{id}}" {{#selected}}selected=selected{{/selected}}>{{name}}</option>
+                {{/forms}}
+                </select>
+                <p class="description">The form template to be used. See <a href="?page=llg_forms">form previews</a> to view available form templates. Changing the form whilst in use is not recommended.</p>
+            </td>
+        </tr>
+
+        <tr style="border-top: 1px solid grey ">
+            <th><label for="password-3">Confirm change: Enter event password</label></th>
+            <td><input type="password" id="password-3" name="password" required/></td>
+        </tr>
+
+        </table>
+            <p class="submit">
+                <input type="button" class="button button-primary update-event-btn" value="Update" data-event-id="{{event.id}}" />
+                <i>Enter password above before submitting</i>
+            </p>
+            <input value="{{event.name}}" type="hidden" name="name" />
+            <input value="{{event.id}}" type="hidden" name="event_id" />
+            <input type="hidden" name="llg_post_action" value="update_event" />
         </form>
+
+    </div>
+
+    <div id="delete-event" style="display: none">
+        <h2 class="title">Delete event and data</h2>
+        <div style="border: 1px solid red; padding: 2em; margin-top: 1em;">
+
+            <p><strong><u>WARNING This cannot be undone!</u></strong></p>
+            <form id="{{event.id}}-form-delete" method="post" action="?page={{this_page}}&amp;event_id={{event.id}}">
+            {{& csrf}}
+                <input type="hidden" id="{{event.id}}-event-name" name="event_name_selected" value="{{event.name}}" />
+                <input type="hidden" name="llg_post_action"  value="delete_data" />
+                <input type="hidden" name="event_id"  value="{{event.id}}" />
+
+                <table class="form-table">
+                    <th><label for="password-1">Enter {{event.name}} Password</label></th>
+                    <td><input type="password" id="password-1" autocomplete="off" name="password" required /></td>
+                    <tr>
+                        <th>Delete event and data</th>
+                        <td><input type="button" class="button button-primary delete-event" value="Delete" data-event-id="{{event.id}}"></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
     </div>
 
  </div> <!-- end wrap -->
+
+<script>
+/* tab toggler  */
+jq('a[href="#data"]').click(() => {
+  jq('#data').show();
+  jq('#change-details').hide();
+  jq('#delete-event').hide();
+});
+
+jq('a[href="#change-details"]').click(() => {
+  jq('#change-details').show();
+  jq('#data').hide();
+  jq('#delete-event').hide();
+});
+
+jq('a[href="#delete-event"]').click(() => {
+  jq('#change-details').hide();
+  jq('#data').hide();
+  jq('#delete-event').show();
+});
+</script>

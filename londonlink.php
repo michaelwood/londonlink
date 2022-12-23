@@ -9,17 +9,17 @@ Author URI: http://michaelwood.me.uk
 */
 
 
-include_once ('mustache/mustache.php');
+require_once('mustache/mustache.php');
 
 
-include_once ('config.php');
-include_once ('export-data.php');
-include_once ('event-settings.php');
-include_once ('booking-record.php');
-include_once ('booking-form.php');
-include_once ('delete-data.php');
-include_once ('update-admin-notes.php');
-include_once ('widget.php');
+require_once('config.php');
+require_once('export-data.php');
+require_once('event-settings.php');
+require_once('booking-record.php');
+require_once('booking-form.php');
+require_once('delete-data.php');
+require_once('update-admin-notes.php');
+require_once('widget.php');
 
 //error_reporting(E_ALL);
 
@@ -40,10 +40,14 @@ function llg_db_connection (){
 
 function llg_validate_pass($db, $event_id, $password){
 
+  if(!isset($password)){
+    return False;
+  }
+
   $pass = mysqli_real_escape_string($db, $password);
   $event_id = mysqli_real_escape_string($db, $event_id);
 
-  $select_password = 'SELECT COUNT(password) FROM events WHERE id="'.$event_id.'" AND password=PASSWORD("'.$pass.'") LIMIT 1';
+  $select_password = 'SELECT COUNT(password) FROM events WHERE id="'.$event_id.'" AND password=SHA2("'.$pass.'", 256) LIMIT 1';
   $pass_res = mysqli_query($db, $select_password) or die (mysqli_error($db));
 
   if (mysqli_fetch_assoc($pass_res)['COUNT(password)'] != 1){
@@ -135,6 +139,18 @@ function llg_process_post ()
   case 'update_admin_notes':
     if (llg_can_do_this()){
       update_admin_notes();
+    }
+    break;
+
+  case 'update_form_template':
+    if (llg_can_do_this()){
+      update_form_template();
+    }
+    break;
+
+  case 'new_form_template':
+    if(llg_can_do_this()){
+      new_form_template();
     }
     break;
 

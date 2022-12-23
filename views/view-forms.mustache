@@ -1,22 +1,75 @@
-<div class="wrap">
-  <h2>Preview forms</h2>
-  <div class="form-wrap">
-    <form method="POST">
+<style scoped>
+pre {
+  display: inline-block;
+}
+</style>
 
+<div class="wrap">
+  <h2 style="display: inline-block">Forms</h2>
+  <form style="display: inline-block" method="POST">
+    {{& csrf}}
+    <input type="hidden" name="llg_post_action" value="new_form_template" />
+    <input type="submit" value="Add new" class="add-new-h2" />
+  </form>
+  <div class="form-wrap">
+    <form method="GET" id="select-form-form">
       <div class="form-field">
-        <label for="select-form">Select a form to preview<br /></label>
-        <select id="select-form" name="form_template">
+        <label style="display: inline-block" for="select-form">Select a form to edit or preview</label>
+        <select id="select-form" name="form_id" onchange="document.getElementById('select-form-form').submit()">
           <option value="" >-</option>
           {{#forms}}
-          <option value="{{name}}" {{#in_use}}{{name}}:{{selected_form}}{{/in_use}}>{{basename}}</option>
+          <option value="{{id}}" {{#selected}}selected=selected{{/selected}} >{{name}}</option>
           {{/forms}}
         </select>
-        <input type="submit" value="View" class="button button-primary"/>
-        <p>Forms live in {{forms_dir}} .Please note styling will change to match current theme</p>
+        <input type="hidden" name="page" value="llg_forms" />
+<!--        <input type="submit" value="Open" class="button button-secondary"/> -->
       </div>
       {{& csrf}}
     </form>
   </div>
 
-  {{#selected_form}}</p><b>{{selected_form}}:</b></p>{{/selected_form}}
+  <hr />
+  {{#selected_form}}
+  <h2>{{form.name}}</h2>
+  <a href="#preview" style="display: inline-block" class="button" onclick="document.getElementById('form-preview').style.display = 'block'; document.getElementById('form-edit').style.display = 'none'">Preview</a>
+  <a href="#code" style="display: inline-block" class="button" onclick="document.getElementById('form-preview').style.display = 'none'; document.getElementById('form-edit').style.display = 'block'" >Edit</a>
+
+
+  <div id="form-preview">
+    <h2>Preview</h2>
+    <p>Please note styling will change to match current theme. Changes must be saved to see in preview.</p>
+    <div style="border: 1px solid #8c8f94; border-radius: 4px; padding: 5px">
+    {{& form_rendered}}
+    </div>
+  </div>
+
+  <div id="form-edit" style="display: none;">
+    <h2>Edit</h2>
+    <p>Available tokens:  <i>Tokens get replaced with the actual values specified in the event settings.</i> </p>
+    <pre><code> &#123;&#123;event.name}} &#123;&#123;event.cost}} &#123;&#123;event.event_start_date}} &#123;&#123;event.event_end_date}}  &#123;&#123;event.booking_person_name}} </code></pre>
+
+    <p>Element ids and classes:</p>
+    <i>Eveything with class <pre><code>thankyou</code></pre> shown after submission.
+    Eveything in id <pre><code>booking-area</code></pre> shown before submission.
+    Expected form element class <pre><code>llg-form</code></pre>
+    Expected form id <pre><code>llg-event-form</code></pre>, method POST
+    </i>
+
+    <form action="" method="POST">
+      <label for="form-name">Name</label><br />
+      <input type="text" id="form-name" name="form_name" value="{{form.name}}" />
+
+      <br />
+      <label for="form-template">Template</label>
+      <textarea id="form-template" name="form_template" style="width:100%; height: 60vh !important" >
+        {{form.template}}
+      </textarea>
+      {{& csrf}}
+      <input type="hidden" name="form_id" value="{{form.id}}" />
+      <input type="hidden" name="llg_post_action" value="update_form_template" />
+      <input type="submit" value="Save" class="button button-primary" />
+    </form>
+  </div>
+
+  {{/selected_form}}
 </div>
