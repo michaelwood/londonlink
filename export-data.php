@@ -37,8 +37,8 @@ function export_data(){
 
   $select_booking_data = '
     SELECT bookings.id, bookings.submit_timestamp,
-     AES_DECRYPT(data, CONCAT(PASSWORD("'.$pass.'"), "'.$salt.'")) AS data,
-     AES_DECRYPT(admin_notes, CONCAT(PASSWORD("'.$pass.'"), "'.$salt.'")) AS notes
+     AES_DECRYPT(data, CONCAT(SHA2("'.$pass.'", 256), "'.$salt.'")) AS data,
+     AES_DECRYPT(admin_notes, CONCAT(SHA2("'.$pass.'", 256), "'.$salt.'")) AS notes
      FROM bookings WHERE bookings.event_id='.$event_id.' ORDER BY id ASC';
 
 /*   Possible join for getting event information

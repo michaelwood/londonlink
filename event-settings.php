@@ -8,50 +8,33 @@ $m = new Mustache_Engine(array(
 
 /* Page util functions */
 
-function find_available_forms(){
+function find_available_forms($selected_id=null){
   $db = llg_db_connection();
 
   $res = mysqli_query($db, 'SELECT id, name from forms');
-  $forms = mysqli_fetch_assoc($res);
+  $forms = mysqli_fetch_all($res, MYSQLI_ASSOC);
 
-  print_r($forms);
-  return $forms;
-/*
-
-
-  $forms_dir = dirname(__FILE__) . '/forms/';
-
-  $forms = array();
-
-  foreach (scandir($forms_dir) as $key => $val){
-    /* Skip the unix dir entries of .. and ../ *//*
-    if ($val == '.' || $val == '..'){
-      continue;
+  if (isset($selected_id)){
+    foreach ($forms as &$form){
+      if ($form['id'] == $selected_id){
+        $form['selected'] = true;
+      }
     }
 
-    $basename = basename($val, '.mustache');
-
-    $forms[] = array(
-      'name' => $val,
-      'basename' => $basename,
-      'in_use' => function($compare, Mustache_LambdaHelper $helper){
-        /* Cheeky bit of logic *//*
-        $compare = $helper->render($compare);
-        $comparison = explode(":", trim($compare), 2);
-
-        if (strcmp($comparison[0], $comparison[1]) == 0){
-          return $helper->render("selected=selected");
-        }
-        return;
-      }
-    );
+    unset($form);
   }
 
-  return $forms;*/
+  return $forms;
 }
 
 
-function update_event (){
+function update_event(){
+
+  if (!isset($_POST['password'])){
+    echo "No password supplied";
+    return;
+  }
+
   $db = llg_db_connection();
 
   $event_id = mysqli_real_escape_string($db, $_POST['event_id']);
@@ -112,7 +95,7 @@ function insert_event () {
     $esc_val = mysqli_real_escape_string($db, $value);
 
     if ($key == 'password') {
-      $insert_sql .= "PASSWORD (\"$esc_val\"),";
+      $insert_sql .= "SHA2(\"$esc_val\", 256),";
       continue;
     }
 
@@ -210,7 +193,7 @@ function llg_admin_forms_page(){
   $context = array(
     'csrf' => wp_nonce_field("llg_event_dash", "llg_event_dash_csrf"),
     'org_name' => config()['org_name'],
-    'forms' => find_available_forms(),
+    'forms' => find_available_forms($_GET['form_id']),
     'selected_form' => $_GET['form_id'],
     'form_html' => '',
   );
@@ -274,7 +257,7 @@ function llg_admin_event_details_page(){
   $context = array(
     'event' => $event,
     'csrf' => wp_nonce_field("llg_event_dash", "llg_event_dash_csrf"),
-    'forms' => find_available_forms(),
+    'forms' => find_available_forms($event["form_id"]),
     'this_page' => $_GET['page'],
     'bad_pass' => ($_GET['bad_pass'] == 1),
   );
@@ -285,8 +268,10 @@ function llg_admin_event_details_page(){
 
 
 function new_form_template(){
-  mysqli_query("INSERT INTO `forms` (`form_template`, `form_name`) VALUES ('form_template_here', 'Untitled form')") or die (mysqli_error ($db));
-
+  $db = llg_db_connection();
+  mysqli_query($db, 'INSERT INTO `forms` (`template`, `name`) VALUES (\'<!-- form_template_here --!> \', \'Untitled form\')') or die (mysqli_error ($db));
+  $new_form_id = mysqli_insert_id($db);
+  header('Location:'.$_SERVER['REQUEST_URI'].'&form_id='.$new_form_id.'');
 }
 
 function update_form_template(){
@@ -302,12 +287,12 @@ function update_form_template(){
   $db = llg_db_connection();
 
   $form_id = mysqli_real_escape_string($db, $_POST["form_id"]);
-  /* <warning> unescaped input */
-  $form_template = $_POST["form_template"];
-  /* </warning> */
+  /* if magic quotes is enabled this will end up double escaped */
+  /* https://stackoverflow.com/questions/1522313/php-mysql-real-escape-string-stripslashes-leaving-multiple-slashes */
+  $form_template = mysqli_real_escape_string($db, stripslashes(trim($_POST["form_template"])));
   $form_name = mysqli_real_escape_string($db, $_POST["form_name"]);
 
-  mysqli_query($db, 'UPDATE `forms` SET `template`="'.$form_template.'", `name`="'.$form_name.'" WHERE `id`='.$form_id.'') or die (mysqli_error());
+  mysqli_query($db, 'UPDATE `forms` SET `template`=\''.$form_template.'\', `name`="'.$form_name.'" WHERE `id`='.$form_id.'') or die (mysqli_error());
 }
 
 ?>

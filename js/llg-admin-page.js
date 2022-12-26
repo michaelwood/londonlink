@@ -50,7 +50,7 @@ jq(document).ready(function(){
       return;
     } else {
       form.submit();
-    } 
+    }
   });
 
 
@@ -86,6 +86,7 @@ function check_inputs_val(inputs){
       errors--;
     } else {
       jq(this).css("border", "1px solid red");
+      errors++;
     }
   });
 

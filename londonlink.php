@@ -40,10 +40,14 @@ function llg_db_connection (){
 
 function llg_validate_pass($db, $event_id, $password){
 
+  if(!isset($password)){
+    return False;
+  }
+
   $pass = mysqli_real_escape_string($db, $password);
   $event_id = mysqli_real_escape_string($db, $event_id);
 
-  $select_password = 'SELECT COUNT(password) FROM events WHERE id="'.$event_id.'" AND password=PASSWORD("'.$pass.'") LIMIT 1';
+  $select_password = 'SELECT COUNT(password) FROM events WHERE id="'.$event_id.'" AND password=SHA2("'.$pass.'", 256) LIMIT 1';
   $pass_res = mysqli_query($db, $select_password) or die (mysqli_error($db));
 
   if (mysqli_fetch_assoc($pass_res)['COUNT(password)'] != 1){
@@ -141,6 +145,12 @@ function llg_process_post ()
   case 'update_form_template':
     if (llg_can_do_this()){
       update_form_template();
+    }
+    break;
+
+  case 'new_form_template':
+    if(llg_can_do_this()){
+      new_form_template();
     }
     break;
 

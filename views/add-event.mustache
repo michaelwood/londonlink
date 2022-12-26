@@ -55,10 +55,10 @@
 
       <div class="form-field">
         <label for="select-form">Select a form template to use<br /></label>
-        <select id="select-form" name="form_template" />
+        <select id="select-form" name="form_id" />
           <option value="">-</option>
           {{#forms}}
-          <option value="{{name}}">{{basename}}</option>
+          <option value="{{id}}">{{name}}</option>
           {{/forms}}
         </select>
         <p>See form <a href="?page=llg_forms" target="_blank">previews</a> to view available form templates</p>
