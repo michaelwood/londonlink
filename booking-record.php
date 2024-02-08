@@ -106,9 +106,9 @@ function save_booking(){
 
   $mail_body = 'Hello,'."\n\n";
   $mail_body .= 'We have received your booking '.$participant_name.'';
-  $mail_body .= "\n";
+  $mail_body .= "\n\n";
   $mail_body .= 'The booking reference is #'.$booking_id.'. Important - please keep a note of this reference and use it as a reference in any applicable payments.';
-  $mail_body .= "\n";
+  $mail_body .= "\n\n";
   $mail_body .= 'If there any problems please don\'t hesitate to contact the bookings person for this event (CC d)';
   $mail_body .= "\n\n";
   $mail_body .= 'Thank you';
