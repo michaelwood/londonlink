@@ -60,6 +60,7 @@ function submit_form(formJson){
       jq("#llg-spinner").hide();
       jq("#llg-booking-area").hide();
       jq("#llg-thank-you").show();
+      jq("#booking-ref").text(retData);
       try {
         jq("#llg-thank-you").get(0).scrollIntoView();
       } catch (e) {}

@@ -78,6 +78,7 @@ function save_booking(){
     AES_ENCRYPT("'.$json_string_booking.'", "'.$pw.'"))';
 
   mysqli_query($db, $insert_booking) or exit_with_error("E104");
+  $booking_id = mysqli_insert_id($db);
 
   $booking_person_email = $event_details['booking_person_email'];
 
@@ -106,6 +107,8 @@ function save_booking(){
   $mail_body = 'Hello,'."\n\n";
   $mail_body .= 'We have received your booking '.$participant_name.'';
   $mail_body .= "\n";
+  $mail_body .= 'The booking reference is #'.$booking_id.'. Important - please keep a note of this reference and use it as a reference in any applicable payments.';
+  $mail_body .= "\n";
   $mail_body .= 'If there any problems please don\'t hesitate to contact the bookings person for this event (CC d)';
   $mail_body .= "\n\n";
   $mail_body .= 'Thank you';
@@ -126,6 +129,7 @@ function save_booking(){
     exit_with_error('Mailing exception: '.$e->get_message().'');
   }
 
+  echo $booking_id;
   exit();
 }
 
