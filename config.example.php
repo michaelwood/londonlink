@@ -12,17 +12,24 @@ function config () {
 
   /* Admin email */
   $config['admin_email'] = '';
+  /* A single string such as "myorganisationforms" */
   $config['shortcode'] = '';
   $config['from'] = '';
 
   /* Anti spam answer */
   $config['antispam'] = '';
 
-  /* Mailman password to add people to mailing list */
+  /* Optional Mailman password to add people to mailing list */
   $config['mailman'] = '';
 
-  /* Salt file for the encryption password */
+  /* File path to a text file containing the additional item to the encryption password */
   $config['saltfile'] = '';
+
+  /* Organisation name */
+  $config['org_name'] = '';
+
+  /* Debug switched on or off */
+  $config['debug'] = false;
 
   return $config;
 }
